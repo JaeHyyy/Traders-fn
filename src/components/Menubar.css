@@ -1,0 +1,48 @@
+.hr {
+    height: 10px;
+    background-color: #aada2a;
+}
+
+.logo {
+    width: 150px;
+    height: 90px;
+    object-fit: cover;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #aada2a;
+}
+
+.header_con1 {
+    display: flex;
+    align-items: center;
+}
+
+.header_con2 {
+    margin-right: 20px;
+}
+
+.logout {
+    color: red;
+}
+
+.menubar {
+    width: 220px;
+    height: 619px;
+    border-right: 1px solid gray;
+}
+
+.menu_sz {
+    width: 100%;
+    height: 70px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.sz_color {
+    background-color: #aada2a;
+}
