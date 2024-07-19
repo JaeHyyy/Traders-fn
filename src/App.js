@@ -1,11 +1,11 @@
 import './App.css';
-import { createBrowserRouter, RouterProvider, Navigate, useRouteLoaderData} from "react-router-dom";
+import { createBrowserRouter, RouterProvider, Navigate, useRouteLoaderData } from "react-router-dom";
 import RootLayout from "./pages/Root";
 
 const router = createBrowserRouter([
   {
-    path:"/",
-    element:<RootLayout />,
+    path: "/home",
+    element: <RootLayout />,
     children: [
       {
 
