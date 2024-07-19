@@ -4,7 +4,7 @@ import RootLayout from "./pages/Root";
 
 const router = createBrowserRouter([
   {
-    path: "/home",
+    path: "/homee",
     element: <RootLayout />,
     children: [
       {
