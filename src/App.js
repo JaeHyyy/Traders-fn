@@ -6,20 +6,22 @@ import Login from './pages/Login';
 import Main from './pages/Main';
 
 const router = createBrowserRouter([
+
   {
     path: "/",
-    element: <Login />
-  },
-  {
-    path: "/home",
     element: <RootLayout />,
     children: [
       {
         path: "/home",
         element: <Main />
-      }
+      },
+
     ]
-  }
+  },
+  {
+    path: "/login",
+    element: <Login />
+  },
 ])
 
 function App() {
