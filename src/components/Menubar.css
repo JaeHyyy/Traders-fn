@@ -1,9 +1,15 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 .hr {
     height: 10px;
     background-color: #aada2a;
 }
 
-.logo {
+.logoo {
     width: 150px;
     height: 90px;
     object-fit: cover;
