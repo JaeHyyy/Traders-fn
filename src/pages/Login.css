@@ -94,3 +94,8 @@ html {
     text-decoration: none;
     color: black;
 }
+
+.logo {
+    margin: auto;
+    display: block;
+}
