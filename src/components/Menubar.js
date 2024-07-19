@@ -8,7 +8,7 @@ function Menubar() {
             <div className='hr'></div>
             <div className='header'>
                 <div className='header_con1'>
-                    <img src={logo} alt='로고' className='logo' />
+                    <img src={logo} alt='로고' className='logoo' />
                     <span>광안점</span>
                 </div>
 
