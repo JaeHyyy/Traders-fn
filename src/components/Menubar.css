@@ -1,12 +1,33 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.Menubar {
+    display: flex;
+}
+
 .hr {
     height: 10px;
     background-color: #aada2a;
 }
 
-.logo {
+.menu_box {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.logoo {
     width: 150px;
     height: 90px;
     object-fit: cover;
+}
+
+.head_box {
+    display: flex;
+    width: 100%;
 }
 
 .header {
@@ -14,6 +35,7 @@
     align-items: center;
     justify-content: space-between;
     border-bottom: 1px solid #aada2a;
+    width: 100%;
 }
 
 .header_con1 {
@@ -29,10 +51,16 @@
     color: red;
 }
 
-.menubar {
-    width: 220px;
+.menubarr {
+    width: 100%;
     height: 619px;
     border-right: 1px solid gray;
+    display: flex;
+}
+
+.sz_box {
+    width: 220px;
+    height: 619px;
 }
 
 .menu_sz {

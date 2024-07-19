@@ -8,10 +8,7 @@ export default function RootLayout(){
         <div className="container">
           <Menubar />
           <hr/>
-          <main>
-            <Outlet />
-          </main>
-        
+          
         </div>
     )
 }
