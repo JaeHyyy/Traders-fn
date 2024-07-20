@@ -7,7 +7,6 @@ export default function RootLayout(){
     return(
         <div className="container">
           <Menubar />
-          <hr/>
           
         </div>
     )
