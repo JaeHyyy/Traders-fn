@@ -8,18 +8,18 @@ import Main from './pages/Main';
 const router = createBrowserRouter([
 
   {
-    path: "/",
+    path: "/home",
     element: <RootLayout />,
     children: [
       {
-        path: "/",
+        path: "/home",
         element: <Main />
       },
 
     ]
   },
   {
-    path: "/login",
+    path: "/",
     element: <Login />
   },
 ])
