@@ -4,29 +4,33 @@ import { createBrowserRouter, RouterProvider, Navigate, useRouteLoaderData } fro
 import RootLayout from "./pages/Root";
 import Login from './pages/Login';
 import Main from './pages/Main';
+import Testt from './pages/Testt';
 
 const router = createBrowserRouter([
 
   {
-    path: "/home",
+    path: "/",
     element: <RootLayout />,
     children: [
       {
-        path: "/home",
+        path: "/",
         element: <Main />
       },
-
+      {
+        path: "/test",
+        element: <Testt />
+      },
     ]
   },
   {
-    path: "/",
+    path: "/login",
     element: <Login />
-  },
+  }
 ])
 
 function App() {
   return <RouterProvider router={router} />
-         
+
 }
 
 export default App;
