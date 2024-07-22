@@ -1,13 +1,12 @@
 import './Testt.module.css';
+import ProductList from '../components/ProductList';
 
 function Testt() {
 
     return (
         <div className='Test'>
             <div className='content'>
-                <div className='tt'>
-                    test
-                </div>
+                <ProductList />
             </div>
         </div>
     );
