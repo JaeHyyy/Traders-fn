@@ -1,39 +1,71 @@
-import './Menubar.css'
+import menubar from './Menubar.module.css'
 import logo from '../assets/logo.png'
-import { Outlet } from "react-router-dom";
-function Menubar() {
-    return (
-        <div className="Menubar">
+import { NavLink, Outlet, useLocation } from "react-router-dom";
 
-            <div className='hr'></div>
-            <div className='menu_box'>
-                <div className='head_box'>
-                    <div className='header'>
-                        <div className='header_con1'>
-                            <img src={logo} alt='로고' className='logoo' />
+function Menubar() {
+    const location = useLocation();
+
+    const menuItems = [
+        { name: '홈', path: '/' },
+        { name: '입고관리', path: '/test' },
+        { name: '재고관리', path: '/페이지만들어' },
+        { name: '발주하기', path: '/페이지만들어' },
+        { name: '유통기한관리', path: '/페이지만들어' }
+    ];
+
+    return (
+        <div className={menubar.Menubar}>
+
+            <div className={menubar.hr}></div>
+            <div className={menubar.menu_box}>
+                <div className={menubar.head_box}>
+                    <div className={menubar.header}>
+                        <div className={menubar.header_con1}>
+                            <img src={logo} alt='로고' className={menubar.logo} />
                             <span>광안점</span>
                         </div>
 
-                        <div className='header_con2'>
+                        <div className={menubar.header_con2}>
                             <span>마이페이지&nbsp;</span>
                             <span>&nbsp;|&nbsp;</span>
-                            <span className='logout'>&nbsp;로그아웃</span>
+                            <span className={menubar.logout}>&nbsp;로그아웃</span>
                         </div>
                     </div>
                 </div>
 
-                <div className='menubarr'>
-                    <div className='sz_box'>
-                        <div className='menu_sz sz_color'>
-                            <div>홈</div>
+                <div className={menubar.menubarr}>
+                    <div className={menubar.sz_con}>
+                        <div className={menubar.sz_box}>
+                            {menuItems.map((item) => (
+                                <NavLink
+                                    key={item.name}
+                                    to={item.path}
+                                    className={({ isActive }) =>
+                                        `${menubar.menu_sz} ${isActive ? menubar.selected : ''}`
+                                    }
+                                >
+                                    {({ isActive }) => (
+                                        <>
+                                            {isActive && <span className={menubar.arrow}>▶</span>}
+                                            {item.name}
+                                        </>
+                                    )}
+                                </NavLink>
+                            ))}
                         </div>
-                        <div className='menu_sz'>입고관리</div>
-                        <div className='menu_sz'>재고관리</div>
-                        <div className='menu_sz'>발주하기</div>
-                        <div className='menu_sz'>유통기한관리</div>
                     </div>
 
-                    <main className='main_con'>
+                    {/* <div className={menubar.sz_box}>
+                        <div className={`${menubar.menu_sz} ${menubar.sz_color}`}>
+                            홈
+                        </div>
+                        <div className={menubar.menu_sz}>입고관리</div>
+                        <div className={menubar.menu_sz}>재고관리</div>
+                        <div className={menubar.menu_sz}>발주하기</div>
+                        <div className={menubar.menu_sz}>유통기한관리</div>
+                        </div> */}
+
+                    <main>
                         <Outlet />
                     </main>
                 </div>
