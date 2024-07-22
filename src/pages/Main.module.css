@@ -5,8 +5,8 @@
 } */
 
 .Main {
-    width: 1486px;
-    height: 680px;
+    width: 1300px;
+    height: 400px;
     display: flex; /* Flexbox 사용 */
     margin: 0 auto; /* 중앙 정렬 */
     padding: 5px; /* 여백 추가 */
@@ -35,9 +35,9 @@
 
 
 .inputGoodsSearch{
-    width: 90%; 
-    height: 40px; 
-    padding: 5px; 
+    width: 89%; 
+    height: 30px; 
+    padding: 3px; 
     font-size: 16px; 
     box-sizing: border-box; /* padding과 border를 포함하여 너비를 계산하도록 설정 */
 }
@@ -48,14 +48,14 @@
     font-size: 15px;
     background-color: #AADA2A;
     margin-top: 5px;
-    margin-left: 10px;
+    margin-left: 14px;
     padding: 10px 10px;
     border: none;
     cursor: pointer;
 }
 
 .goodsList {
-    height: 350px; 
+    height: 330px; 
     overflow-y: scroll; 
     border: 1px solid #AADA2A;
     margin-top: 10px; 
@@ -87,7 +87,7 @@
 
 .events {
     width: 100%;
-    height: 200px;
+    height: 170px;
     margin-top: 20px;
     background-color: red;
 }
@@ -141,7 +141,7 @@
 .rightSectionBox {
     display: flex;
     flex-direction: row; 
-    align-items: stretch;
+    /* align-items: stretch; */
     width: 100%; /* 부모 요소의 전체 너비를 차지하게 설정 */
     justify-content: space-between; /* 테이블 간의 여백을 균등하게 배치 */
 }
@@ -150,7 +150,7 @@
 .disuseList, .stockList {
     flex: 1; /* 각 테이블이 동일한 비율로 공간을 차지하도록 */
     margin: 0 10px 10px 10px;  /*각 테이블에 여백 추가 */
-    height: 250px;
+    height: 207px;
     width: 320px; 
     overflow-y: scroll;
     overflow-x: scroll;  
