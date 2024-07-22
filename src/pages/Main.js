@@ -70,11 +70,8 @@ function Main() {
       </div>
 
       <div className={main.rightsection}>
-        <div className={main.locCalender}>
-          <Calendar
-            onChange={setDate}
-            value={date}
-          />
+         <div className={main.locCalender}>
+          <Calendar/>
         </div>
         <div className={main.tableLabel}>
           <div className={main.tableLabel2}>유통기한 임박 상품 리스트</div>
