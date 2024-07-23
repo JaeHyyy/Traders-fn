@@ -55,10 +55,10 @@
 }
 
 .goodsList {
-    height: 330px; 
+    height: 250px; 
     overflow-y: scroll; 
     border: 1px solid #AADA2A;
-    margin-top: 10px; 
+    margin-top: 5px; 
 }
 
 .goodsTable {
@@ -107,7 +107,7 @@
 .locCalender{
     width: 100%; /* 부모 요소의 전체 너비를 차지하게 설정 */
     /* height: 100%; */
-    padding: 30px; 
+    padding: 10px; 
     box-sizing: border-box;
     display: flex;
     justify-content: center;
