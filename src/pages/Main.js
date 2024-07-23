@@ -10,8 +10,10 @@ function Main() {
 
   const [date, setDate] = useState(new Date());
   const [goods, setGoods] = useState([]);
-  const [expiringProducts, setExpiringProducts] = useState([]);
 
+  const [searchGoods, setSearchGoods] = useState('');
+
+  const [expiringProducts, setExpiringProducts] = useState([]);
 
   useEffect(() => {
     axios.get('http://localhost:8090/traders/home')
@@ -26,7 +28,7 @@ function Main() {
 
   const handleSearch = (event) => {
     event.preventDefault();
-    axios.get(`http://localhost:8090/traders/home/${searchName}`)
+    axios.get(`http://localhost:8090/traders/home/${searchGoods}`)
       .then(response => {
         setGoods(response.data);
       })
@@ -62,8 +64,8 @@ function Main() {
               name='goods_search'
               placeholder='제품코드, 카테고리명, 상품명 검색'
               className={main.inputGoodsSearch}
-              value={searchName}
-              onChange={(e) => setSearchName(e.target.value)} />
+              value={searchGoods}
+              onChange={(e) => setSearchGoods(e.target.value)} />
             <button type="submit" className={main.btnGoodsSearch}>검색</button>
           </form>
           <div className={main.goodsList}>
