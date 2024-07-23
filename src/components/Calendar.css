@@ -6,6 +6,7 @@
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px;
   }
   
   .calendar-header {
@@ -88,4 +89,36 @@
     color: #ff0000;
     font-weight: bold;
     background-color: #ffeeee;
+  }
+
+
+  .calendar-day.selected {
+    background-color: #aada2a;
+    color: white;
+  }
+  
+  .expiring-products {
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+  }
+  
+  .expiring-products h3 {
+    margin-top: 0;
+    color: #333;
+  }
+  
+  .expiring-products ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .expiring-products li {
+    margin-bottom: 10px;
+    padding: 5px;
+    background-color: #fff;
+    border: 1px solid #eee;
+    border-radius: 4px;
   }
