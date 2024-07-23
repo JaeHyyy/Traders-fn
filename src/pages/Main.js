@@ -10,6 +10,7 @@ function Main() {
   const [date, setDate] = useState(new Date());
 
   const [goods, setGoods] = useState([]);
+  const [searchName, setSearchName] = useState('');
 
   useEffect(() => {
     axios.get('http://localhost:8090/traders/home')
@@ -21,10 +22,17 @@ function Main() {
       });
   }, []);
 
-  // const goods = [
-  //   { num: 1, gcode: "1000044163528", gcategory: "곡류", gname: "대왕님표여주쌀10kg", gcostprice: 32800 },
 
-  // ];
+  const handleSearch = (event) => {
+    event.preventDefault();
+    axios.get(`http://localhost:8090/traders/home/${searchName}`)
+      .then(response => {
+        setGoods(response.data);
+      })
+      .catch(error => {
+        console.error('There was an error fetching the goods!', error);
+      });
+  };
 
   const disuse = [
     { num: 1, stockid: "2407210001", gname: "대왕님표여주쌀10kg", expdate: "2024-07-21" }
@@ -42,11 +50,13 @@ function Main() {
     <div className={main.Main}>
       <div className={main.goods_page}>
         <div className={main.leftSection}>
-          <form action='#' method='get' id='goods-form'>
+          <form onSubmit={handleSearch} id='goods-form'>
             <input type='search'
               name='goods_search'
               placeholder='제품코드, 카테고리명, 상품명 검색'
-              className={main.inputGoodsSearch} />
+              className={main.inputGoodsSearch}
+              value={searchName}
+              onChange={(e) => setSearchName(e.target.value)} />
             <button type="submit" className={main.btnGoodsSearch}>검색</button>
           </form>
           <div className={main.goodsList}>
