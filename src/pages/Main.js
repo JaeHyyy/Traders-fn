@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import main from '../pages/Main.module.css';
-import Calendar from 'react-calendar';
-import 'react-calendar/dist/Calendar.css'; // 캘린더 스타일
+// import Calendar2 from '../components/Calendar2';
+import Calendar from '../components/Calendar';
 
 
 function Main() {
@@ -71,7 +71,8 @@ function Main() {
 
       <div className={main.rightsection}>
          <div className={main.locCalender}>
-          <Calendar/>
+          <Calendar />
+          {/* <useCalendar /> */}
         </div>
         <div className={main.tableLabel}>
           <div className={main.tableLabel2}>유통기한 임박 상품 리스트</div>
