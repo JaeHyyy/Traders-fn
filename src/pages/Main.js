@@ -26,6 +26,7 @@ function Main() {
   }, []);
 
 
+  
   const handleSearch = (event) => {
     event.preventDefault();
     axios.get(`http://localhost:8090/traders/home/${searchGoods}`)
