@@ -1,34 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import receiptt from '../pages/Receipt.module.css';
 
 function Receipt(){
 
-    const [receiptData, setReceiptData] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [movement, setMovement] = useState([]);
 
     useEffect(() => {
-        const fetchReceiptData = async () => {
-          try {
-            const response = await axios.get('http://localhost:8090/traders/income');
-            setReceiptData(response.data);
-            setLoading(false);
-          } catch (error) {
-            setError(error);
-            setLoading(false);
-          }
-        };
-    
-        fetchReceiptData();
+      axios.get('http://localhost:8090/traders/income')
+        .then(response => {
+          setMovement(response.data);
+        })
+        .catch(error => {
+          console.error('돌아가. 뭔가 잘못되었다.', error);
+        });
     }, []);
 
-    if (loading) return <div>Loading...</div>;
-    if (error) return <div>Error: {error.message}</div>;
 
     return(
-        <div>
-      <h1>입고 목록</h1>
-      <table>
+        <div className={receiptt.Receipt}>
+      <table className={receiptt.receiptTable}>
         <thead>
           <tr>
             <th>입고 번호</th>
@@ -40,8 +31,8 @@ function Receipt(){
           </tr>
         </thead>
         <tbody>
-          {receiptData.map((movement) => (
-            <tr key={movement.movcode}>
+          {movement.map((movement,idx) => (
+            <tr key={idx} className={receiptt.movcode}>
               <td>{movement.movcode}</td>
               <td>{movement.ordercode}</td>
               <td>{movement.gcode}</td>
