@@ -1,0 +1,172 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+hr {
+    opacity: 0.5;
+}
+
+.logo {
+    display: block;
+    width: 200px;
+    height: 100px;
+    object-fit: cover;
+    margin-bottom: 20px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#signup_page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100vh;
+    padding: 20px;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* Internet Explorer 10+ */
+}
+
+#signup_page::-webkit-scrollbar {
+    display: none;
+    /* Safari and Chrome */
+}
+
+.signup_box {
+    width: 90%;
+    max-width: 500px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    background-color: #fff;
+}
+
+.signup_form {
+    width: 100%;
+}
+
+.inputContainer {
+    position: relative;
+    width: 100%;
+    margin: 4px 0;
+}
+
+.inputContainer .icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 24px;
+    opacity: 0.5;
+}
+
+.input:not(.addressInput):not([type="file"]) {
+    width: 100%;
+    height: 48px;
+    padding: 0 10px 0 50px;
+    margin: 4px 0;
+    border-radius: 6px;
+    background-color: #F8F8F8;
+    border: 1px solid #ddd;
+}
+
+.input.addressInput {
+    width: 100%;
+    height: 48px;
+    padding: 0 10px;
+    margin: 4px 0;
+    border-radius: 6px;
+    background-color: #F8F8F8;
+    border: 1px solid #ddd;
+}
+
+.addressSection {
+    display: flex;
+    align-items: center;
+    margin: 6px 0;
+}
+
+.addressSection>div {
+    margin-right: 8px;
+}
+
+.addressSection button {
+    height: 48px;
+    border: none;
+    border-radius: 6px;
+    background-color: #AADA2A;
+    color: white;
+    padding: 0 20px;
+    cursor: pointer;
+}
+
+.addressSection button:hover {
+    background-color: #133A00;
+}
+
+.upload {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+}
+
+.upload input[type="text"] {
+    width: calc(100% - 120px);
+    height: 48px;
+    padding: 0 10px;
+    border-radius: 6px;
+    background-color: #F8F8F8;
+    border: 1px solid #ddd;
+    margin-right: 8px;
+    color: #333;
+    /* opacity: 0.5; */
+    /* text-align: center; */
+}
+
+.upload input[type="file"] {
+    display: none;
+    opacity: 0.5;
+}
+
+.upload_label {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 6px;
+    color: white;
+    border: none;
+    cursor: pointer;
+    background-color: #133A00;
+    font-size: 14px;
+    text-align: center;
+    margin-left: 8px;
+    /* Space between text input and button */
+}
+
+.upload_label:hover {
+    background-color: #AADA2A;
+}
+
+.btn_signup {
+    color: #fff;
+    font-size: 16px;
+    text-align: center;
+    background-color: #AADA2A;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    width: 100%;
+    height: 48px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.btn_signup:hover {
+    background-color: #133A00;
+}

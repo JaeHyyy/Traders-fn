@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { createBrowserRouter, RouterProvider, Navigate, useRouteLoaderData } from "react-router-dom";
 import RootLayout from "./pages/Root";
 import Login from './pages/Login';
+import Signup from './pages/Signup';
 import Main from './pages/Main';
 import Testt from './pages/Testt';
 
@@ -19,12 +20,16 @@ const router = createBrowserRouter([
       {
         path: "/test",
         element: <Testt />
-      },
+      }
     ]
   },
   {
     path: "/login",
     element: <Login />
+  },
+  {
+    path: "/signup",
+    element: <Signup />
   }
 ])
 

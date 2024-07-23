@@ -1,17 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import main from '../pages/Main.module.css';
 // import Calendar2 from '../components/Calendar2';
 import Calendar from '../components/Calendar';
+import axios from 'axios';
 
 
 function Main() {
 
   const [date, setDate] = useState(new Date());
 
-  const goods = [
-    { num: 1, gcode: "1000044163528", gcategory: "곡류", gname: "대왕님표여주쌀10kg", gcostprice: 32800 },
+  const [goods, setGoods] = useState([]);
 
-  ];
+  useEffect(() => {
+    axios.get('http://localhost:8090/traders/home')
+      .then(response => {
+        setGoods(response.data);
+      })
+      .catch(error => {
+        console.error('There was an error fetching the goods!', error);
+      });
+  }, []);
+
+  // const goods = [
+  //   { num: 1, gcode: "1000044163528", gcategory: "곡류", gname: "대왕님표여주쌀10kg", gcostprice: 32800 },
+
+  // ];
 
   const disuse = [
     { num: 1, stockid: "2407210001", gname: "대왕님표여주쌀10kg", expdate: "2024-07-21" }
