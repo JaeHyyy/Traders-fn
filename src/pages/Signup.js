@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import logo from '../assets/logo.png';
@@ -7,7 +7,7 @@ import lockIcon from '../assets/lock.png';
 import phoneIcon from '../assets/phone.png';
 import ofName from '../assets/officename.png';
 import ofPhone from '../assets/officephone.png';
-import styles from "./Signup.module.css";
+import styles from './Signup.module.css';
 
 const Signup = () => {
     const [formData, setFormData] = useState({
@@ -24,6 +24,19 @@ const Signup = () => {
     });
 
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const script = document.createElement('script');
+        script.src = "//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js";
+        script.async = true;
+        script.onload = () => {
+            console.log('Daum Postcode script loaded');
+        };
+        document.body.appendChild(script);
+        return () => {
+            document.body.removeChild(script);
+        };
+    }, []);
 
     const handleChange = (e) => {
         setFormData({
@@ -44,6 +57,46 @@ const Signup = () => {
                 console.error('There was an error!', error);
                 alert('회원가입 실패: ' + error.message);
             });
+    };
+
+    const handlePostcode = () => {
+        new window.daum.Postcode({
+            oncomplete: function (data) {
+                var roadAddr = data.roadAddress; // 도로명 주소 변수
+                var extraRoadAddr = ''; // 참고 항목 변수
+
+                if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
+                    extraRoadAddr += data.bname;
+                }
+                if (data.buildingName !== '' && data.apartment === 'Y') {
+                    extraRoadAddr += (extraRoadAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                }
+                if (extraRoadAddr !== '') {
+                    extraRoadAddr = ' (' + extraRoadAddr + ')';
+                }
+
+                setFormData(prevState => ({
+                    ...prevState,
+                    post: data.zonecode,
+                    addr1: roadAddr + extraRoadAddr,
+                    addr2: data.jibunAddress
+                }));
+
+                var guideTextBox = document.getElementById("guide");
+                if (data.autoRoadAddress) {
+                    var expRoadAddr = data.autoRoadAddress + extraRoadAddr;
+                    guideTextBox.innerHTML = '(예상 도로명 주소 : ' + expRoadAddr + ')';
+                    guideTextBox.style.display = 'block';
+                } else if (data.autoJibunAddress) {
+                    var expJibunAddr = data.autoJibunAddress;
+                    guideTextBox.innerHTML = '(예상 지번 주소 : ' + expJibunAddr + ')';
+                    guideTextBox.style.display = 'block';
+                } else {
+                    guideTextBox.innerHTML = '';
+                    guideTextBox.style.display = 'none';
+                }
+            }
+        }).open();
     };
 
     return (
@@ -73,7 +126,7 @@ const Signup = () => {
                             <input type="text" name="post" className={`${styles.input} ${styles.addressInput}`} placeholder="우편번호" value={formData.post} onChange={handleChange} />
                         </div>
                         <div>
-                            <button type="button" className={styles.button}>우편번호 찾기</button>
+                            <button type="button" className={styles.button} onClick={handlePostcode}>우편번호 찾기</button>
                         </div>
                     </div>
                     <div className={styles.addressSection}>
