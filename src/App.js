@@ -8,6 +8,7 @@ import Main from './pages/Main';
 import Testt from './pages/Testt';
 import Receipt from './pages/Receipt';
 import Stock from './pages/Stock';
+import OrderCart from './pages/OrderCart';
 
 const router = createBrowserRouter([
 
