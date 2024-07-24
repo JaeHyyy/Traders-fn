@@ -7,6 +7,7 @@ import Signup from './pages/Signup';
 import Main from './pages/Main';
 import Testt from './pages/Testt';
 import Receipt from './pages/Receipt';
+import Stock from './pages/Stock';
 
 const router = createBrowserRouter([
 
@@ -21,7 +22,20 @@ const router = createBrowserRouter([
       {
         path: "/receipt",
         element: <Receipt />
+      },
+      {
+        path: "/stock",
+        element: <Stock />
+      },
+      {
+        path: "/ordercart",
+        element: <OrderCart />
+      },
+      {
+        path: "/test",
+        element: <Testt />
       }
+
     ]
   },
   {
