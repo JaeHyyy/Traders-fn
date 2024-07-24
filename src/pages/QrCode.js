@@ -6,8 +6,8 @@ const QrCode = () => {
 
     useEffect(() => {
         const fetchQrCode = async () => {
-            try {
-                const response = await axios.get('http://10.10.10.197:8090/app/api/qrcode', {
+            try { //ssg wifi ip : 10.10.10.197
+                const response = await axios.get('http://localhost:8090/traders/api/qrcode', {
                     responseType: 'arraybuffer',
                 });
                 const base64Image = btoa(
