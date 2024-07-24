@@ -1,22 +1,53 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import main from '../pages/Main.module.css';
-import Calendar from 'react-calendar';
-import 'react-calendar/dist/Calendar.css'; // 캘린더 스타일
+// import Calendar2 from '../components/Calendar2';
+import Calendar from '../components/Calendar';
+import axios from 'axios';
+import { format } from 'date-fns'; 
 
 
 function Main() {
 
   const [date, setDate] = useState(new Date());
+  const [goods, setGoods] = useState([]);
 
-  const goods = [
-    { num: 1, gcode: "1000044163528", gcategory: "곡류", gname: "대왕님표여주쌀10kg", gcostprice: 32800 },
+  const [searchGoods, setSearchGoods] = useState('');
 
-  ];
+  const [expiringProducts, setExpiringProducts] = useState([]);
 
-  const disuse = [
-    { num: 1, stockid: "2407210001", gname: "대왕님표여주쌀10kg", expdate: "2024-07-21" }
+  useEffect(() => {
+    axios.get('http://localhost:8090/traders/home')
+      .then(response => {
+        setGoods(response.data);
+      })
+      .catch(error => {
+        console.error('There was an error fetching the goods!', error);
+      });
+  }, []);
 
-  ];
+
+  
+  const handleSearch = (event) => {
+    event.preventDefault();
+    axios.get(`http://localhost:8090/traders/home/${searchGoods}`)
+      .then(response => {
+        setGoods(response.data);
+      })
+      .catch(error => {
+        console.error('There was an error fetching the goods!', error);
+      });
+  };
+
+  const handleDateSelect = (selectedDate) => {
+    // 여기서 선택된 날짜에 해당하는 유통기한 임박 상품을 가져오는 API 호출을 수행
+    axios.get(`http://localhost:8090/traders/expiring-products?date=${format(selectedDate, 'yyyy-MM-dd')}`)
+      .then(response => {
+        setExpiringProducts(response.data);
+      })
+      .catch(error => {
+        console.error('There was an error fetching the expiring products!', error);
+      });
+  };
 
   const stock = [
     { num: 1, stockid: "2407210001", gname: "대왕님표여주쌀10kg", quantity: "2", gunit: "개" }
@@ -29,11 +60,13 @@ function Main() {
     <div className={main.Main}>
       <div className={main.goods_page}>
         <div className={main.leftSection}>
-          <form action='#' method='get' id='goods-form'>
+          <form onSubmit={handleSearch} id='goods-form'>
             <input type='search'
               name='goods_search'
               placeholder='제품코드, 카테고리명, 상품명 검색'
-              className={main.inputGoodsSearch} />
+              className={main.inputGoodsSearch}
+              value={searchGoods}
+              onChange={(e) => setSearchGoods(e.target.value)} />
             <button type="submit" className={main.btnGoodsSearch}>검색</button>
           </form>
           <div className={main.goodsList}>
@@ -62,6 +95,8 @@ function Main() {
               </tbody>
             </table>
           </div>
+          
+          <button className={main.orBtn}>발주하기</button>
 
           <div className={main.events}>
             이벤트 슬라이드
@@ -71,7 +106,7 @@ function Main() {
 
       <div className={main.rightsection}>
          <div className={main.locCalender}>
-          <Calendar/>
+            <Calendar onDateSelect={handleDateSelect} />
         </div>
         <div className={main.tableLabel}>
           <div className={main.tableLabel2}>유통기한 임박 상품 리스트</div>
@@ -89,12 +124,12 @@ function Main() {
                 </tr>
               </thead>
               <tbody>
-                {disuse.map((disuse, index) => (
+              {expiringProducts.map((product, index) => (
                   <tr key={index} className={main.disuseItem}>
-                    <td>{disuse.num}</td>
-                    <td>{disuse.stockid}</td>
-                    <td>{disuse.gname}</td>
-                    <td>{disuse.expdate}</td>
+                    <td>{product.num}</td>
+                    <td>{product.stockid}</td>
+                    <td>{product.gname}</td>
+                    <td>{product.expdate}</td>
                   </tr>
                 ))}
               </tbody>

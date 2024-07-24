@@ -6,6 +6,7 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Main from './pages/Main';
 import Testt from './pages/Testt';
+import Receipt from './pages/Receipt';
 
 const router = createBrowserRouter([
 
@@ -18,8 +19,8 @@ const router = createBrowserRouter([
         element: <Main />
       },
       {
-        path: "/test",
-        element: <Testt />
+        path: "/receipt",
+        element: <Receipt />
       }
     ]
   },
