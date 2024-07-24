@@ -7,7 +7,7 @@ function Receipt(){
     const [movement, setMovement] = useState([]);
 
     useEffect(() => {
-      axios.get('http://localhost:8090/traders/income')
+      axios.get('http://localhost:8090/traders/receipt')
         .then(response => {
           setMovement(response.data);
         })
