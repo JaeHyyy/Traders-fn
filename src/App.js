@@ -9,6 +9,7 @@ import Testt from './pages/Testt';
 import Receipt from './pages/Receipt';
 import Stock from './pages/Stock';
 import OrderCart from './pages/OrderCart';
+import QrCode from './pages/QrCode'; 
 
 const router = createBrowserRouter([
 
@@ -23,6 +24,10 @@ const router = createBrowserRouter([
       {
         path: "/receipt",
         element: <Receipt />
+      },
+      {
+        path: "/qrcode",
+        element: <QrCode />
       },
       {
         path: "/stock",
