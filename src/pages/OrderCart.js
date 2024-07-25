@@ -1,4 +1,5 @@
-import Table from '../components/Table';
+import OrderCartTable from '../components/OrderCartTable';
+
 
 const OrderCart = () => {
   const columns = [
@@ -11,6 +12,7 @@ const OrderCart = () => {
     },
     { header: '카테고리', accessor: 'category' },
     { header: '상품명(단위)', accessor: 'name' },
+    { header: '유통기한', accessor: 'expdate' },
     { header: '제조사', accessor: 'manufacturer' },
     { header: '원가', accessor: 'cost' },
     { 
@@ -56,7 +58,7 @@ const OrderCart = () => {
       },
   ];
 
-  return <Table columns={columns} data={data} />;
+  return <OrderCartTable columns={columns} data={data} />;
 };
 
 export default OrderCart;
