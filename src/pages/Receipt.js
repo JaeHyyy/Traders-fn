@@ -1,50 +1,60 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import receiptt from '../pages/Receipt.module.css';
+import styles from './Receipt.module.css';
 
-function Receipt(){
+const Receipt=() => {
+  const [data, setData] = useState([]);
+  const navigate = useNavigate();
 
-    const [movement, setMovement] = useState([]);
-
-    useEffect(() => {
-      axios.get('http://localhost:8090/traders/income')
-        .then(response => {
-          setMovement(response.data);
-        })
-        .catch(error => {
-          console.error('돌아가. 뭔가 잘못되었다.', error);
-        });
-    }, []);
+  const columns = [
+    { header: '순번', accessor: null },
+    { header: '입고코드', accessor: null},
+    { header: '입고날짜', accessor: 'movdate' },
+    { header: '입고건수', accessor: 'count' },
+    { header: '검수상태', accessor: "대기"},
+    { header: '검수', accessor: null}
+   ];
 
 
-    return(
-        <div className={receiptt.Receipt}>
-      <table className={receiptt.receiptTable}>
-        <thead>
-          <tr>
-            <th>입고 번호</th>
-            <th>발주 번호</th>
-            <th>상품 번호</th>
-            <th>입고 날짜</th>
-            <th>수량</th>
-            <th>입고 상태</th>
-          </tr>
-        </thead>
-        <tbody>
-          {movement.map((movement,idx) => (
-            <tr key={idx} className={receiptt.movcode}>
-              <td>{movement.movcode}</td>
-              <td>{movement.ordercode}</td>
-              <td>{movement.gcode}</td>
-              <td>{movement.movdate}</td>
-              <td>{movement.movquantity}</td>
-              <td>{movement.movstatus}</td>
-            </tr>
+   useEffect(() => {
+    axios.get('http://localhost:8090/traders/receipt')
+      .then(response => {
+        setData(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+  }, []);
+
+  const handleButtonClick = (rowIndex) => {
+    console.log(`Button clicked in row ${rowIndex}`);
+    navigate('/qrcode');
+  };
+
+    return (
+      <table className = {styles['receipt-table']}>
+      <thead>
+        <tr>
+          {columns.map((column, index) => (
+            <th key={index}>{column.header}</th>
           ))}
-        </tbody>
-      </table>
-    </div>
+        </tr>
+      </thead>
+      <tbody>
+        {data.map((row, rowIndex) => (
+          <tr key={rowIndex}>
+            {columns.map((column, colIndex) => (
+              <td key={colIndex}>
+                {column.accessor ? row[column.accessor] : (column.header === '검수' ? 
+                <button className={styles.button} onClick={() => handleButtonClick(rowIndex)}>검수</button> : rowIndex + 1)}
+              </td>
+            ))}
+            </tr>
+        ))}       
+      </tbody>
+    </table>
     );
-}
+};
 
 export default Receipt;

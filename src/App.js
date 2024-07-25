@@ -10,6 +10,10 @@ import Receipt from './pages/Receipt';
 import MobileLogin from './pages/ModileLogin';
 import MobileMain from './pages/MobileMain';
 import MobileProductDetail from './pages/MobileProductDetail';
+import Stock from './pages/StockList';
+import OrderCart from './pages/OrderCart';
+import QrCode from './pages/QrCode';
+
 
 const router = createBrowserRouter([
 
@@ -24,7 +28,24 @@ const router = createBrowserRouter([
       {
         path: "/receipt",
         element: <Receipt />
+      },
+      {
+        path: "/qrcode",
+        element: <QrCode />
+      },
+      {
+        path: "/stock",
+        element: <Stock />
+      },
+      {
+        path: "/ordercart",
+        element: <OrderCart />
+      },
+      {
+        path: "/test",
+        element: <Testt />
       }
+
     ]
   },
   {
