@@ -7,7 +7,7 @@ import Signup from './pages/Signup';
 import Main from './pages/Main';
 import Testt from './pages/Testt';
 import Receipt from './pages/Receipt';
-import Stock from './pages/Stock';
+import Stock from './pages/StockList';
 import OrderCart from './pages/OrderCart';
 import QrCode from './pages/QrCode'; 
 
