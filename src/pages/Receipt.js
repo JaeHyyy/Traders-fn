@@ -13,7 +13,7 @@ const Receipt=() => {
 
   const columns = [
     { header: '순번', accessor: null },
-    { header: '입고코드', accessor: null},
+    { header: '입고코드', accessor: "대기"},
     { header: '입고날짜', accessor: 'movdate' },
     { header: '입고건수', accessor: 'count' },
     { header: '검수상태', accessor: "대기"},
@@ -36,13 +36,13 @@ const Receipt=() => {
     navigate('/qrcode');
   };
 
-  
   useEffect(() => {
+    let sortedData = [...data];
     if (checkbox1) {
-      const sortedData = [...data].sort((a, b) => new Date(a.movdate) - new Date(b.movdate));
-      setData(sortedData);
+      sortedData = sortedData.sort((a, b) => new Date(a.movdate) - new Date(b.movdate));
+    } else if (checkbox3) {
+      sortedData = sortedData.sort((a, b) => b.count - a.count);
     } else {
-      // 데이터를 초기 상태로 다시 로드하거나 원래 상태를 유지하도록 구현
       axios.get('http://localhost:8090/traders/receipt')
         .then(response => {
           setData(response.data);
@@ -51,7 +51,8 @@ const Receipt=() => {
           console.error('Error fetching data:', error);
         });
     }
-  }, [checkbox1]);
+    setData(sortedData);
+  }, [checkbox1, checkbox3]);
 
     return (
       <>
