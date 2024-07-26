@@ -26,11 +26,67 @@
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
-    margin: 4px 2px;
+    margin: 2px 2px;
     cursor: pointer;
     border-radius: 8px; /* 둥근 모서리 */
   }
 
   .button:hover {
     background-color: #45a049; /* 호버 시 더 짙은 녹색 */
+  }
+  
+  .checkbox-container {
+    display: flex;
+    align-items: right;
+    margin: 10px;
+  }
+  
+  .checkbox-label {
+    font-size: 16px;
+    margin-right: 20px;
+    display: flex;
+    align-items: right;
+  }
+  
+  .checkbox {
+    display: none; /* 기본 체크박스를 숨김 */
+  }
+  
+  .checkbox + label {
+    position: relative;
+    cursor: pointer;
+    padding-left: 35px; /* 커스텀 체크박스를 위한 공간 */
+  }
+  
+  .checkbox + label::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    border: 2px solid #4CAF50;
+    border-radius: 4px;
+    background: white;
+  }
+  
+  .checkbox:checked + label::before {
+    background-color: #4CAF50;
+  }
+  
+  .checkbox + label::after {
+    content: '\2665'; /* Unicode for heart */
+    position: absolute;
+    left: 4px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px;
+    color: white;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  
+  .checkbox:checked + label::after {
+    opacity: 1;
   }
