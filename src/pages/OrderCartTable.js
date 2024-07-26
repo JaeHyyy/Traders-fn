@@ -1,15 +1,28 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import order from './OrderCartTable.module.css';
+import axios from 'axios';
 
-const OrderCartTable = ({ columns, data }) => {
+const OrderCartTable = ({ columns }) => {
     const [selectedRows, setSelectedRows] = useState([]);
+    const [orderCart, setOrderCart] = useState([]);
+     // 발주리스트 전체 조회
+  
 
-    //thead는 컬럼명 header
-    //tbody는 데이터 accessor
+  useEffect(() => {
+    axios.get('http://localhost:8090/traders/ordercart')
+      .then(response => {
+        setOrderCart(response.data);
+        console.log(response.data)
+      })
+      .catch(error => {
+        console.error('There was an error fetching the goods!', error);
+      });
+  }, []);
+
 
     const handleSelectAll = (event) => {
         if (event.target.checked) {
-          setSelectedRows(data.map((_, index) => index));
+          setSelectedRows(orderCart.map((_, index) => index));
         } else {
           setSelectedRows([]);
         }
@@ -33,7 +46,7 @@ const OrderCartTable = ({ columns, data }) => {
                         <input
                             type="checkbox"
                             onChange={handleSelectAll}
-                            checked={selectedRows.length === data.length}
+                            checked={selectedRows.length === orderCart.length}
                         />
                     </th>
 
@@ -43,7 +56,7 @@ const OrderCartTable = ({ columns, data }) => {
                 </tr>
             </thead>
             <tbody>
-                {data.map((row, rowIndex) => (
+                {orderCart.map((row, rowIndex) => (
                     <tr key={rowIndex}>
                         <td>
                             <input
@@ -55,8 +68,6 @@ const OrderCartTable = ({ columns, data }) => {
                         {columns.map((column, colIndex) => (
                             <td key={colIndex}>
                                 {column.render ? column.render(row) : row[column.accessor]}
-                                {/* render는 이미지나 입력필드 같은 특수한 데이터
-                 accessor는 데이터 키값 */}
                             </td>
                         ))}
                     </tr>
@@ -66,7 +77,7 @@ const OrderCartTable = ({ columns, data }) => {
       </div>
       <div className={order.tableBottom}>
         <div className={order.total}>
-           <p>총&nbsp;&nbsp;{data.length}건&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 총&nbsp;합계:&nbsp;&nbsp;{data.length}원</p>
+           <p>총&nbsp;&nbsp;{orderCart.length}건&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 총&nbsp;합계:&nbsp;&nbsp;{orderCart.length}원</p>
         </div>    
         <div className={order.tableBottomBtn}>
             <button className={order.orderBtn}>결제하기</button>
