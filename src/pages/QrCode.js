@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import styles from './QrCode.module.css';
 
 const QrCode = () => {
     const [qrCode, setQrCode] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchQrCode = async () => {
@@ -22,15 +25,24 @@ const QrCode = () => {
         fetchQrCode();
     }, []);
 
+    function handleButtonClick (){
+        return navigate('/receipt');
+      };
+
     return (
-        <div>
-            <h1>QR Code</h1>
-            {qrCode ? (
-                <img src={qrCode} alt="QR Code" />
-            ) : (
-                <p>Loading QR code...</p>
-            )}
-        </div>
+        <>
+            <div className={styles.container}>
+                {qrCode ? (
+                    <img className={styles.image} src={qrCode} alt="QR Code" />
+                ) : (
+                    <p className={styles.loading}>Loading QR code...</p>
+                )}
+            </div>
+            <div className={styles.container2}>
+                <button className={styles.button} onClick={handleButtonClick}>뒤로가기</button>
+            </div>
+        </>
+        
     );
 };
 
