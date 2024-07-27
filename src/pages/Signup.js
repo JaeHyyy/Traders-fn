@@ -16,7 +16,7 @@ const Signup = () => {
         branchName: '',
         nickname: '',
         branchNum: '',
-        branchImage: '',
+        branchImage: null, // 파일을 null로 초기화
         post: '',
         addr1: '',
         addr2: '',
@@ -45,16 +45,44 @@ const Signup = () => {
         });
     };
 
+    const handleFileChange = (e) => {
+        setFormData({
+            ...formData,
+            branchImage: e.target.files[0] // 파일 객체로 업데이트
+        });
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        axios.post('http://localhost:8090/traders/signup', formData)
+
+        const data = new FormData();
+        data.append('branchId', formData.branchId);
+        data.append('passwd', formData.passwd);
+        data.append('branchName', formData.branchName);
+        data.append('nickname', formData.nickname);
+        data.append('branchNum', formData.branchNum);
+        data.append('post', formData.post);
+        data.append('addr1', formData.addr1);
+        data.append('addr2', formData.addr2);
+        data.append('phoneNum', formData.phoneNum);
+
+        // 파일 객체를 FormData에 추가
+        if (formData.branchImage) {
+            data.append('branchImage', formData.branchImage);
+        }
+
+        axios.post('http://localhost:8090/traders/signup', data, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        })
             .then(response => {
                 console.log(response.data);
                 alert('회원가입 성공');
-                navigate('/login'); // 회원가입 성공 시 로그인 페이지로 이동
+                navigate('/login');
             })
             .catch(error => {
-                console.error('There was an error!', error);
+                console.error('오류 발생:', error);
                 alert('회원가입 실패: ' + error.message);
             });
     };
@@ -62,8 +90,8 @@ const Signup = () => {
     const handlePostcode = () => {
         new window.daum.Postcode({
             oncomplete: function (data) {
-                var roadAddr = data.roadAddress; // 도로명 주소 변수
-                var extraRoadAddr = ''; // 참고 항목 변수
+                var roadAddr = data.roadAddress;
+                var extraRoadAddr = '';
 
                 if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
                     extraRoadAddr += data.bname;
@@ -140,9 +168,9 @@ const Signup = () => {
                     </div>
                     <hr />
                     <div className={styles.upload}>
-                        <input type="text" className={styles.upload_name} value={formData.branchImage} placeholder="사업자등록증등록" readOnly />
+                        <input type="text" className={styles.upload_name} value={formData.branchImage ? formData.branchImage.name : ''} placeholder="사업자등록증등록" readOnly />
                         <label htmlFor="file" className={styles.upload_label}>파일찾기</label>
-                        <input type="file" id="file" onChange={(e) => setFormData({ ...formData, branchImage: e.target.files[0].name })} />
+                        <input type="file" id="file" onChange={handleFileChange} />
                     </div>
                     <br />
                     <div className={styles.inputContainer}>
