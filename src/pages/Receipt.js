@@ -4,16 +4,19 @@ import axios from 'axios';
 import styles from './Receipt.module.css';
 
 const Receipt=() => {
-  const [data, setData] = useState([]);
+  const [receipt, setReceipt] = useState([]);
+  const [originalReceipt, setOriginalReceipt] = useState([]);
   const navigate = useNavigate();
 
-  const [checkbox1, setCheckbox1] = useState(false);
-  const [checkbox2, setCheckbox2] = useState(false);
-  const [checkbox3, setCheckbox3] = useState(false);
+  const [sortOption, setSortOption] = useState('');
+  const [sortStates, setSortStates] = useState({
+    movdate: false,
+    count: false
+});
 
   const columns = [
     { header: '순번', accessor: null },
-    { header: '입고코드', accessor: null},
+    { header: '입고코드', accessor: "대기"},
     { header: '입고날짜', accessor: 'movdate' },
     { header: '입고건수', accessor: 'count' },
     { header: '검수상태', accessor: "대기"},
@@ -24,7 +27,8 @@ const Receipt=() => {
    useEffect(() => {
     axios.get('http://localhost:8090/traders/receipt')
       .then(response => {
-        setData(response.data);
+        setReceipt(response.data);
+        setOriginalReceipt(response.data); 
       })
       .catch(error => {
         console.error('Error fetching data:', error);
@@ -36,52 +40,61 @@ const Receipt=() => {
     navigate('/qrcode');
   };
 
-  
-  useEffect(() => {
-    if (checkbox1) {
-      const sortedData = [...data].sort((a, b) => new Date(a.movdate) - new Date(b.movdate));
-      setData(sortedData);
-    } else {
-      // 데이터를 초기 상태로 다시 로드하거나 원래 상태를 유지하도록 구현
-      axios.get('http://localhost:8090/traders/receipt')
-        .then(response => {
-          setData(response.data);
-        })
-        .catch(error => {
-          console.error('Error fetching data:', error);
-        });
+  const handleSortChange = (sortBy) => {
+    setSortStates(prevState => {
+        const newSortStates = { ...prevState, [sortBy]: !prevState[sortBy] };
+
+        // 체크박스가 해제되면 정렬 옵션을 기본 상태로 설정
+        if (!newSortStates[sortBy]) {
+            setSortOption('');
+        } else {
+            setSortOption(sortBy);
+        }
+
+        // 한 번에 하나의 정렬만 활성화
+        for (const key in newSortStates) {
+            if (key !== sortBy) {
+                newSortStates[key] = false;
+            }
+        }
+        return newSortStates;
+      });
+    };
+    
+    const sortedReceipt = [...receipt];
+    if (sortOption) {
+      sortedReceipt.sort((a, b) => {
+        switch (sortOption) {
+          case 'movdate':
+            return new Date(a.movdate) - new Date(b.movdate);
+          case 'count':
+            return b.count - a.count;
+          default:
+            return 0;
+        }
+      });
     }
-  }, [checkbox1]);
+
+    useEffect(() => {
+      if (!sortStates.movdate && !sortStates.count) {
+        setReceipt(originalReceipt);
+      } else {
+        setReceipt(sortedReceipt);
+      }
+    }, [sortStates, originalReceipt]);
+
 
     return (
       <>
-      <div className={styles['checkbox-container']}>
-        <input
-          type="checkbox"
-          id="checkbox1"
-          className={styles.checkbox}
-          checked={checkbox1}
-          onChange={(e) => setCheckbox1(e.target.checked)}
-        />
-        <label htmlFor="checkbox1" className={styles['checkbox-label']}>입고일자</label>
-
-        <input
-          type="checkbox"
-          id="checkbox2"
-          className={styles.checkbox}
-          checked={checkbox2}
-          onChange={(e) => setCheckbox2(e.target.checked)}
-        />
-        <label htmlFor="checkbox2" className={styles['checkbox-label']}>검수 대기중</label>
-
-        <input
-          type="checkbox"
-          id="checkbox3"
-          className={styles.checkbox}
-          checked={checkbox3}
-          onChange={(e) => setCheckbox3(e.target.checked)}
-        />
-        <label htmlFor="checkbox3" className={styles['checkbox-label']}>입고건수</label>
+      <div className={styles.tableTop}>
+          <div className={styles.tableCon}>
+                <input type='checkbox' checked={sortStates.movdate} onChange={() => handleSortChange('movdate')} />
+                <span>입고일자 순</span>
+                <input type='checkbox' checked={sortStates.count} onChange={() => handleSortChange('count')} />
+                <span>입고건수 순</span>
+                <input type='checkbox'/>
+                <span>배송중</span>
+          </div>
       </div>
       <div>
       <table className = {styles['receipt-table']}>
@@ -93,7 +106,7 @@ const Receipt=() => {
         </tr>
       </thead>
       <tbody>
-        {data.map((row, rowIndex) => (
+        {receipt.map((row, rowIndex) => (
           <tr key={rowIndex}>
             {columns.map((column, colIndex) => (
               <td key={colIndex}>
