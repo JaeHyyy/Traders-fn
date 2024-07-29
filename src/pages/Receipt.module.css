@@ -34,36 +34,20 @@
   .button:hover {
     background-color: #45a049; /* 호버 시 더 짙은 녹색 */
   }
-  
-  .checkbox-container {
-    border: 1px solid white;
-    
+
+  .tableTop{
+    display: flex;
+    flex-direction: column;
+    height: 40px;
   }
-  
-  .checkbox-label {
-    
-  }
-  
-  .checkbox {
-    
-  }
-  
-  .checkbox + label {
-    
-  }
-  
-  .checkbox + label::before {
-    
-  }
-  
-  .checkbox:checked + label::before {
-    
-  }
-  
-  .checkbox + label::after {
-    
-  }
-  
-  .checkbox:checked + label::after {
-    
-  }
+
+.tableCon {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    height: 40px;
+}
+
+.tableCon>span {
+    margin-right: 20px;
+}
