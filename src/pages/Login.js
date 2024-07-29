@@ -14,6 +14,8 @@ function Login() {
         if (savedBranchId) {
             setCredentials((prev) => ({ ...prev, branchId: savedBranchId }));
             setRememberMe(true);
+        } else {
+            setRememberMe(false);
         }
     }, []);
 
@@ -25,7 +27,14 @@ function Login() {
     };
 
     const handleRememberMeChange = (e) => {
-        setRememberMe(e.target.checked);
+        const isChecked = e.target.checked;
+        setRememberMe(isChecked);
+
+        if (isChecked) {
+            localStorage.setItem('branchId', credentials.branchId);
+        } else {
+            localStorage.removeItem('branchId');
+        }
     };
 
     const handleSubmit = (e) => {
@@ -33,6 +42,7 @@ function Login() {
         axios.post('http://localhost:8090/traders/login', credentials)
             .then(response => {
                 console.log(response.data);
+                // RememberMe 상태에 따라 로컬 스토리지에 저장
                 if (rememberMe) {
                     localStorage.setItem('branchId', credentials.branchId);
                 } else {
@@ -47,7 +57,6 @@ function Login() {
     };
 
     return (
-
         <div id={login.login_page}>
             <div className={login.login_box}>
                 <img src={logo} alt="로고" className={login.logo} />
@@ -56,7 +65,8 @@ function Login() {
                     <input type="password" name="passwd" placeholder="Password" className={login.input} value={credentials.passwd} onChange={handleChange} /><br />
                     <div className={login.form_options}>
                         <label htmlFor="remember-check-id">
-                            <input type="checkbox" id="remember-check-id" checked={rememberMe} onChange={handleRememberMeChange} />아이디 저장하기
+                            <input type="checkbox" id="remember-check-id" checked={rememberMe} onChange={handleRememberMeChange} />
+                            아이디 저장하기
                         </label><br />
                         <a href="/reset-password" className={login.reset_password}>비밀번호 재설정</a>
                     </div><br />
@@ -65,7 +75,6 @@ function Login() {
                 </form>
             </div>
         </div>
-
     );
 }
 
