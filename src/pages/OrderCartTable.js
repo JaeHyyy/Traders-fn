@@ -67,7 +67,7 @@ const OrderCartTable = ({ columns }) => {
                         </td>
                         {columns.map((column, colIndex) => (
                             <td key={colIndex}>
-                                {column.render ? column.render(row) : row[column.accessor]}
+                                {row.goods && column.render ? column.render(row) : row[column.accessor]}
                             </td>
                         ))}
                     </tr>
