@@ -47,6 +47,7 @@ function Login() {
     };
 
     return (
+
         <div id={login.login_page}>
             <div className={login.login_box}>
                 <img src={logo} alt="로고" className={login.logo} />
@@ -64,6 +65,7 @@ function Login() {
                 </form>
             </div>
         </div>
+
     );
 }
 
