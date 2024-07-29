@@ -10,7 +10,7 @@
 
 .receipt-table th, .receipt-table td{
     border: 1px solid #ddd;
-    padding: 8px;
+    padding: 5px;
     text-align: center;
     overflow: hidden; /* 내용이 셀을 벗어나지 않도록 설정 */
     text-overflow: ellipsis; /* 내용이 넘칠 경우 ... 으로 표시 */
@@ -25,8 +25,8 @@
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 16px;
-    margin: 2px 2px;
+    font-size: 14px;
+    margin: 1px;
     cursor: pointer;
     border-radius: 8px; /* 둥근 모서리 */
   }
