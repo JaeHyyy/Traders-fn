@@ -7,6 +7,10 @@ const Receipt=() => {
   const [data, setData] = useState([]);
   const navigate = useNavigate();
 
+  const [checkbox1, setCheckbox1] = useState(false);
+  const [checkbox2, setCheckbox2] = useState(false);
+  const [checkbox3, setCheckbox3] = useState(false);
+
   const columns = [
     { header: '순번', accessor: null },
     { header: '입고코드', accessor: null},
@@ -32,7 +36,54 @@ const Receipt=() => {
     navigate('/qrcode');
   };
 
+  
+  useEffect(() => {
+    if (checkbox1) {
+      const sortedData = [...data].sort((a, b) => new Date(a.movdate) - new Date(b.movdate));
+      setData(sortedData);
+    } else {
+      // 데이터를 초기 상태로 다시 로드하거나 원래 상태를 유지하도록 구현
+      axios.get('http://localhost:8090/traders/receipt')
+        .then(response => {
+          setData(response.data);
+        })
+        .catch(error => {
+          console.error('Error fetching data:', error);
+        });
+    }
+  }, [checkbox1]);
+
     return (
+      <>
+      <div className={styles['checkbox-container']}>
+        <input
+          type="checkbox"
+          id="checkbox1"
+          className={styles.checkbox}
+          checked={checkbox1}
+          onChange={(e) => setCheckbox1(e.target.checked)}
+        />
+        <label htmlFor="checkbox1" className={styles['checkbox-label']}>입고일자</label>
+
+        <input
+          type="checkbox"
+          id="checkbox2"
+          className={styles.checkbox}
+          checked={checkbox2}
+          onChange={(e) => setCheckbox2(e.target.checked)}
+        />
+        <label htmlFor="checkbox2" className={styles['checkbox-label']}>검수 대기중</label>
+
+        <input
+          type="checkbox"
+          id="checkbox3"
+          className={styles.checkbox}
+          checked={checkbox3}
+          onChange={(e) => setCheckbox3(e.target.checked)}
+        />
+        <label htmlFor="checkbox3" className={styles['checkbox-label']}>입고건수</label>
+      </div>
+      <div>
       <table className = {styles['receipt-table']}>
       <thead>
         <tr>
@@ -54,6 +105,8 @@ const Receipt=() => {
         ))}       
       </tbody>
     </table>
+      </div>
+      </>
     );
 };
 
