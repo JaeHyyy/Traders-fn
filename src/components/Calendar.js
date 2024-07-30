@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { format, addMonths, subMonths, startOfMonth, endOfMonth, startOfWeek, addDays, getDay, getWeek, isSameMonth } from 'date-fns';
 import '../components/Calendar.css';
-import ExpiringProducts from './ExpiringProducts';
 
 const Calendar = ({ onDateSelect }) => {
   const [currentDate, setCurrentDate] = useState(new Date()); // 현재 날짜를 저장하는 상태

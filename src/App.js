@@ -13,7 +13,7 @@ import MobileProductDetail from './pages/MobileProductDetail';
 import Stock from './pages/StockList';
 import OrderCart from './pages/OrderCart';
 import QrCode from './pages/QrCode';
-
+import ReceiptModify from './pages/ReceiptModify';
 
 const router = createBrowserRouter([
 
@@ -28,6 +28,10 @@ const router = createBrowserRouter([
       {
         path: "/receipt",
         element: <Receipt />
+      },
+      {
+        path: "/receiptmodify",
+        element: <ReceiptModify />
       },
       {
         path: "/qrcode",
