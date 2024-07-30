@@ -1,13 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useSearchParams, useNavigate } from 'react-router-dom';
+import styles from './QrCode.module.css';
 
 const QrCode = () => {
     const [qrCode, setQrCode] = useState(null);
-
+    const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const date = searchParams.get("date")
+    console.log(date);
+    //const date = "2024-07-19";
     useEffect(() => {
         const fetchQrCode = async () => {
-            try { //ssg wifi ip : 10.10.10.197
-                const response = await axios.get('http://localhost:8090/traders/api/qrcode', {
+            try {
+                const response = await axios.get(`http://localhost:8090/traders/api/qrcode?date=${date}`, {
                     responseType: 'arraybuffer',
                 });
                 const base64Image = btoa(
@@ -22,15 +28,23 @@ const QrCode = () => {
         fetchQrCode();
     }, []);
 
+    const handleButtonClick = () => {
+        navigate(-1); // 이전 페이지로 이동
+    };
+
     return (
-        <div>
-            <h1>QR Code</h1>
-            {qrCode ? (
-                <img src={qrCode} alt="QR Code" />
-            ) : (
-                <p>Loading QR code...</p>
-            )}
-        </div>
+        <>
+            <div className={styles.container}>
+                {qrCode ? (
+                    <img className={styles.image} src={qrCode} alt="QR Code" />
+                ) : (
+                    <p className={styles.loading}>Loading QR code...</p>
+                )}
+            </div>
+            <div className={styles.container2}>
+                <button className={styles.button} onClick={handleButtonClick}>뒤로가기</button>
+            </div>
+        </>
     );
 };
 

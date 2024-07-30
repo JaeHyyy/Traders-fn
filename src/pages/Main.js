@@ -12,13 +12,10 @@ function Main() {
 
   // const [date, setDate] = useState(new Date());
   const [goods, setGoods] = useState([]);
-
   const [searchGoods, setSearchGoods] = useState('');
-  // const [expiringProducts, setExpiringProducts] = useState([]);
   const [stock, setStock] = useState([]);
-
-  // const [searchParam] = useSearchParams();
-  // const date = searchParam.get("date")
+  const [expiringProducts, setExpiringProducts] = useState([]);
+  const [selectedGoods, setSelectedGoods] = useState([]);
 
   useEffect(() => {
     axios.get('http://localhost:8090/traders/home')
@@ -80,17 +77,39 @@ function Main() {
       });
   };
 
-  // const handleDateSelect = (selectedDate) => {
-  //   // 여기서 선택된 날짜에 해당하는 유통기한 임박 상품을 가져오는 API 호출을 수행
-  //   axios.get(`http://localhost:8090/traders/stock?date=${format(selectedDate, 'yyyy-MM-dd')}`)
-  //     .then(response => {
-  //       setStock(response.data);
-  //       console.log(response.data);
-  //     })
-  //     .catch(error => {
-  //       console.error('There was an error fetching the expiring products!', error);
-  //     });
-  // };
+
+  const handleSelect = (gcode) => {
+    setSelectedGoods(prevSelectedGoods =>
+      prevSelectedGoods.includes(gcode)
+        ? prevSelectedGoods.filter(gcode => gcode !== gcode)
+        : [...prevSelectedGoods, gcode]
+    );
+  };
+  const handleOrder = () => {
+    const selectedItems = goods.filter(item => selectedGoods.includes(item.gcode));
+    const orderCartDTOs = selectedItems.map(item => ({
+        
+        gcount: 1, // 필요에 따라 수정
+        goods: {
+            gcode: item.gcode,
+            gcategory: item.gcategory,
+            gname: item.gname,
+            gcostprice: item.gcostprice,
+            gimage: item.gimage,
+            gcompany: item.gcompany,
+            gunit: item.gunit,
+        }
+    }));
+    axios.post('http://localhost:8090/traders/ordercart/saveAll', orderCartDTOs)
+      .then(response => {
+        console.log('Order placed successfully:', response);
+        console.log('Response data:', response.data);
+      })
+      .catch(error => {
+        console.error('There was an error placing the order!', error);
+      });
+};
+
 
   return (
     <div className={main.Main}>
@@ -120,7 +139,9 @@ function Main() {
               <tbody>
                 {goods.map((goods, index) => (
                   <tr key={index} className={main.goodsItem}>
-                    <td><input type="checkbox" /></td>
+                    <td><input    type="checkbox"
+                        checked={selectedGoods.includes(goods.gcode)}
+                        onChange={() => handleSelect(goods.gcode)} /></td>
                     <td>{goods.num}</td>
                     <td>{goods.gcode}</td>
                     <td>{goods.gcategory}</td>
@@ -131,8 +152,7 @@ function Main() {
               </tbody>
             </table>
           </div>
-
-          <button className={main.orBtn}>발주하기</button>
+          <button className={main.orBtn} onClick={handleOrder}>발주하기</button>
 
           <div className={main.events}>
             이벤트 슬라이드

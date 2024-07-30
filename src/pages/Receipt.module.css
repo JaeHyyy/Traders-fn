@@ -10,7 +10,7 @@
 
 .receipt-table th, .receipt-table td{
     border: 1px solid #ddd;
-    padding: 8px;
+    padding: 5px;
     text-align: center;
     overflow: hidden; /* 내용이 셀을 벗어나지 않도록 설정 */
     text-overflow: ellipsis; /* 내용이 넘칠 경우 ... 으로 표시 */
@@ -25,8 +25,8 @@
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
+    font-size: 14px;
+    margin: 1px;
     cursor: pointer;
     border-radius: 8px; /* 둥근 모서리 */
   }
@@ -34,3 +34,20 @@
   .button:hover {
     background-color: #45a049; /* 호버 시 더 짙은 녹색 */
   }
+
+  .tableTop{
+    display: flex;
+    flex-direction: column;
+    height: 40px;
+  }
+
+.tableCon {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    height: 40px;
+}
+
+.tableCon>span {
+    margin-right: 20px;
+}

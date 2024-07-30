@@ -1,0 +1,35 @@
+.container {
+    width: 100%;
+    display: flex;
+    height: 70vh;
+}
+.container2 {
+    width: 100%;
+    display: flex;
+    justify-content: right; /* 수평 중앙 정렬 */
+    align-items: center; /* 수직 중앙 정렬 */
+}
+
+
+.loading {
+    font-size: 1.5em;
+    color: #666;
+}
+
+.button {
+    background-color: #aada2a; /* 녹색 배경 */
+    border: none;
+    color: white; /* 흰색 글씨 */
+    padding: 10px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+
+    cursor: pointer;
+    border-radius: 8px; /* 둥근 모서리 */
+  }
+
+  .button:hover {
+    background-color: #45a049; /* 호버 시 더 짙은 녹색 */
+  }
