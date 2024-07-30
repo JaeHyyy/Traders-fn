@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useSearchParams } from 'react-router-dom';
+import Styles from 'QrCode.module.css';
 
 const QrCode = () => {
     const [qrCode, setQrCode] = useState(null);
@@ -27,7 +28,7 @@ const QrCode = () => {
     }, []);
 
     return (
-        <div>
+        <div className="style.container">
             <h1>QR Code</h1>
             {qrCode ? (
                 <img src={qrCode} alt="QR Code" />

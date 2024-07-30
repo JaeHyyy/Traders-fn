@@ -36,9 +36,14 @@ const Receipt = () => {
       });
   }, []);
 
-  const handleButtonClick = (movdate) => {
+  const handleButtonClick = (movdate) => { //QR코드 버튼 이벤트
     console.log(`Button clicked for date ${movdate}`);
     navigate(`/qrcode?date=${movdate}`);
+  };
+
+  const handleInspectionButtonClick = (id) => {//검수 버튼 이벤트
+    console.log(`Inspection button clicked for id ${id}`);
+    navigate(`/inspection?receiptId=${id}`);
   };
 
   const handleSortChange = (sortBy) => {
@@ -111,8 +116,12 @@ const Receipt = () => {
               <tr key={rowIndex}>
                 {columns.map((column, colIndex) => (
                   <td key={colIndex}>
-                    {column.accessor ? row[column.accessor] : (column.header === 'QR' ?
-                      <button className={styles.button} onClick={() => handleButtonClick(row.movdate)}>QR</button> : rowIndex + 1)}
+                    {column.accessor ? row[column.accessor] : (
+                      column.header === 'QR' ?
+                        <button className={styles.button} onClick={() => handleButtonClick(row.movdate)}>QR</button> :
+                        column.header === '검수' ?
+                          <button className={styles.button} onClick={() => handleInspectionButtonClick(row.A)}>검수</button> :
+                          rowIndex + 1)}
                   </td>
                 ))}
               </tr>
