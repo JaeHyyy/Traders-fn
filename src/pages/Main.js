@@ -3,17 +3,22 @@ import main from '../pages/Main.module.css';
 // import Calendar2 from '../components/Calendar2';
 import Calendar from '../components/Calendar';
 import axios from 'axios';
-import { format } from 'date-fns'; 
+import { format } from 'date-fns';
+// import { useSearchParams } from 'react-router-dom';
+// import ExpiringProducts from '../components/ExpiringProducts';
 
 
 function Main() {
 
-  const [date, setDate] = useState(new Date());
+  // const [date, setDate] = useState(new Date());
   const [goods, setGoods] = useState([]);
 
   const [searchGoods, setSearchGoods] = useState('');
+  // const [expiringProducts, setExpiringProducts] = useState([]);
+  const [stock, setStock] = useState([]);
 
-  const [expiringProducts, setExpiringProducts] = useState([]);
+  // const [searchParam] = useSearchParams();
+  // const date = searchParam.get("date")
 
   useEffect(() => {
     axios.get('http://localhost:8090/traders/home')
@@ -26,7 +31,7 @@ function Main() {
   }, []);
 
 
-  
+
   const handleSearch = (event) => {
     event.preventDefault();
     axios.get(`http://localhost:8090/traders/home/${searchGoods}`)
@@ -39,22 +44,53 @@ function Main() {
   };
 
   const handleDateSelect = (selectedDate) => {
-    // 여기서 선택된 날짜에 해당하는 유통기한 임박 상품을 가져오는 API 호출을 수행
-    axios.get(`http://localhost:8090/traders/expiring-products?date=${format(selectedDate, 'yyyy-MM-dd')}`)
+    // 날짜가 어떤 형식으로 들어오는지 검증
+    const formattedDate = format(selectedDate, 'yyyy-MM-dd');
+    console.log("Formatted date for API:", formattedDate);
+    axios.get(`http://localhost:8090/traders/stock?date=${formattedDate}`)
+    // axios.get(`http://localhost:8090/traders/stock?date=${format(selectedDate, 'yyyy-MM-dd')}`)
       .then(response => {
-        setExpiringProducts(response.data);
+        //data가 들어오는지 검증
+        console.log("API:", response.data);
+
+        // 선택된 날짜로부터 7일 이내에 유통기한이 끝나는 상품만 필터링
+        const expiringProducts = response.data.filter(stock => {
+          // console.log("date변환전 : " + JSON.stringify(stock)); 
+          // stock을 콘솔로 찍었을때 object라고만 떠서 JSON.stringify로 문자열로 변환후 데이터를 확인
+
+          console.log("date변환전 : " + stock.expdate);
+          // stock에 날짜가 expdate로 들어오고 있었음
+
+          //날짜 변환
+          // const expirationDate = stock.expdate;
+          const expirationDate = new Date(stock.expdate); //유통기한
+          console.log("test:" + expirationDate);
+
+          const daysDifference = (expirationDate - selectedDate) / (1000 * 60 * 60 * 24);
+                                                 //1000밀리초, 60초, 60분, 24시간 = 86,400,000 (날짜간의 차이를 계산할때 정확하게하기 위해)
+          console.log("tt:" + daysDifference);
+          return daysDifference >= -7 && daysDifference <= 0;
+        });
+        setStock(expiringProducts);
+        console.log("Expiring Products:", expiringProducts);
+        // console.log(response.data);
       })
       .catch(error => {
-        console.error('There was an error fetching the expiring products!', error);
+        console.error('There was an error fetching the stock!', error);
       });
   };
 
-  const stock = [
-    { num: 1, stockid: "2407210001", gname: "대왕님표여주쌀10kg", quantity: "2", gunit: "개" }
-
-  ];
-
-
+  // const handleDateSelect = (selectedDate) => {
+  //   // 여기서 선택된 날짜에 해당하는 유통기한 임박 상품을 가져오는 API 호출을 수행
+  //   axios.get(`http://localhost:8090/traders/stock?date=${format(selectedDate, 'yyyy-MM-dd')}`)
+  //     .then(response => {
+  //       setStock(response.data);
+  //       console.log(response.data);
+  //     })
+  //     .catch(error => {
+  //       console.error('There was an error fetching the expiring products!', error);
+  //     });
+  // };
 
   return (
     <div className={main.Main}>
@@ -95,7 +131,7 @@ function Main() {
               </tbody>
             </table>
           </div>
-          
+
           <button className={main.orBtn}>발주하기</button>
 
           <div className={main.events}>
@@ -105,8 +141,8 @@ function Main() {
       </div>
 
       <div className={main.rightsection}>
-         <div className={main.locCalender}>
-            <Calendar onDateSelect={handleDateSelect} />
+        <div className={main.locCalender}>
+          <Calendar onDateSelect={handleDateSelect} />
         </div>
         <div className={main.tableLabel}>
           <div className={main.tableLabel2}>유통기한 임박 상품 리스트</div>
@@ -124,12 +160,12 @@ function Main() {
                 </tr>
               </thead>
               <tbody>
-              {expiringProducts.map((product, index) => (
-                  <tr key={index} className={main.disuseItem}>
-                    <td>{product.num}</td>
-                    <td>{product.stockid}</td>
-                    <td>{product.gname}</td>
-                    <td>{product.expdate}</td>
+                {stock.map((stock, index) => (
+                  <tr key={index} className={main.stockItem}>
+                    <td>{stock.stockid}</td>
+                    <td>{stock.goods.gcode}</td>
+                    <td>{stock.goods.gname}</td>
+                    <td>{stock.expdate}</td>
                   </tr>
                 ))}
               </tbody>

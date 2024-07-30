@@ -1,37 +1,48 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
+import axios from 'axios';
 import { format } from 'date-fns';
+import main from '../pages/Main.module.css';
+import Calendar from '../components/Calendar';
 
-const ExpiringProducts = ({ date }) => {
-  const [products, setProducts] = useState([]);
+const ExpiringProducts = () => {
+  const [expiringProducts, setExpiringProducts] = useState([]);
 
-  useEffect(() => {
-    // 여기서 선택된 날짜에 해당하는 유통기한 임박 상품을 가져오는 API 호출을 수행합니다.
-    // 예시로 더미 데이터를 사용합니다.
-    const fetchExpiringProducts = async () => {
-      // API 호출 대신 더미 데이터
-      const dummyData = [
-        { id: 1, name: '대왕남포오징어10kg', expiryDate: '2024-07-21' },
-        { id: 2, name: '고등어', expiryDate: '2024-07-21' },
-        // ... 더 많은 상품 데이터
-      ];
-      setProducts(dummyData.filter(product => product.expiryDate === format(date, 'yyyy-MM-dd')));
-    };
-
-    fetchExpiringProducts();
-  }, [date]);
+  const handleDateSelect = (selectedDate) => {
+    axios.get(`http://localhost:8090/traders/expiring-products?date=${format(selectedDate, 'yyyy-MM-dd')}`)
+      .then(response => {
+        setExpiringProducts(response.data);
+        console.log(response.data);
+      })
+      .catch(error => {
+        console.error('There was an error fetching the expiring products!', error);
+      });
+  };
 
   return (
-    <div className="expiring-products">
-      <h3>{format(date, 'yyyy년 MM월 dd일')} 유통기한 임박 상품</h3>
-      {products.length > 0 ? (
-        <ul>
-          {products.map(product => (
-            <li key={product.id}>{product.name} - 유통기한: {product.expiryDate}</li>
-          ))}
-        </ul>
-      ) : (
-        <p>해당 날짜의 유통기한 임박 상품이 없습니다.</p>
-      )}
+    <div className={main.locCalender}>
+      <Calendar onDateSelect={handleDateSelect} />
+      <div className={main.disuseList}>
+        <table className={main.disuseTable}>
+          <thead>
+            <tr>
+              <th style={{ width: '70px' }}>상품번호</th>
+              <th>제품코드</th>
+              <th>상품명</th>
+              <th>유통기한</th>
+            </tr>
+          </thead>
+          <tbody>
+            {expiringProducts.map((product, index) => (
+              <tr key={index} className={main.disuseItem}>
+                <td>{product.num}</td>
+                <td>{product.stockid}</td>
+                <td>{product.gname}</td>
+                <td>{product.expdate}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
