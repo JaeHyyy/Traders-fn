@@ -20,7 +20,7 @@ function Main() {
         setGoods(response.data);
       })
       .catch(error => {
-        console.error('There was an error fetching the goods!', error);
+        console.error('goods상품 조회 불가', error);
       });
   }, []);
 
@@ -33,7 +33,7 @@ function Main() {
         setGoods(response.data);
       })
       .catch(error => {
-        console.error('There was an error fetching the goods!', error);
+        console.error('goods상품 검색 불가', error);
       });
   };
 
@@ -48,6 +48,7 @@ function Main() {
       });
   };
 
+  // 개별 선택 체크
   const handleSelect = (gcode) => {
     setSelectedGoods(prevSelectedGoods =>
       prevSelectedGoods.includes(gcode)
@@ -55,11 +56,21 @@ function Main() {
         : [...prevSelectedGoods, gcode]
     );
   };
+  //전체 선택 체크
+  const handleSelectAll = (event) => {
+    if (event.target.checked) {
+      setSelectedGoods(goods.map(item => item.gcode));
+    } else {
+      setSelectedGoods([]);
+    }
+  };
+
+
   const handleOrder = () => {
     const selectedItems = goods.filter(item => selectedGoods.includes(item.gcode));
     const orderCartDTOs = selectedItems.map(item => ({
         
-        gcount: 1, // 필요에 따라 수정
+        gcount: 1, // 필요에 따라 수정, 기본 1개만 담기게 설정되어져 있음
         goods: {
             gcode: item.gcode,
             gcategory: item.gcategory,
@@ -72,11 +83,11 @@ function Main() {
     }));
     axios.post('http://localhost:8090/traders/ordercart/saveAll', orderCartDTOs)
       .then(response => {
-        console.log('Order placed successfully:', response);
+        console.log('발주하기에 담기 성공:', response);
         console.log('Response data:', response.data);
       })
       .catch(error => {
-        console.error('There was an error placing the order!', error);
+        console.error('발주하기에 담기 불가', error);
       });
 };
 
@@ -104,7 +115,10 @@ function Main() {
             <table className={main.goodsTable}>
               <thead>
                 <tr>
-                  <th style={{ width: '50px' }}><input type="checkbox" /></th>
+                  <th style={{ width: '50px' }}>
+                    <input type="checkbox"
+                            onChange={handleSelectAll}
+                            checked={selectedGoods.length === goods.length} /></th>
                   <th style={{ width: '65px' }}>제품번호</th>
                   <th>제품코드</th>
                   <th>카테고리</th>
@@ -122,7 +136,7 @@ function Main() {
                     <td>{goods.gcode}</td>
                     <td>{goods.gcategory}</td>
                     <td>{goods.gname}</td>
-                    <td>{goods.gcostprice}</td>
+                    <td>{goods.gcostprice.toLocaleString('ko-KR')}</td>
                   </tr>
                 ))}
               </tbody>
