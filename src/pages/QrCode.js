@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useSearchParams } from 'react-router-dom';
-import Styles from 'QrCode.module.css';
+import { useSearchParams, useNavigate } from 'react-router-dom';
+import styles from './QrCode.module.css';
 
 const QrCode = () => {
     const [qrCode, setQrCode] = useState(null);
+    const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const date = searchParams.get("date")
     console.log(date);
@@ -27,15 +28,23 @@ const QrCode = () => {
         fetchQrCode();
     }, []);
 
+    const handleButtonClick = () => {
+        navigate(-1); // 이전 페이지로 이동
+    };
+
     return (
-        <div className="style.container">
-            <h1>QR Code</h1>
-            {qrCode ? (
-                <img src={qrCode} alt="QR Code" />
-            ) : (
-                <p>Loading QR code...</p>
-            )}
-        </div>
+        <>
+            <div className={styles.container}>
+                {qrCode ? (
+                    <img className={styles.image} src={qrCode} alt="QR Code" />
+                ) : (
+                    <p className={styles.loading}>Loading QR code...</p>
+                )}
+            </div>
+            <div className={styles.container2}>
+                <button className={styles.button} onClick={handleButtonClick}>뒤로가기</button>
+            </div>
+        </>
     );
 };
 

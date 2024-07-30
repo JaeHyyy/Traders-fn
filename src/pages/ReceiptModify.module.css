@@ -1,0 +1,18 @@
+.table{
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+}
+
+.thead {
+    background-color: #aada2a;
+}
+
+.table th,.table td {
+    border: 1px solid #ddd;
+    padding: 5px;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
