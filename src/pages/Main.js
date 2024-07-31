@@ -14,6 +14,7 @@ function Main() {
   const [goods, setGoods] = useState([]);
   const [searchGoods, setSearchGoods] = useState('');
   const [stock, setStock] = useState([]);
+  const [stockk, setStockk] = useState([]); // 재고부족 상품 상태
   const [expiringProducts, setExpiringProducts] = useState([]);
   const [selectedGoods, setSelectedGoods] = useState([]);
 
@@ -21,6 +22,16 @@ function Main() {
     axios.get('http://localhost:8090/traders/home')
       .then(response => {
         setGoods(response.data);
+      })
+      .catch(error => {
+        console.error('There was an error fetching the goods!', error);
+      });
+
+      // 재고부족 상품 리스트 조회
+      axios.get('http://localhost:8090/traders/stock')
+      .then(response => {
+        const shortage = response.data.filter(stock => stock.stockquantity <= 10).sort((a, b) => a.stockquantity - b.stockquantity);
+        setStockk(shortage);
       })
       .catch(error => {
         console.error('There was an error fetching the goods!', error);
@@ -66,7 +77,7 @@ function Main() {
           const daysDifference = (expirationDate - selectedDate) / (1000 * 60 * 60 * 24);
                                                  //1000밀리초, 60초, 60분, 24시간 = 86,400,000 (날짜간의 차이를 계산할때 정확하게하기 위해)
           console.log("tt:" + daysDifference);
-          return daysDifference >= -7 && daysDifference <= 0;
+          return daysDifference >= -7 && daysDifference <= 1;
         });
         setStock(expiringProducts);
         console.log("Expiring Products:", expiringProducts);
@@ -142,7 +153,7 @@ function Main() {
                     <td><input    type="checkbox"
                         checked={selectedGoods.includes(goods.gcode)}
                         onChange={() => handleSelect(goods.gcode)} /></td>
-                    <td>{goods.num}</td>
+                    <td>{index + 1}</td>
                     <td>{goods.gcode}</td>
                     <td>{goods.gcategory}</td>
                     <td>{goods.gname}</td>
@@ -173,16 +184,16 @@ function Main() {
             <table className={main.disuseTable}>
               <thead>
                 <tr>
-                  <th style={{ width: '70px' }}>상품번호</th>
-                  <th>제품코드</th>
-                  <th>상품명</th>
-                  <th>유통기한</th>
+                  <th style={{ width: '12%' }}>번호</th>
+                  <th style={{ width: '28%' }}>제품코드</th>
+                  <th style={{ width: '35%' }}>상품명</th>
+                  <th style={{ width: '25%' }}>유통기한</th>
                 </tr>
               </thead>
               <tbody>
                 {stock.map((stock, index) => (
                   <tr key={index} className={main.stockItem}>
-                    <td>{stock.stockid}</td>
+                    <td>{index + 1}</td>
                     <td>{stock.goods.gcode}</td>
                     <td>{stock.goods.gname}</td>
                     <td>{stock.expdate}</td>
@@ -196,21 +207,21 @@ function Main() {
             <table className={main.stockTable}>
               <thead>
                 <tr>
-                  <th style={{ width: '70px' }}>상품번호</th>
-                  <th>제품코드</th>
-                  <th>상품명</th>
-                  <th>수량</th>
-                  <th>단위</th>
+                  <th style={{ width: '12%' }}>번호</th>
+                  <th style={{ width: '28%' }}>제품코드</th>
+                  <th style={{ width: '35%' }}>상품명</th>
+                  <th style={{ width: '12%' }}>수량</th>
+                  {/* <th>단위</th> */}
                 </tr>
               </thead>
               <tbody>
-                {stock.map((stock, index) => (
+                {stockk.map((stock, index) => (
                   <tr key={index} className={main.stockItem}>
-                    <td>{stock.num}</td>
-                    <td>{stock.stockid}</td>
-                    <td>{stock.gname}</td>
-                    <td>{stock.quantity}</td>
-                    <td>{stock.gunit}</td>
+                    <td>{index + 1}</td>
+                    <td>{stock.goods.gcode}</td>
+                    <td>{stock.goods.gname}</td>
+                    <td>{stock.stockquantity}</td>
+                    {/* <td>{stock.gunit}</td> */}
                   </tr>
                 ))}
               </tbody>
