@@ -89,14 +89,22 @@
   }
 
   .stockBtn>button:nth-child(1) {
+    padding: 10px 20px ; 
+    background-color: #4CAF50; 
+    color: white; /* 버튼 글자색 */
+    border: none; 
+    border-radius: 5px;
+    cursor: pointer;
     margin-right: 20px;
-    background-color: #aada2a;
-    border: 1px solid #aada2a;
   }
 
   .stockBtn>button:nth-child(2) {
-    background-color: yellow;
-    border: 1px solid yellow;
+    padding: 10px 20px;
+    background-color: #252F81;
+    color: white; /* 버튼 글자색 */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer; 
   }
   
   /* 필요한 경우 특정 컬럼의 너비를 조정 */

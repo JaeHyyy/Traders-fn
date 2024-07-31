@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { format, addMonths, subMonths, startOfMonth, endOfMonth, startOfWeek, addDays, getDay, getWeek, isSameMonth } from 'date-fns';
 import '../components/Calendar.css';
-import ExpiringProducts from './ExpiringProducts';
 
 const Calendar = ({ onDateSelect }) => {
   const [currentDate, setCurrentDate] = useState(new Date()); // 현재 날짜를 저장하는 상태
-  const [selectedDate, setSelectedDate] = useState(null); // 선택된 날짜를 저장하는 상태
+  const [selectedDate, setSelectedDate] = useState(new Date()); // 선택된 날짜를 저장하는 상태
 
   // 한국어로 된 월 이름을 반환하는 함수
   const getKoreanMonth = (date) => {
@@ -42,6 +41,11 @@ const Calendar = ({ onDateSelect }) => {
     setSelectedDate(date); // 선택된 날짜 상태 업데이트
     onDateSelect(date); // 부모 컴포넌트로 선택된 날짜 전달
   };
+
+  // 컴포넌트가 처음 로드될 때 초기 선택된 날짜를 부모 컴포넌트에 전달
+  useEffect(()=> {
+    onDateSelect(selectedDate);
+  }, [onDateSelect, selectedDate]);
 
   return (
     <div className="calendar">
