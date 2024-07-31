@@ -170,7 +170,7 @@
 .disuseTable {
     width: 100%;
     border-collapse: collapse; /* 테이블 테두리 결합 */
-    border: 1px solid #AADA2A;
+    /* border: 1px solid #AADA2A; */
 }
 
 .disuseTable th, .disuseTable td {
@@ -189,7 +189,7 @@
 .stockTable {
     width: 100%;
     border-collapse: collapse; 
-    border: 1px solid #AADA2A;
+    /* border: 1px solid #AADA2A; */
 }
 
 .stockTable th, .stockTable td {
