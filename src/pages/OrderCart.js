@@ -1,9 +1,39 @@
 import { render } from '@testing-library/react';
 import OrderCartTable from './OrderCartTable';
-
+import axios from 'axios';
+import { useState, useEffect } from 'react';
 
 
 const OrderCart = () => {
+  const [orderCart, setOrderCart] = useState([]);
+ 
+   // 발주페이지 전체 조회(ordercart db테이블 값 나타내기)
+  useEffect(() => {
+    axios.get('http://localhost:8090/traders/ordercart')
+      .then(response => {
+        setOrderCart(response.data);
+        console.log(response.data)
+      })
+      .catch(error => {
+        console.error('There was an error fetching the goods!', error);
+      });
+  }, []);
+
+
+   //수량 동적 변경 처리 
+   const handleGcount = (rowIndex, value) => {
+    console.log('handleGcount called with:', rowIndex, value);
+    const newOrderCart = [...orderCart];
+    if (newOrderCart[rowIndex]) {
+      newOrderCart[rowIndex].gcount =  Math.max(value, 1);
+      setOrderCart(newOrderCart);
+    } else {
+      console.error('Invalid rowIndex:', rowIndex);
+    }
+  };
+
+
+
   const columns = [
     { header: '순번' },
     { header: '상품코드', accessor: 'gcode', render:(row)=>row.goods.gcode},
@@ -16,25 +46,20 @@ const OrderCart = () => {
     { header: '상품명(단위)', accessor: 'gname',render:(row)=>row.goods.gname },
     // { header: '유통기한' },
     { header: '제조사', accessor: 'gcompany',render:(row)=>row.goods.gcompany },
-    { header: '원가', accessor: 'gcostprice',render:(row)=>row.goods.gcostprice },
+    { header: '원가', accessor: 'gcostprice',render:(row)=>row.goods.gcostprice.toLocaleString('ko-KR') },
     { 
       header: '수량', accessor: 'gcount', 
-      render: (row) => (
-          <input type="number" defaultValue={row.gcount} style={{width: '50px'}} />   )},
-    { header: '단위', accessor: 'gunit',render:(row)=>   
-        <div>
-          <select defaultValue={row.goods.gunit}/>
-            {/* <option value="box">box</option>
-            <option value="개">개</option>
-          </select> */}
-        </div>},
+      render: (row, rowIndex) => (
+          <input type="number" value={row.gcount} style={{width: '50px'}}
+                 onChange={(e) => handleGcount(rowIndex, Number(e.target.value))} />   )},
+    { header: '단위', accessor: 'gunit',render:(row)=>row.goods.gunit},
    
-    { header: '합계(단위: won)' },
+    { header: '합계(단위: won)', render:(row)=>(row.goods.gcostprice * row.gcount).toLocaleString('ko-KR')  }
   ];
 
  
 
-  return <OrderCartTable columns={columns} />;
+  return <OrderCartTable columns={columns} orderCart={orderCart} setOrderCart={setOrderCart} handleGcount={handleGcount} />;
 };
 
 export default OrderCart;
