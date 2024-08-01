@@ -35,13 +35,29 @@ function Main() {
 
   const handleSearch = (event) => {
     event.preventDefault();
-    axios.get(`http://localhost:8090/traders/home/${searchGoods}`)
-      .then(response => {
-        setGoods(response.data);
-      })
-      .catch(error => {
-        console.error('goods상품 검색 불가', error);
-      });
+    if (searchGoods.trim() === '') {
+      // 검색어가 없으면 모든 상품을 조회
+      axios.get('http://localhost:8090/traders/home')
+        .then(response => {
+          setGoods(response.data);
+        })
+        .catch(error => {
+          console.error('goods상품 조회 불가', error);
+        });
+    } else {
+      // 검색어가 있으면 해당 검색어로 상품 조회
+      axios.get(`http://localhost:8090/traders/home/${searchGoods}`)
+        .then(response => {
+          if(response.data.length === 0) {
+            alert("해당 검색어로 상품을 찾을 수 없습니다.");
+          }else{
+            setGoods(response.data);
+          }
+        })
+        .catch(error => {
+          console.error('goods상품 검색 불가', error);
+        });
+    }
   };
 
   const handleDateSelect = (selectedDate) => {
@@ -56,25 +72,25 @@ function Main() {
     axios.get(`http://localhost:8090/traders/stock?date=${formattedDate}`)
       .then(response => {
         //data가 들어오는지 검증
-        console.log("API:", response.data);
+        // console.log("API:", response.data);
 
         // 선택된 날짜로부터 7일 이내에 유통기한이 끝나는 상품만 필터링
         const expiringProducts = response.data.filter(stock => {
           // console.log("date변환전 : " + JSON.stringify(stock)); 
           // stock을 콘솔로 찍었을때 object라고만 떠서 JSON.stringify로 문자열로 변환후 데이터를 확인
 
-          console.log("date변환전 : " + stock.expdate);
+          // console.log("date변환전 : " + stock.expdate);
           //stock에 날짜가 expdate로 들어오고 있었음
           const expirationDate = new Date(stock.expdate); //유통기한
-          console.log("test:" + expirationDate);
+          // console.log("test:" + expirationDate);
           const daysDifference = (expirationDate - selectedDate) / (1000 * 60 * 60 * 24);
           //1000밀리초, 60초, 60분, 24시간 = 86,400,000 (날짜간의 차이를 계산할때 정확하게하기 위해)
-          console.log("tt:" + daysDifference);
+          // console.log("tt:" + daysDifference);
           return daysDifference >= 0 && daysDifference <= 7;
         });
         if (expiringProducts.length > 0) {
           setStock(expiringProducts);
-          console.log(expiringProducts);
+          // console.log(expiringProducts);
           setExpiringMessage('');
         } else {
           setStock([]);
@@ -122,6 +138,8 @@ function Main() {
       .then(response => {
         console.log('발주하기에 담기 성공:', response);
         console.log('Response data:', response.data);
+        alert('발주하기에 담겼습니다.');
+        setSelectedGoods([]);
       })
       .catch(error => {
         console.error('발주하기에 담기 불가', error);
