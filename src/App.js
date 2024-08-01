@@ -71,7 +71,7 @@ const router = createBrowserRouter([
     element: <MobileMain />
   },
   {
-    path: "/mobile/productDetail",
+    path: "/mobile/productDetail/:gcode",
     element: <MobileProductDetail />
   }
 ])
