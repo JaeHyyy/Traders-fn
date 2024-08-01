@@ -5,7 +5,7 @@ import RootLayout from "./pages/Root";
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Main from './pages/Main';
-import Testt from './pages/Testt';
+import DisUse from './pages/DisUse';
 import Receipt from './pages/Receipt';
 import MobileLogin from './pages/ModileLogin';
 import MobileMain from './pages/MobileMain';
@@ -14,6 +14,7 @@ import Stock from './pages/StockList';
 import OrderCart from './pages/OrderCart';
 import QrCode from './pages/QrCode';
 import ReceiptModify from './pages/ReceiptModify';
+
 
 const router = createBrowserRouter([
 
@@ -47,8 +48,8 @@ const router = createBrowserRouter([
         element: <OrderCart />
       },
       {
-        path: "/test",
-        element: <Testt />
+        path: "/disuse",
+        element: <DisUse />
       }
 
     ]
@@ -70,7 +71,7 @@ const router = createBrowserRouter([
     element: <MobileMain />
   },
   {
-    path: "/mobile/productDetail",
+    path: "/mobile/productDetail/:gcode",
     element: <MobileProductDetail />
   }
 ])
