@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useParams } from 'react-router-dom';
 import axios from 'axios';
 import styles from './ReceiptModify.module.css';
+import get from 'lodash/get';
 
 const ReceiptModify = () => {
     const [movements, setMovements] = useState([]);
@@ -11,23 +12,29 @@ const ReceiptModify = () => {
     const [locations, setLocations] = useState({ loc1: '', loc2: '', loc3: '' });
 
     const columns = [
-        { header: '순번', accessor: null },
-        { header: '상품코드', accessor: 'gcode' },
-        { header: '상품명', accessor: 'gname' },
-        { header: '입고수량', accessor: 'movquantity' },
-        { header: '검수상태', accessor: 'movstatus' },
-        { header: '위치', accessor: null }
+        { header: '순번', accessor: null, className: styles['column-seq'] },
+        { header: '상품코드', accessor: 'goods.gcode', className: styles['column-gcode'] },
+        { header: '상품명', accessor: 'goods.gname', className: styles['column-gname'] },
+        { header: '제조사', accessor: 'goods.gcompany', className: styles['column-gcompany'] },
+        { header: '입고수량', accessor: 'movement.movquantity', className: styles['column-movquantity'] },
+        { header: '단위', accessor: 'goods.gunit', className: styles['column-gunit'] },
+        { header: '총액', accessor: 'goods.gcostprice', className: styles['column-gcostprice'] },
+        { header: '검수상태', accessor: 'movement.movstatus', className: styles['column-movstatus'] },
+        { header: '위치', accessor: null, className: styles['column-location'] }
     ];
 
     useEffect(() => { //날짜로 분류된 데이터 조회
-        axios.get(`http://localhost:8090/traders/receiptmodify?movdate=${movdate}`)
+        axios.get(`http://localhost:8090/traders/join?movdate=${movdate}`)
             .then(response => {
+                console.log('API Response:', response.data);
                 setMovements(response.data);
+
             })
             .catch(error => {
                 console.error('Error fetching data:', error);
             });
     }, [movdate]);
+
 
     const handleEditClick = async (gcode) => {
         setSelectedGcode(gcode);
@@ -73,6 +80,7 @@ const ReceiptModify = () => {
         }
     };
 
+
     return (
         <div className={styles.rable}>
             <div className={styles["table-container"]}>
@@ -89,9 +97,16 @@ const ReceiptModify = () => {
                             <tr key={rowIndex}>
                                 {columns.map((column, colIndex) => (
                                     <td key={colIndex}>
-                                        {column.accessor ? row[column.accessor] : (
+                                        {column.accessor ? (
+                                            column.accessor === 'goods.gcostprice' ? (
+                                                // 연산 예시: 총액 (gcostprice * movquantity)
+                                                get(row, 'goods.gcostprice') * get(row, 'movement.movquantity')
+                                            ) : (
+                                                get(row, column.accessor)
+                                            )
+                                        ) : (
                                             column.header === '위치' ? (
-                                                <button className={styles.tbutton} onClick={() => handleEditClick(row.gcode, row.loc1, row.loc2, row.loc3)}>수정 </button>
+                                                <button className={styles.tbutton} onClick={() => handleEditClick(row.goods.gcode)}>수정 </button>
                                             ) : (rowIndex + 1)
                                         )}
                                     </td>
