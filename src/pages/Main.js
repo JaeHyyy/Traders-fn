@@ -95,7 +95,8 @@ function Main() {
     }
   };
 
-
+  
+  //발주하기 버튼 클릭시 ordercart db테이블에 저장 및 발주페이지에 보여주기
   const handleOrder = () => {
     const selectedItems = goods.filter(item => selectedGoods.includes(item.gcode));
     const orderCartDTOs = selectedItems.map(item => ({
