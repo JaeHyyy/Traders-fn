@@ -11,6 +11,7 @@ function Main() {
   const [stockk, setStockk] = useState([]); // 재고부족 상품 상태
   const [selectedGoods, setSelectedGoods] = useState([]);
   const prevSelectedDate = useRef(null);  // 이전에 선택한 날짜를 추적하는 ref
+  const [expiringMessage, setExpiringMessage] = useState('');  // 메시지를 저장할 상태 추가
 
   useEffect(() => {
     axios.get('http://localhost:8090/traders/home')
@@ -55,7 +56,7 @@ function Main() {
     axios.get(`http://localhost:8090/traders/stock?date=${formattedDate}`)
       .then(response => {
         //data가 들어오는지 검증
-                console.log("API:", response.data);
+        console.log("API:", response.data);
 
         // 선택된 날짜로부터 7일 이내에 유통기한이 끝나는 상품만 필터링
         const expiringProducts = response.data.filter(stock => {
@@ -67,13 +68,18 @@ function Main() {
           const expirationDate = new Date(stock.expdate); //유통기한
           console.log("test:" + expirationDate);
           const daysDifference = (expirationDate - selectedDate) / (1000 * 60 * 60 * 24);
-                                                      //1000밀리초, 60초, 60분, 24시간 = 86,400,000 (날짜간의 차이를 계산할때 정확하게하기 위해)
+          //1000밀리초, 60초, 60분, 24시간 = 86,400,000 (날짜간의 차이를 계산할때 정확하게하기 위해)
           console.log("tt:" + daysDifference);
           return daysDifference >= 0 && daysDifference <= 7;
         });
-        setStock(expiringProducts);
-        // console.log(expiringProducts);
-        console.log(expiringProducts);
+        if (expiringProducts.length > 0) {
+          setStock(expiringProducts);
+          console.log(expiringProducts);
+          setExpiringMessage('');
+        } else {
+          setStock([]);
+          setExpiringMessage('7일 이내에 유통기한이 임박한 상품이 없습니다.');
+        }
       })
       .catch(error => {
         console.error('There was an error fetching the stock!', error);
@@ -194,14 +200,20 @@ function Main() {
                 </tr>
               </thead>
               <tbody>
-                {stock.map((stock, index) => (
-                  <tr key={index} className={main.stockItem}>
-                    <td>{index + 1}</td>
-                    <td>{stock.goods.gcode}</td>
-                    <td>{stock.goods.gname}</td>
-                    <td>{stock.expdate}</td>
+                {stock.length > 0 ? (
+                  stock.map((stock, index) => (
+                    <tr key={index} className={main.stockItem}>
+                      <td>{index + 1}</td>
+                      <td>{stock.goods.gcode}</td>
+                      <td>{stock.goods.gname}</td>
+                      <td>{stock.expdate}</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="4">{expiringMessage}</td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
           </div>
