@@ -16,7 +16,7 @@ const ReceiptModify = () => {
         { header: '상품코드', accessor: 'goods.gcode', className: styles['column-gcode'] },
         { header: '상품명', accessor: 'goods.gname', className: styles['column-gname'] },
         { header: '제조사', accessor: 'goods.gcompany', className: styles['column-gcompany'] },
-        { header: '입고수량', accessor: 'movement.movquantity', className: styles['column-movquantity'] },
+        { header: '수량', accessor: 'movement.movquantity', className: styles['column-movquantity'] },
         { header: '단위', accessor: 'goods.gunit', className: styles['column-gunit'] },
         { header: '총액', accessor: 'goods.gcostprice', className: styles['column-gcostprice'] },
         { header: '검수상태', accessor: 'movement.movstatus', className: styles['column-movstatus'] },

@@ -26,7 +26,7 @@
 .table th,
 .table td {
     border: 1px solid #ddd;
-    padding: 10px;
+    padding: 8px;
     text-align: center;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -102,38 +102,42 @@
     margin-bottom: 20px;
 }
 
-.column-seq {
-    width: 2%;
+.table th:nth-child(1), 
+.table td:nth-child(1) {
+    width: 6%;/*순번 */
 }
 
-.column-gcode {
-    width: 15%;
+.table th:nth-child(2),
+.table td:nth-child(2) {
+    width: 16%;/*상품코드 */
 }
 
-.column-gname {
-    width: 25%;
+.table th:nth-child(3),
+.table td:nth-child(3) {
+    width: 20%;/*상품명 */
 }
 
-.column-gcompany {
-    width: 15%;
+.table th:nth-child(4),
+.table td:nth-child(4) {
+    width: 12%;/*제조사*/
 }
 
-.column-movquantity {
-    width: 10%;
+.table th:nth-child(5),
+.table td:nth-child(5) {
+    width: 8%;/*수량 */
 }
 
-.column-gunit {
-    width: 10%;
+.table th:nth-child(6),
+.table td:nth-child(6) {
+    width: 8%;/*단위 */
 }
 
-.column-gcostprice {
-    width: 10%;
+.table th:nth-child(7),
+.table td:nth-child(7) {
+    width: 10%;/*총액 */
 }
 
-.column-movstatus {
-    width: 10%;
-}
-
-.column-location {
-    width: 10%;
+.table th:nth-child(8),
+.table td:nth-child(8) {
+    width: 10%; /*검수상태 */
 }

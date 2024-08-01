@@ -91,7 +91,7 @@ const Receipt = () => {
 
 
   return (
-    <>
+    <div className={styles.rable}>
       <div className={styles.tableTop}>
         <div className={styles.tableCon}>
           <input type='checkbox' checked={sortStates.movdate} onChange={() => handleSortChange('movdate')} />
@@ -102,8 +102,8 @@ const Receipt = () => {
           <span>배송중</span>
         </div>
       </div>
-      <div>
-        <table className={styles['receipt-table']}>
+      <div className={styles['receipt-table']}>
+        <table className={styles.table}>
           <thead>
             <tr>
               {columns.map((column, index) => (
@@ -118,7 +118,7 @@ const Receipt = () => {
                   <td key={colIndex}>
                     {column.accessor ? row[column.accessor] : (
                       column.header === 'QR' ?
-                        <button className={styles.button} onClick={() => handleButtonClick(row.movdate)}>QR</button> :
+                        <button className={styles.button} onClick={() => handleButtonClick(row.movdate)}>큐알</button> :
                         column.header === '검수' ?
                           <button className={styles.button} onClick={() => handleInspectionButtonClick(row.movdate)}>검수</button> :
                           rowIndex + 1)}
@@ -129,7 +129,7 @@ const Receipt = () => {
           </tbody>
         </table>
       </div>
-    </>
+    </div>
   );
 };
 
