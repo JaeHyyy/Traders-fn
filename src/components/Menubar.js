@@ -21,7 +21,9 @@ function Menubar() {
                 <div className={menubar.head_box}>
                     <div className={menubar.header}>
                         <div className={menubar.header_con1}>
-                            <img src={logo} alt='로고' className={menubar.logo} />
+                            <NavLink to="/">
+                                <img src={logo} alt='로고' className={menubar.logo} />
+                            </NavLink>
                             <span>광안점</span>
                         </div>
 
