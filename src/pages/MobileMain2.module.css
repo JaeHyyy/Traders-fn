@@ -45,38 +45,46 @@
 .card_content {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    padding: 10px;
-    background-color: #333333;
+    /* gap: 10px; */
+    /* padding: 20px; */
+    background-color: white;
     overflow-y: auto;
-    max-height: calc(100vh - 180px);
-    /* Adjust based on other elements' height */
+    max-height: calc(100vh - 250px);
     -ms-overflow-style: none;
+    /* IE와 Edge */
     scrollbar-width: none;
+    /* Firefox */
+    border-radius: 0px 0px 10px 10px;
+    background-color: #333333;
+}
 
-    ::-webkit-scrollbar {
-        display: none;
-        width: 0px;
-    }
+.card_content::-webkit-scrollbar {
+    display: none;
+    /* Chrome, Safari, Opera */
 }
 
 .card_section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     background-color: #f9f9f9;
     border: 1px solid #ddd;
-    padding: 10px;
     border-radius: 5px;
 }
 
-.card_section h3 {
-    margin-bottom: 10px;
-}
-
-.card_section pre {
+.card_section .text_container {
+    flex-grow: 1;
     background-color: #eaeaea;
     padding: 10px;
     border-radius: 5px;
-    white-space: pre-wrap;
-    word-wrap: break-word;
+    overflow-wrap: anywhere;
+}
+
+.checkbox_container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
 }
 
 .btn_mobileLogin {
@@ -90,4 +98,59 @@
     border: none;
     cursor: pointer;
     border-radius: 10px;
+}
+
+/*  */
+.table_with_checkbox {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: #333333;
+}
+
+.table_container {
+    width: 340px;
+    border-collapse: collapse;
+    /* margin-bottom: 20px; */
+    /* padding: 20px; */
+    margin: 20px;
+    /* background-color: #333333; */
+        /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
+            /* border-radius: 8px; */
+}
+
+.table_container th,
+.table_container td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.table_container th {
+    background-color: #f2f2f2;
+}
+
+.table_container td {
+    background-color: #fff;
+}
+
+.table_container tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.table_container .checkbox_cell {
+    height: 100%;
+    vertical-align: middle;
+    text-align: center;
+    width: 50px;
+}
+
+/*  */
+.completed {
+    opacity: 0.5;
+    /* 흐리게 만들기 */
+    pointer-events: none;
+    /* 클릭 비활성화 */
 }
