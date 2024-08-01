@@ -101,3 +101,39 @@
     color: #333;
     margin-bottom: 20px;
 }
+
+.column-seq {
+    width: 2%;
+}
+
+.column-gcode {
+    width: 15%;
+}
+
+.column-gname {
+    width: 25%;
+}
+
+.column-gcompany {
+    width: 15%;
+}
+
+.column-movquantity {
+    width: 10%;
+}
+
+.column-gunit {
+    width: 10%;
+}
+
+.column-gcostprice {
+    width: 10%;
+}
+
+.column-movstatus {
+    width: 10%;
+}
+
+.column-location {
+    width: 10%;
+}
