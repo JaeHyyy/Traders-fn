@@ -5,6 +5,7 @@ import styles from './ReceiptModify.module.css';
 
 const ReceiptModify = () => {
     const [movements, setMovements] = useState([]);
+    const [goods, setGoods] = useState({});
     const [searchParams] = useSearchParams();
     const movdate = searchParams.get("movdate");
     const [selectedGcode, setSelectedGcode] = useState(null);
@@ -13,20 +14,40 @@ const ReceiptModify = () => {
     const columns = [
         { header: '순번', accessor: null },
         { header: '상품코드', accessor: 'gcode' },
-        { header: '상품명', accessor: 'gname' },
+        { header: '상품명', accessor: 'goods.gname' },
+        { header: '제조사', accessor: 'gcompany' },
         { header: '입고수량', accessor: 'movquantity' },
+        { header: '단위', accessor: 'gunit' },
+        { header: '총액', accessor: 'gcostprice' },
         { header: '검수상태', accessor: 'movstatus' },
         { header: '위치', accessor: null }
     ];
 
-    useEffect(() => { //날짜로 분류된 데이터 조회
-        axios.get(`http://localhost:8090/traders/receiptmodify?movdate=${movdate}`)
-            .then(response => {
-                setMovements(response.data);
-            })
-            .catch(error => {
+    useEffect(() => {
+        const fetchMovements = async () => {
+            try {
+                const response = await axios.get(`http://localhost:8090/traders/receiptmodify?movdate=${movdate}`);
+                const movementsData = response.data;
+
+                const goodsPromises = movementsData.map(row =>
+                    axios.get(`http://localhost:8090/traders/findgcode?gcode=${row.gcode}`)
+                );
+
+                const goodsResponses = await Promise.all(goodsPromises);
+                const goodsData = goodsResponses.map(res => res.data);
+
+                const combinedData = movementsData.map((movement, index) => ({
+                    ...movement,
+                    ...goodsData[index]
+                }));
+
+                setMovements(combinedData);
+            } catch (error) {
                 console.error('Error fetching data:', error);
-            });
+            }
+        };
+
+        fetchMovements();
     }, [movdate]);
 
     const handleEditClick = async (gcode) => {
