@@ -1,22 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import main from '../pages/Main.module.css';
-// import Calendar2 from '../components/Calendar2';
 import Calendar from '../components/Calendar';
 import axios from 'axios';
 import { format } from 'date-fns';
-// import { useSearchParams } from 'react-router-dom';
-// import ExpiringProducts from '../components/ExpiringProducts';
-
 
 function Main() {
-
-  // const [date, setDate] = useState(new Date());
   const [goods, setGoods] = useState([]);
   const [searchGoods, setSearchGoods] = useState('');
   const [stock, setStock] = useState([]);
   const [stockk, setStockk] = useState([]); // 재고부족 상품 상태
-  const [expiringProducts, setExpiringProducts] = useState([]);
   const [selectedGoods, setSelectedGoods] = useState([]);
+  const prevSelectedDate = useRef(null);  // 이전에 선택한 날짜를 추적하는 ref
 
   useEffect(() => {
     axios.get('http://localhost:8090/traders/home')
@@ -27,8 +21,8 @@ function Main() {
         console.error('goods상품 조회 불가', error);
       });
 
-      // 재고부족 상품 리스트 조회
-      axios.get('http://localhost:8090/traders/stock')
+    // 재고부족 상품 리스트 조회
+    axios.get('http://localhost:8090/traders/stock')
       .then(response => {
         const shortage = response.data.filter(stock => stock.stockquantity <= 10).sort((a, b) => a.stockquantity - b.stockquantity);
         setStockk(shortage);
@@ -37,8 +31,6 @@ function Main() {
         console.error('There was an error fetching the goods!', error);
       });
   }, []);
-
-
 
   const handleSearch = (event) => {
     event.preventDefault();
@@ -52,14 +44,18 @@ function Main() {
   };
 
   const handleDateSelect = (selectedDate) => {
+    // 선택한 날짜가 이전에 선택한 날짜와 다른 경우에만 실행
+    if (prevSelectedDate.current && prevSelectedDate.current.getTime() === selectedDate.getTime()) {
+      return;
+    }
+    prevSelectedDate.current = selectedDate;
+
     // 날짜가 어떤 형식으로 들어오는지 검증
     const formattedDate = format(selectedDate, 'yyyy-MM-dd');
-    console.log("Formatted date for API:", formattedDate);
     axios.get(`http://localhost:8090/traders/stock?date=${formattedDate}`)
-    // axios.get(`http://localhost:8090/traders/stock?date=${format(selectedDate, 'yyyy-MM-dd')}`)
       .then(response => {
         //data가 들어오는지 검증
-        console.log("API:", response.data);
+                console.log("API:", response.data);
 
         // 선택된 날짜로부터 7일 이내에 유통기한이 끝나는 상품만 필터링
         const expiringProducts = response.data.filter(stock => {
@@ -67,36 +63,32 @@ function Main() {
           // stock을 콘솔로 찍었을때 object라고만 떠서 JSON.stringify로 문자열로 변환후 데이터를 확인
 
           console.log("date변환전 : " + stock.expdate);
-          // stock에 날짜가 expdate로 들어오고 있었음
-
-          //날짜 변환
-          // const expirationDate = stock.expdate;
+          //stock에 날짜가 expdate로 들어오고 있었음
           const expirationDate = new Date(stock.expdate); //유통기한
           console.log("test:" + expirationDate);
-
           const daysDifference = (expirationDate - selectedDate) / (1000 * 60 * 60 * 24);
-                                                 //1000밀리초, 60초, 60분, 24시간 = 86,400,000 (날짜간의 차이를 계산할때 정확하게하기 위해)
+                                                      //1000밀리초, 60초, 60분, 24시간 = 86,400,000 (날짜간의 차이를 계산할때 정확하게하기 위해)
           console.log("tt:" + daysDifference);
-          return daysDifference >= -7 && daysDifference <= 1;
+          return daysDifference >= 0 && daysDifference <= 7;
         });
         setStock(expiringProducts);
-        console.log("Expiring Products:", expiringProducts);
-        // console.log(response.data);
+        // console.log(expiringProducts);
+        console.log(expiringProducts);
       })
       .catch(error => {
         console.error('There was an error fetching the stock!', error);
       });
   };
 
-
   // 개별 선택 체크
   const handleSelect = (gcode) => {
     setSelectedGoods(prevSelectedGoods =>
       prevSelectedGoods.includes(gcode)
-        ? prevSelectedGoods.filter(gcode => gcode !== gcode)
+        ? prevSelectedGoods.filter(code => code !== gcode)
         : [...prevSelectedGoods, gcode]
     );
   };
+
   //전체 선택 체크
   const handleSelectAll = (event) => {
     if (event.target.checked) {
@@ -106,21 +98,19 @@ function Main() {
     }
   };
 
-
   const handleOrder = () => {
     const selectedItems = goods.filter(item => selectedGoods.includes(item.gcode));
     const orderCartDTOs = selectedItems.map(item => ({
-        
-        gcount: 1, // 필요에 따라 수정, 기본 1개만 담기게 설정되어져 있음
-        goods: {
-            gcode: item.gcode,
-            gcategory: item.gcategory,
-            gname: item.gname,
-            gcostprice: item.gcostprice,
-            gimage: item.gimage,
-            gcompany: item.gcompany,
-            gunit: item.gunit,
-        }
+      gcount: 1, // 필요에 따라 수정, 기본 1개만 담기게 설정되어져 있음
+      goods: {
+        gcode: item.gcode,
+        gcategory: item.gcategory,
+        gname: item.gname,
+        gcostprice: item.gcostprice,
+        gimage: item.gimage,
+        gcompany: item.gcompany,
+        gunit: item.gunit,
+      }
     }));
     axios.post('http://localhost:8090/traders/ordercart/saveAll', orderCartDTOs)
       .then(response => {
@@ -130,8 +120,7 @@ function Main() {
       .catch(error => {
         console.error('발주하기에 담기 불가', error);
       });
-};
-
+  };
 
   return (
     <div className={main.Main}>
@@ -152,8 +141,8 @@ function Main() {
                 <tr>
                   <th style={{ width: '50px' }}>
                     <input type="checkbox"
-                            onChange={handleSelectAll}
-                            checked={selectedGoods.length === goods.length} /></th>
+                      onChange={handleSelectAll}
+                      checked={selectedGoods.length === goods.length} /></th>
                   <th style={{ width: '65px' }}>제품번호</th>
                   <th>제품코드</th>
                   <th>카테고리</th>
@@ -164,9 +153,9 @@ function Main() {
               <tbody>
                 {goods.map((goods, index) => (
                   <tr key={index} className={main.goodsItem}>
-                    <td><input    type="checkbox"
-                        checked={selectedGoods.includes(goods.gcode)}
-                        onChange={() => handleSelect(goods.gcode)} /></td>
+                    <td><input type="checkbox"
+                      checked={selectedGoods.includes(goods.gcode)}
+                      onChange={() => handleSelect(goods.gcode)} /></td>
                     <td>{index + 1}</td>
                     <td>{goods.gcode}</td>
                     <td>{goods.gcategory}</td>
@@ -225,7 +214,6 @@ function Main() {
                   <th style={{ width: '28%' }}>제품코드</th>
                   <th style={{ width: '35%' }}>상품명</th>
                   <th style={{ width: '12%' }}>수량</th>
-                  {/* <th>단위</th> */}
                 </tr>
               </thead>
               <tbody>
@@ -235,7 +223,6 @@ function Main() {
                     <td>{stock.goods.gcode}</td>
                     <td>{stock.goods.gname}</td>
                     <td>{stock.stockquantity}</td>
-                    {/* <td>{stock.gunit}</td> */}
                   </tr>
                 ))}
               </tbody>
