@@ -140,8 +140,8 @@ const Stock = ({ columns }) => {
                 <span>재고량 순</span>
 
                 <form className={stockk.cate_Form}>
-                    <select name='category' onChange={handleCategoryFilterChange}>
-                        <option disabled selected>카테고리</option>
+                    <select name='category' onChange={handleCategoryFilterChange} value={categoryFilter}>
+                        <option value="">카테고리</option>
                         <option>간식류</option>
                         <option>곡류</option>
                         <option>소스류</option>
@@ -149,8 +149,8 @@ const Stock = ({ columns }) => {
                 </form>
 
                 <form className={stockk.cate_Form}>
-                    <select name='category' onChange={handleLocationFilterChange}>
-                        <option disabled selected>위치</option>
+                    <select name='category' onChange={handleLocationFilterChange} value={locationFilter}>
+                        <option value="">위치</option>
                         <option>A</option>
                         <option>B</option>
                         <option>C</option>
