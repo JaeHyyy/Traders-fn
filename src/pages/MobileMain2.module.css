@@ -151,6 +151,6 @@
 .completed {
     opacity: 0.5;
     /* 흐리게 만들기 */
-    pointer-events: none;
+    /* pointer-events: none; */
     /* 클릭 비활성화 */
 }
