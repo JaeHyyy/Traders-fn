@@ -44,9 +44,9 @@ const MobileProductDetail = () => {
 
                 // 제품 상세 정보와 추가 정보를 동시에 가져오기
                 const [response1, response2, response3] = await Promise.all([
-                    axios.get(`http://localhost:8090/traders/stock/gcode-data/${gcode}`),
-                    axios.get(`http://localhost:8090/traders/goods/${gcode}`),
-                    axios.get(`http://localhost:8090/traders/movement/${gcode}`)
+                    axios.get(`http://10.10.10.197:8090/traders/stock/gcode-data/${gcode}`),
+                    axios.get(`http://10.10.10.197:8090/traders/goods/${gcode}`),
+                    axios.get(`http://10.10.10.197:8090/traders/movement/${gcode}`)
                 ]);
 
                 const data1 = response1.data[0];  // 배열의 첫 번째 요소를 사용

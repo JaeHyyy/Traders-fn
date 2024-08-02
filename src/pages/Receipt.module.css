@@ -1,16 +1,31 @@
+.rable {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
 .receipt-table{
-    width: 100%; /* 테이블이 컨테이너의 전체 너비를 차지하도록 설정 */
-    table-layout: fixed; /* 컬럼 너비를 고정하여 내용에 따라 변하지 않도록 설정 */
-    border-collapse: collapse;
+    flex: 3;
+      margin-right: 20px;
+}
+.table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
 }
 
 .thead {
     background-color: #aada2a;
   }
 
-.receipt-table th, .receipt-table td{
+.table th, .table td{
     border: 1px solid #ddd;
-    padding: 5px;
+    padding: 8px;
     text-align: center;
     overflow: hidden; /* 내용이 셀을 벗어나지 않도록 설정 */
     text-overflow: ellipsis; /* 내용이 넘칠 경우 ... 으로 표시 */
@@ -21,7 +36,7 @@
     background-color: #aada2a; /* 녹색 배경 */
     border: none;
     color: white; /* 흰색 글씨 */
-    padding: 10px 10px;
+    padding: 8px 8px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
