@@ -7,9 +7,9 @@ const QrCode = () => {
     const [qrCode, setQrCode] = useState(null);
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
-    const date = searchParams.get("date")
-    console.log(date);
-    //const date = "2024-07-19";
+    const date = searchParams.get("date");
+    const [qrData, setQrData] = useState('');
+
     useEffect(() => {
         const fetchQrCode = async () => {
             try {
@@ -20,17 +20,18 @@ const QrCode = () => {
                     new Uint8Array(response.data).reduce((data, byte) => data + String.fromCharCode(byte), '')
                 );
                 setQrCode(`data:image/png;base64,${base64Image}`);
+
+                setQrData(response.data);
+                console.log(qrData);
+                console.log(qrCode);
+
             } catch (error) {
                 console.error('Error fetching QR code:', error);
             }
         };
 
         fetchQrCode();
-    }, []);
-
-    const handleButtonClick = () => {
-        navigate(-1); // 이전 페이지로 이동
-    };
+    }, [date]);
 
     return (
         <>
@@ -42,7 +43,7 @@ const QrCode = () => {
                 )}
             </div>
             <div className={styles.container2}>
-                <button className={styles.button} onClick={handleButtonClick}>뒤로가기</button>
+                <button className={styles.button} onClick={() => navigate(-1)}>뒤로가기</button>
             </div>
         </>
     );
