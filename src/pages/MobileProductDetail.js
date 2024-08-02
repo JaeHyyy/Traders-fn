@@ -23,7 +23,7 @@ const ZONE_IMAGES = {
 
 const loc1Options = ['AA', 'BB', 'CC'];
 const loc2Options = ['A', 'B', 'C'];
-const loc3Options = ['1', '2', '3', '4', '5'];
+const loc3Options = ['a', 'b', 'c', 'd', 'e', 'f'];
 
 const MobileProductDetail = () => {
     const { gcode } = useParams();  // URL에서 gcode 파라미터를 가져옵니다.
@@ -44,9 +44,9 @@ const MobileProductDetail = () => {
 
                 // 제품 상세 정보와 추가 정보를 동시에 가져오기
                 const [response1, response2, response3] = await Promise.all([
-                    axios.get(`http://10.10.10.197:8090/traders/stock/gcode-data/${gcode}`),
-                    axios.get(`http://10.10.10.197:8090/traders/goods/${gcode}`),
-                    axios.get(`http://10.10.10.197:8090/traders/movement/${gcode}`)
+                    axios.get(`http://10.10.10.207:8090/traders/stock/gcode-data/${gcode}`),
+                    axios.get(`http://10.10.10.207:8090/traders/goods/${gcode}`),
+                    axios.get(`http://10.10.10.207:8090/traders/movement/${gcode}`)
                 ]);
 
                 const data1 = response1.data[0];  // 배열의 첫 번째 요소를 사용
@@ -126,13 +126,23 @@ const MobileProductDetail = () => {
                 loc3: newLoc3
             };
 
-            const response = await axios.put(`http://localhost:8090/traders/stock/update-location/${gcode}`, updatedLocation);
+            // API 요청을 통해 위치 업데이트
+            const response = await axios.put('http://10.10.10.207:8090/traders/stock/mobile-update-location', null, {
+                params: {
+                    gcode,
+                    loc1: updatedLocation.loc1,
+                    loc2: updatedLocation.loc2,
+                    loc3: updatedLocation.loc3
+                }
+            });
             console.log('위치 정보 업데이트 완료:', response.data);
 
             // 업데이트된 위치 정보를 상태에 반영
             setProductDetails((prevDetails) => ({
                 ...prevDetails,
-                ...updatedLocation
+                loc1: updatedLocation.loc1,
+                loc2: updatedLocation.loc2,
+                loc3: updatedLocation.loc3
             }));
         } catch (error) {
             console.error("위치 정보 업데이트 오류:", error);
