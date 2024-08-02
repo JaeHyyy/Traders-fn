@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios'; // axios import
 import logo from '../assets/logo.png';
 import mobileMain from './MobileMain2.module.css';
@@ -9,44 +9,34 @@ const MobileMain = () => {
     const [error, setError] = useState(null);
     const [selectAll, setSelectAll] = useState(false);
     const navigate = useNavigate();
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
+    const qrData = searchParams.get('data');
 
     useEffect(() => {
-        const fetchQrCodes = async () => {
-            try {
-                const response = await axios.get("http://localhost:8090/traders/api/qrcodeDivisions");
-                const data = response.data;
-                console.log('QR 코드 데이터:', data);
+        if (qrData) {
+            console.log('Received QR Data:', qrData);
 
-                const parsedData = Array.isArray(data) ? data : Object.values(data);
+            // qrData를 사용하여 필요한 작업 수행 (예: 필터링, 추가 처리 등)
+            const processData = qrData.split('\n').map(item => {
+                const dataObject = {};
+                const keyValuePairs = item.match(/(\w+)=([^,]+)/g);
+                if (keyValuePairs) {
+                    keyValuePairs.forEach(pair => {
+                        const [key, value] = pair.split("=");
+                        if (key && value) {
+                            dataObject[key.trim()] = value.trim();
+                        }
+                    });
+                    return { ...dataObject, isChecked: false };
+                }
+                return null;
+            }).filter(Boolean);
 
-                const formattedData = parsedData.flatMap(item => {
-                    const matches = item.text.match(/\(([^)]+)\)/g);
-                    if (matches) {
-                        return matches.map(match => {
-                            const keyValuePairs = match.replace(/[()]/g, "").split(", ");
-                            const dataObject = {};
-                            keyValuePairs.forEach(pair => {
-                                const [key, value] = pair.split("=");
-                                if (key && value) {
-                                    dataObject[key.trim()] = value.trim();
-                                }
-                            });
-                            return { ...dataObject, isChecked: false };
-                        });
-                    }
-                    return [];
-                });
+            setQrCodesData(processData);
 
-                setQrCodesData(formattedData);
-
-            } catch (error) {
-                console.error("QR 코드 가져오기 에러:", error);
-                setError("QR 코드를 가져오는 데 문제가 발생했습니다. 서버가 실행 중인지 확인해 주세요.");
-            }
-        };
-
-        fetchQrCodes();
-    }, []);
+        }
+    }, [qrData]);
 
     const handleSelectAll = () => {
         setSelectAll(!selectAll);
