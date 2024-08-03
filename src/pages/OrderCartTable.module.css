@@ -16,7 +16,7 @@
   width: 100%; /* 테이블이 컨테이너의 전체 너비를 차지하도록 설정 */
   table-layout: fixed; /* 컬럼 너비 조정 */
   border-collapse: collapse;
-  margin-bottom: 20px; 
+  /* margin-bottom: 20px;  */
 }
 
   thead {
@@ -77,25 +77,20 @@
 /* 발주리스트 테이블 밑부분 구성 */
 .tableBottom{
   display: flex;
-  justify-content: space-between; /*총합과 버튼을 양쪽 끝으로 정렬 */
+  flex-direction: row;
+  position: absolute;
+  top: 640px; 
+  right: 10px; /* 부모 요소의 오른쪽에서 10px 왼쪽  */ 
+  justify-content: flex-end; 
   padding: 15px;
-  margin-right: 10px;
-  background: white;
-  
+  /* margin-right: 5px; */
+  background: white; 
 }
 
 .total {
-  margin-left: auto; /* 오른쪽 끝으로 밀기 */
+  margin-left: auto;
+  margin-right: 30px;
   font-weight: 700;  
-}
-
-
-.tableBottomBtn{
-  display: flex;
-  flex-direction: row;
-  position: absolute;
-  top: 650px; 
-  right: 20px; /* 부모 요소의 오른쪽에서 10px 왼쪽 */
 }
 
   .orderBtn {
