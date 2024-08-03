@@ -25,7 +25,13 @@ function Main() {
     // 재고부족 상품 리스트 조회
     axios.get('http://localhost:8090/traders/stock')
       .then(response => {
-        const shortage = response.data.filter(stock => stock.stockquantity <= 10).sort((a, b) => a.stockquantity - b.stockquantity);
+        const currentDate = new Date();
+        const shortage = response.data.filter(stock => {
+          // 유통기한이 지나지 않았고 재고가 10개 이하인 상품만 선택
+          const expirationDate = new Date(stock.expdate); // 유통기한 날짜
+          return expirationDate > currentDate && stock.stockquantity <= 10;
+        })
+        .sort((a, b) => a.stockquantity - b.stockquantity);
         setStockk(shortage);
       })
       .catch(error => {

@@ -1,567 +1,40 @@
-// import React, { useState, useEffect } from "react";
-// import { useParams } from 'react-router-dom';
-// import axios from 'axios';
-// import logo from '../assets/logo.png';
-// import plan from '../assets/warehouse drawing.png';
-// import product from './MobileProductDetail.module.css';
-
-// const MobileProductDetail = () => {
-//     const { gcode } = useParams();  // URL에서 gcode 파라미터를 가져옵니다.
-//     const [markerPosition, setMarkerPosition] = useState(null);  // 마커 위치 상태
-//     const [productDetails, setProductDetails] = useState(null);  // 제품 상세 정보 상태
-//     const [error, setError] = useState(null);  // 오류 상태
-
-//     // gcode를 사용하여 제품 상세 정보를 가져오는 함수
-//     useEffect(() => {
-//         const fetchProductDetails = async () => {
-//             try {
-//                 console.log(`Fetching product details for gcode: ${gcode}`);
-//                 const response = await axios.get(`http://localhost:8090/traders/stock/gcode-data/${gcode}`);
-//                 const data = response.data[0]; // 배열의 첫 번째 요소를 사용
-//                 if (data) {
-//                     console.log('응답 본문:', data);
-//                     setProductDetails(data);  // 제품 상세 정보 설정
-//                 } else {
-//                     console.log('데이터가 없습니다');
-//                     setProductDetails(null);  // 데이터가 없으면 null 설정
-//                 }
-//             } catch (error) {
-//                 console.error("제품 상세 정보 가져오기 오류:", error);
-//                 if (error.response) {
-//                     setError(`서버 오류: ${error.response.status} ${error.response.statusText}`);
-//                 } else if (error.request) {
-//                     setError("서버로부터 응답을 받지 못했습니다.");
-//                 } else {
-//                     setError("요청을 설정하는 중 오류가 발생했습니다.");
-//                 }
-//                 setProductDetails(null);  // 오류 발생 시 null 설정
-//             }
-//         };
-
-//         fetchProductDetails();
-//     }, [gcode]);
-
-//     // 이미지 클릭 시 마커 위치를 설정하는 함수
-//     const handleImageClick = (e) => {
-//         if (markerPosition !== null) return;
-
-//         const rect = e.target.getBoundingClientRect();
-//         const x = e.clientX - rect.left;
-//         const y = e.clientY - rect.top;
-//         const newPosition = { x, y };
-
-//         console.log('이미지 클릭:', { x, y });
-//         setMarkerPosition(newPosition);
-//         localStorage.setItem(`markerPosition_${gcode}`, JSON.stringify(newPosition));  // gcode에 따른 마커 위치 저장
-//     };
-
-//     // 위치 초기화 함수
-//     const handleResetClick = () => {
-//         console.log('위치 초기화');
-//         setMarkerPosition(null);
-//         localStorage.removeItem(`markerPosition_${gcode}`);  // gcode에 따른 마커 위치 삭제
-//     };
-
-//     // 컴포넌트가 마운트되었을 때 또는 gcode가 변경되었을 때 저장된 마커 위치를 불러옴
-//     useEffect(() => {
-//         const savedPosition = localStorage.getItem(`markerPosition_${gcode}`);
-//         if (savedPosition) {
-//             console.log('저장된 위치 불러오기:', savedPosition);
-//             setMarkerPosition(JSON.parse(savedPosition));
-//         }
-//     }, [gcode]);
-
-//     // 데이터가 없는 경우 기본값 설정
-//     const details = productDetails ? {
-//         gcode: productDetails.gcode,
-//         goodsData: {
-//             gname: productDetails.goodsData?.gname || 'N/A',
-//             gcategory: productDetails.goodsData?.gcategory || 'N/A',
-//             gcostprice: productDetails.goodsData?.gcostprice || 'N/A',
-//         },
-//         stockquantity: productDetails.stockquantity || 'N/A',
-//         loc1: productDetails.loc1 || 'N/A',
-//         loc2: productDetails.loc2 || 'N/A',
-//         loc3: productDetails.loc3 || 'N/A',
-//         expdate: productDetails.expdate || 'N/A',
-//     } : {
-//         gcode: gcode,
-//         goodsData: {
-//             gname: 'N/A',
-//             gcategory: 'N/A',
-//             gcostprice: 'N/A',
-//         },
-//         stockquantity: 'N/A',
-//         loc1: 'N/A',
-//         loc2: 'N/A',
-//         loc3: 'N/A',
-//         expdate: 'N/A',
-//     };
-
-//     return (
-//         <div className={product.mobileProductDetail_page}>
-//             <div className={product.mobileProductDetail_box}>
-//                 <img src={logo} alt="로고" className={product.logo} />
-//                 <div className={product.product_box}>
-//                     <h4 className={product.product_header}>물품상세정보</h4>
-//                 </div>
-//                 <div className={product.product_location} onClick={handleImageClick}>
-//                     <img src={plan} alt="도면" className={product.plan} />
-//                     {markerPosition && (
-//                         <div
-//                             className={product.blinking_circle}
-//                             style={{
-//                                 top: markerPosition.y,
-//                                 left: markerPosition.x
-//                             }}
-//                         ></div>
-//                     )}
-//                 </div>
-//                 <button className={product.reset_button} onClick={handleResetClick}>
-//                     위치 초기화
-//                 </button>
-//                 <div className={product.product_information}>
-//                     {error ? (
-//                         <p>에러: {error}</p>
-//                     ) : (
-//                         <table className={product.table}>
-//                             <thead>
-//                                 <tr>
-//                                     <th>헤더</th>
-//                                     <th>데이터</th>
-//                                 </tr>
-//                             </thead>
-//                             <tbody>
-//                                 <tr>
-//                                     <th>상품 코드</th>
-//                                     <td>{details.gcode}</td>
-//                                 </tr>
-//                                 <tr>
-//                                     <th>상품 이름</th>
-//                                     <td>{details.goodsData.gname}</td>
-//                                 </tr>
-//                                 <tr>
-//                                     <th>상품 카테고리</th>
-//                                     <td>{details.goodsData.gcategory}</td>
-//                                 </tr>
-//                                 <tr>
-//                                     <th>상품 가격</th>
-//                                     <td>{details.goodsData.gcostprice}</td>
-//                                 </tr>
-//                                 <tr>
-//                                     <th>재고 수량</th>
-//                                     <td>{details.stockquantity}</td>
-//                                 </tr>
-//                                 <tr>
-//                                     <th>위치</th>
-//                                     <td>{details.loc1}-{details.loc2}-{details.loc3}</td>
-//                                 </tr>
-//                                 <tr>
-//                                     <th>유통 기한</th>
-//                                     <td>{details.expdate}</td>
-//                                 </tr>
-//                             </tbody>
-//                         </table>
-//                     )}
-//                 </div>
-//             </div>
-//         </div>
-//     );
-// };
-
-// export default MobileProductDetail;
-
-// --------------------------------------------------------------------------------------
-
-// import React, { useState, useEffect } from "react";
-// import { useParams } from 'react-router-dom';
-// import axios from 'axios';
-// import logo from '../assets/logo.png';
-// import plan from '../assets/warehouse drawing.png';
-// // import product from './MobileProductDetail.module.css';
-// import product from './MobileProductDetail2.module.css';
-
-
-// const MobileProductDetail = () => {
-//     const { gcode } = useParams();  // URL에서 gcode 파라미터를 가져옵니다.
-//     const [markerPosition, setMarkerPosition] = useState(null);  // 마커 위치 상태
-//     const [productDetails, setProductDetails] = useState(null);  // 제품 상세 정보 상태
-//     const [error, setError] = useState(null);  // 오류 상태
-
-//     // gcode를 사용하여 제품 상세 정보를 가져오는 함수
-//     useEffect(() => {
-//         const fetchProductDetails = async () => {
-//             try {
-//                 console.log(`Fetching product details for gcode: ${gcode}`);
-//                 const response = await axios.get(`http://localhost:8090/traders/stock/gcode-data/${gcode}`);
-//                 const response2 = await axios.get(`http://localhost:8090/traders/goods/${gcode}`);
-//                 const data = response.data[0]; // 배열의 첫 번째 요소를 사용
-//                 if (data) {
-//                     console.log('응답 본문:', data);
-//                     setProductDetails(data);  // 제품 상세 정보 설정
-//                 } else {
-//                     console.log('데이터가 없습니다');
-//                     setProductDetails(null);  // 데이터가 없으면 null 설정
-//                 }
-//             } catch (error) {
-//                 console.error("제품 상세 정보 가져오기 오류:", error);
-//                 if (error.response) {
-//                     setError(`서버 오류: ${error.response.status} ${error.response.statusText}`);
-//                 } else if (error.request) {
-//                     setError("서버로부터 응답을 받지 못했습니다.");
-//                 } else {
-//                     setError("요청을 설정하는 중 오류가 발생했습니다.");
-//                 }
-//                 setProductDetails(null);  // 오류 발생 시 null 설정
-//             }
-//         };
-
-//         fetchProductDetails();
-//     }, [gcode]);
-
-//     // 이미지 클릭 시 마커 위치를 설정하는 함수
-//     const handleImageClick = (e) => {
-//         if (markerPosition !== null) return;
-
-//         const rect = e.target.getBoundingClientRect();
-//         const x = e.clientX - rect.left;
-//         const y = e.clientY - rect.top;
-//         const newPosition = { x, y };
-
-//         console.log('이미지 클릭:', { x, y });
-//         setMarkerPosition(newPosition);
-//         localStorage.setItem(`markerPosition_${gcode}`, JSON.stringify(newPosition));  // gcode에 따른 마커 위치 저장
-//     };
-
-//     // 위치 초기화 함수
-//     const handleResetClick = () => {
-//         console.log('위치 초기화');
-//         setMarkerPosition(null);
-//         localStorage.removeItem(`markerPosition_${gcode}`);  // gcode에 따른 마커 위치 삭제
-//     };
-
-//     // 컴포넌트가 마운트되었을 때 또는 gcode가 변경되었을 때 저장된 마커 위치를 불러옴
-//     useEffect(() => {
-//         const savedPosition = localStorage.getItem(`markerPosition_${gcode}`);
-//         if (savedPosition) {
-//             console.log('저장된 위치 불러오기:', savedPosition);
-//             setMarkerPosition(JSON.parse(savedPosition));
-//         }
-//     }, [gcode]);
-
-//     // 데이터가 없는 경우 기본값 설정
-//     const details = productDetails ? {
-//         gcode: productDetails.gcode,
-//         goodsData: {
-//             gname: productDetails.goodsData?.gname || 'N/A',
-//             gcategory: productDetails.goodsData?.gcategory || 'N/A',
-//             gcostprice: productDetails.goodsData?.gcostprice || 'N/A',
-//         },
-//         stockquantity: productDetails.stockquantity || 'N/A',
-//         loc1: productDetails.loc1 || 'N/A',
-//         loc2: productDetails.loc2 || 'N/A',
-//         loc3: productDetails.loc3 || 'N/A',
-//         expdate: productDetails.expdate || 'N/A',
-//     } : {
-//         gcode: gcode,
-//         goodsData: {
-//             gname: 'N/A',
-//             gcategory: 'N/A',
-//             gcostprice: 'N/A',
-//         },
-//         stockquantity: 'N/A',
-//         loc1: 'N/A',
-//         loc2: 'N/A',
-//         loc3: 'N/A',
-//         expdate: 'N/A',
-//     };
-
-//     return (
-//         <div className={product.mobileProductDetail_page}>
-//             <div className={product.mobileProductDetail_box}>
-//                 <img src={logo} alt="로고" className={product.logo} />
-//                 <div className={product.product_box}>
-//                     <h4 className={product.product_header}>물품상세정보</h4>
-//                 </div>
-//                 <div className={product.product_location} onClick={handleImageClick}>
-//                     <img src={plan} alt="도면" className={product.plan} />
-//                     {markerPosition && (
-//                         <div
-//                             className={product.blinking_circle}
-//                             style={{
-//                                 top: markerPosition.y,
-//                                 left: markerPosition.x
-//                             }}
-//                         ></div>
-//                     )}
-//                 </div>
-//                 <button className={product.reset_button} onClick={handleResetClick}>
-//                     위치 초기화
-//                 </button>
-//                 <div className={product.product_information}>
-//                     {error ? (
-//                         <p>에러: {error}</p>
-//                     ) : (
-//                         <table className={product.table}>
-//                             <thead>
-//                                 <tr>
-//                                     <th>헤더</th>
-//                                     <th>데이터</th>
-//                                 </tr>
-//                             </thead>
-//                             <tbody>
-//                                 <tr>
-//                                     <th>상품 코드</th>
-//                                     <td>{details.gcode}</td>
-//                                 </tr>
-//                                 <tr>
-//                                     <th>상품 이름</th>
-//                                     <td>{details.goodsData.gname}</td>
-//                                 </tr>
-//                                 <tr>
-//                                     <th>상품 카테고리</th>
-//                                     <td>{details.goodsData.gcategory}</td>
-//                                 </tr>
-//                                 <tr>
-//                                     <th>상품 가격</th>
-//                                     <td>{details.goodsData.gcostprice}</td>
-//                                 </tr>
-//                                 <tr>
-//                                     <th>재고 수량</th>
-//                                     <td>{details.stockquantity}</td>
-//                                 </tr>
-//                                 <tr>
-//                                     <th>위치</th>
-//                                     <td>{details.loc1}-{details.loc2}-{details.loc3}</td>
-//                                 </tr>
-//                                 <tr>
-//                                     <th>유통 기한</th>
-//                                     <td>{details.expdate}</td>
-//                                 </tr>
-//                             </tbody>
-//                         </table>
-//                     )}
-//                 </div>
-//             </div>
-//         </div>
-//     );
-// };
-
-// export default MobileProductDetail;
-
-
-// --------------------------------------------------------------------------------------
-
-// import React, { useState, useEffect } from "react";
-// import { useParams } from 'react-router-dom';
-// import axios from 'axios';
-// import logo from '../assets/logo.png';
-// import plan from '../assets/warehouse drawing.png';  // 사용 경로에 맞게 업데이트
-// import product from './MobileProductDetail2.module.css';
-
-// const MobileProductDetail = () => {
-//     const { gcode } = useParams();  // URL에서 gcode 파라미터를 가져옵니다.
-//     const [markerPosition, setMarkerPosition] = useState(null);  // 마커 위치 상태
-//     const [productDetails, setProductDetails] = useState(null);  // 제품 상세 정보 상태
-//     const [additionalInfo, setAdditionalInfo] = useState(null);  // 추가 정보 상태
-//     const [error, setError] = useState(null);  // 오류 상태
-
-//     // gcode를 사용하여 제품 상세 정보와 추가 정보를 가져오는 함수
-//     useEffect(() => {
-//         const fetchProductDetails = async () => {
-//             try {
-//                 console.log(`gcode ${gcode}에 대한 제품 상세 정보 가져오기`);
-
-//                 // 제품 상세 정보와 추가 정보를 동시에 가져오기
-//                 const [response1, response2] = await Promise.all([
-//                     axios.get(`http://localhost:8090/traders/stock/gcode-data/${gcode}`),
-//                     axios.get(`http://localhost:8090/traders/goods/${gcode}`)
-//                 ]);
-
-//                 const data1 = response1.data[0];  // 배열의 첫 번째 요소를 사용
-//                 const data2 = response2.data;
-
-//                 // response1 데이터 설정
-//                 if (data1) {
-//                     console.log('stock + goods:', data1);
-//                     setProductDetails(data1);  // 제품 상세 정보 설정
-//                 } else {
-//                     console.log('stock 데이터가 없습니다');
-//                     setProductDetails(null);  // 데이터가 없으면 null 설정
-//                 }
-
-//                 // response2 데이터 설정
-//                 if (data2) {
-//                     console.log("goods:", data2);
-//                     setAdditionalInfo(data2);  // 추가 정보 설정
-//                 } else {
-//                     console.log('goods 데이터가 없습니다.');
-//                     setAdditionalInfo(null);
-//                 }
-
-//             } catch (error) {
-//                 console.error("제품 상세 정보 가져오기 오류:", error);
-//                 if (error.response) {
-//                     setError(`서버 오류: ${error.response.status} ${error.response.statusText}`);
-//                 } else if (error.request) {
-//                     setError("서버로부터 응답을 받지 못했습니다.");
-//                 } else {
-//                     setError("요청을 설정하는 중 오류가 발생했습니다.");
-//                 }
-//                 setProductDetails(null);  // 오류 발생 시 null 설정
-//                 setAdditionalInfo(null);
-//             }
-//         };
-
-//         fetchProductDetails();
-//     }, [gcode]);
-
-//     // 이미지 클릭 시 마커 위치를 설정하는 함수
-//     const handleImageClick = (e) => {
-//         if (markerPosition !== null) return;
-
-//         const rect = e.target.getBoundingClientRect();
-//         const x = e.clientX - rect.left;
-//         const y = e.clientY - rect.top;
-//         const newPosition = { x, y };
-
-//         console.log('이미지 클릭:', { x, y });
-//         setMarkerPosition(newPosition);
-//         localStorage.setItem(`markerPosition_${gcode}`, JSON.stringify(newPosition));  // gcode에 따른 마커 위치 저장
-//     };
-
-//     // 위치 초기화 함수
-//     const handleResetClick = () => {
-//         console.log('위치 초기화');
-//         setMarkerPosition(null);
-//         localStorage.removeItem(`markerPosition_${gcode}`);  // gcode에 따른 마커 위치 삭제
-//     };
-
-//     // 컴포넌트가 마운트되었을 때 또는 gcode가 변경되었을 때 저장된 마커 위치를 불러옴
-//     useEffect(() => {
-//         const savedPosition = localStorage.getItem(`markerPosition_${gcode}`);
-//         if (savedPosition) {
-//             console.log('저장된 위치 불러오기:', savedPosition);
-//             setMarkerPosition(JSON.parse(savedPosition));
-//         }
-//     }, [gcode]);
-
-//     // 데이터가 없는 경우 기본값 설정
-//     const details = productDetails ? {
-//         gcode: productDetails.gcode,
-//         goodsData: {
-//             gname: productDetails.goodsData?.gname || additionalInfo?.gname || 'N/A',
-//             gcategory: productDetails.goodsData?.gcategory || additionalInfo?.gcategory || 'N/A',
-//             gcostprice: productDetails.goodsData?.gcostprice || additionalInfo?.gcostprice || 'N/A',
-//         },
-//         stockquantity: productDetails.stockquantity || 'N/A',
-//         loc1: productDetails.loc1 || 'N/A',
-//         loc2: productDetails.loc2 || 'N/A',
-//         loc3: productDetails.loc3 || 'N/A',
-//         expdate: productDetails.expdate || 'N/A',
-//     } : {
-//         gcode: gcode,
-//         goodsData: {
-//             gname: additionalInfo?.gname || 'N/A',
-//             gcategory: additionalInfo?.gcategory || 'N/A',
-//             gcostprice: additionalInfo?.gcostprice || 'N/A',
-//         },
-//         stockquantity: 'N/A',
-//         loc1: 'N/A',
-//         loc2: 'N/A',
-//         loc3: 'N/A',
-//         expdate: 'N/A',
-//     };
-
-//     return (
-//         <div className={product.mobileProductDetail_page}>
-//             <div className={product.mobileProductDetail_box}>
-//                 <img src={logo} alt="로고" className={product.logo} />
-//                 <div className={product.product_box}>
-//                     <h4 className={product.product_header}>물품 상세 정보</h4>
-//                 </div>
-//                 <div className={product.product_location} onClick={handleImageClick}>
-//                     <img src={plan} alt="도면" className={product.plan} />
-//                     {markerPosition && (
-//                         <div
-//                             className={product.blinking_circle}
-//                             style={{
-//                                 top: markerPosition.y,
-//                                 left: markerPosition.x
-//                             }}
-//                         ></div>
-//                     )}
-//                 </div>
-//                 <button className={product.reset_button} onClick={handleResetClick}>
-//                     위치 초기화
-//                 </button>
-//                 <div className={product.product_information}>
-//                     {error ? (
-//                         <p>에러: {error}</p>
-//                     ) : (
-//                         <table className={product.table}>
-//                             <thead>
-//                                 <tr>
-//                                     <th>헤더</th>
-//                                     <th>데이터</th>
-//                                 </tr>
-//                             </thead>
-//                             <tbody>
-//                                 <tr>
-//                                     <th>상품 코드</th>
-//                                     <td>{details.gcode}</td>
-//                                 </tr>
-//                                 <tr>
-//                                     <th>상품 이름</th>
-//                                     <td>{details.goodsData.gname}</td>
-//                                 </tr>
-//                                 <tr>
-//                                     <th>상품 카테고리</th>
-//                                     <td>{details.goodsData.gcategory}</td>
-//                                 </tr>
-//                                 <tr>
-//                                     <th>상품 가격</th>
-//                                     <td>{details.goodsData.gcostprice}</td>
-//                                 </tr>
-//                                 <tr>
-//                                     <th>입고 수량</th>
-//                                     <td>{details.stockquantity}</td>
-//                                 </tr>
-//                                 <tr>
-//                                     <th>위치</th>
-//                                     <td>{details.loc1}-{details.loc2}-{details.loc3}</td>
-//                                 </tr>
-//                                 <tr>
-//                                     <th>유통 기한</th>
-//                                     <td>{details.expdate}</td>
-//                                 </tr>
-//                             </tbody>
-//                         </table>
-//                     )}
-//                 </div>
-//             </div>
-//         </div>
-//     );
-// };
-
-// export default MobileProductDetail;
-
-// --------------------------------------------------------------------------------------
-
 import React, { useState, useEffect } from "react";
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import logo from '../assets/logo.png';
-import plan from '../assets/warehouse drawing.png';  // 사용 경로에 맞게 업데이트
-import product from './MobileProductDetail2.module.css';
+import A_1 from '../assets/AA-A.png';
+import A_2 from '../assets/AA-B.png';
+import A_3 from '../assets/AA-C.png';
+import B from '../assets/BB-A,B,C.png';
+import C from '../assets/CC-A,B,C.png';
+import plan from '../assets/warehouse drawing.png';
+import product from './MobileProductDetail3.module.css';
+
+// 구역별 이미지 객체
+const ZONE_IMAGES = {
+    A: {
+        'AA-A': A_1,
+        'AA-B': A_2,
+        'AA-C': A_3
+    },
+    B: B,
+    C: C
+};
+
+const loc1Options = ['AA', 'BB', 'CC'];
+const loc2Options = ['A', 'B', 'C'];
+const loc3Options = ['a', 'b', 'c', 'd', 'e', 'f'];
 
 const MobileProductDetail = () => {
     const { gcode } = useParams();  // URL에서 gcode 파라미터를 가져옵니다.
-    const [markerPosition, setMarkerPosition] = useState(null);  // 마커 위치 상태
     const [productDetails, setProductDetails] = useState(null);  // 제품 상세 정보 상태
     const [additionalInfo, setAdditionalInfo] = useState(null);  // 추가 정보 상태
     const [movementDetails, setMovementDetails] = useState(null);  // movement 데이터 상태
     const [error, setError] = useState(null);  // 오류 상태
+    const [zoneImage, setZoneImage] = useState(null);  // 구역별 이미지 상태
+    const [newLoc1, setNewLoc1] = useState('');  // 새로운 loc1 상태
+    const [newLoc2, setNewLoc2] = useState('');  // 새로운 loc2 상태
+    const [newLoc3, setNewLoc3] = useState('');  // 새로운 loc3 상태
 
     // gcode를 사용하여 제품 상세 정보와 추가 정보를 가져오는 함수
     useEffect(() => {
@@ -572,9 +45,9 @@ const MobileProductDetail = () => {
                 // 제품 상세 정보와 추가 정보를 동시에 가져오기
                 // ssg wifi : 10.10.10.197
                 const [response1, response2, response3] = await Promise.all([
-                    axios.get(`http://10.10.10.197:8090/traders/stock/gcode-data/${gcode}`),
-                    axios.get(`http://10.10.10.197:8090/traders/goods/${gcode}`),
-                    axios.get(`http://10.10.10.197:8090/traders/movement/${gcode}`)
+                    axios.get(`http://10.10.10.207:8090/traders/stock/gcode-data/${gcode}`),
+                    axios.get(`http://10.10.10.207:8090/traders/goods/${gcode}`),
+                    axios.get(`http://10.10.10.207:8090/traders/movement/${gcode}`)
                 ]);
 
                 const data1 = response1.data[0];  // 배열의 첫 번째 요소를 사용
@@ -625,35 +98,64 @@ const MobileProductDetail = () => {
         fetchProductDetails();
     }, [gcode]);
 
-    // 이미지 클릭 시 마커 위치를 설정하는 함수
-    const handleImageClick = (e) => {
-        if (markerPosition !== null) return;
-
-        const rect = e.target.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        const newPosition = { x, y };
-
-        console.log('이미지 클릭:', { x, y });
-        setMarkerPosition(newPosition);
-        localStorage.setItem(`markerPosition_${gcode}`, JSON.stringify(newPosition));  // gcode에 따른 마커 위치 저장
-    };
-
-    // 위치 초기화 함수
-    const handleResetClick = () => {
-        console.log('위치 초기화');
-        setMarkerPosition(null);
-        localStorage.removeItem(`markerPosition_${gcode}`);  // gcode에 따른 마커 위치 삭제
-    };
-
-    // 컴포넌트가 마운트되었을 때 또는 gcode가 변경되었을 때 저장된 마커 위치를 불러옴
+    // 구역 이미지 결정 함수
     useEffect(() => {
-        const savedPosition = localStorage.getItem(`markerPosition_${gcode}`);
-        if (savedPosition) {
-            console.log('저장된 위치 불러오기:', savedPosition);
-            setMarkerPosition(JSON.parse(savedPosition));
+        if (productDetails) {
+            const { loc1, loc2 } = productDetails;
+
+            let imageUrl = null;
+
+            // loc1과 loc2를 조합하여 구역별 이미지 결정
+            if (loc1.startsWith('AA')) {
+                imageUrl = ZONE_IMAGES.A[`${loc1}-${loc2}`] || ZONE_IMAGES.A[loc1] || null;
+            } else if (loc1.startsWith('BB')) {
+                imageUrl = ZONE_IMAGES.B;
+            } else if (loc1.startsWith('CC')) {
+                imageUrl = ZONE_IMAGES.C;
+            }
+
+            setZoneImage(imageUrl);
         }
-    }, [gcode]);
+    }, [productDetails]);
+
+    // 위치 정보를 업데이트하는 함수
+    const updateLocation = async () => {
+        try {
+            const updatedLocation = {
+                loc1: newLoc1,
+                loc2: newLoc2,
+                loc3: newLoc3
+            };
+
+            // API 요청을 통해 위치 업데이트
+            const response = await axios.put('http://10.10.10.207:8090/traders/stock/mobile-update-location', null, {
+                params: {
+                    gcode,
+                    loc1: updatedLocation.loc1,
+                    loc2: updatedLocation.loc2,
+                    loc3: updatedLocation.loc3
+                }
+            });
+            console.log('위치 정보 업데이트 완료:', response.data);
+
+            // 업데이트된 위치 정보를 상태에 반영
+            setProductDetails((prevDetails) => ({
+                ...prevDetails,
+                loc1: updatedLocation.loc1,
+                loc2: updatedLocation.loc2,
+                loc3: updatedLocation.loc3
+            }));
+        } catch (error) {
+            console.error("위치 정보 업데이트 오류:", error);
+            if (error.response) {
+                setError(`서버 오류: ${error.response.status} ${error.response.statusText}`);
+            } else if (error.request) {
+                setError("서버로부터 응답을 받지 못했습니다.");
+            } else {
+                setError("요청을 설정하는 중 오류가 발생했습니다.");
+            }
+        }
+    };
 
     // 데이터가 없는 경우 기본값 설정
     const details = {
@@ -678,21 +180,13 @@ const MobileProductDetail = () => {
                 <div className={product.product_box}>
                     <h4 className={product.product_header}>물품 상세 정보</h4>
                 </div>
-                <div className={product.product_location} onClick={handleImageClick}>
-                    <img src={plan} alt="도면" className={product.plan} />
-                    {markerPosition && (
-                        <div
-                            className={product.blinking_circle}
-                            style={{
-                                top: markerPosition.y,
-                                left: markerPosition.x
-                            }}
-                        ></div>
+                <div className={product.product_location} style={{ position: 'relative' }}>
+                    {zoneImage ? (
+                        <img src={zoneImage} alt="구역 도면" className={product.plan} />
+                    ) : (
+                        <img src={plan} alt="도면" className={product.plan} />
                     )}
                 </div>
-                <button className={product.reset_button} onClick={handleResetClick}>
-                    위치 초기화
-                </button>
                 <div className={product.product_information}>
                     {error ? (
                         <p>에러: {error}</p>
@@ -737,15 +231,40 @@ const MobileProductDetail = () => {
                         </table>
                     )}
                 </div>
+                <div className={product.update_location}>
+                    <h4>위치 정보 업데이트</h4>
+                    <select
+                        value={newLoc1}
+                        onChange={(e) => setNewLoc1(e.target.value)}
+                    >
+                        <option value="">선택하세요</option>
+                        {loc1Options.map(option => (
+                            <option key={option} value={option}>{option}</option>
+                        ))}
+                    </select>
+                    <select
+                        value={newLoc2}
+                        onChange={(e) => setNewLoc2(e.target.value)}
+                    >
+                        <option value="">선택하세요</option>
+                        {loc2Options.map(option => (
+                            <option key={option} value={option}>{option}</option>
+                        ))}
+                    </select>
+                    <select
+                        value={newLoc3}
+                        onChange={(e) => setNewLoc3(e.target.value)}
+                    >
+                        <option value="">선택하세요</option>
+                        {loc3Options.map(option => (
+                            <option key={option} value={option}>{option}</option>
+                        ))}
+                    </select>
+                    <button onClick={updateLocation}>위치 업데이트</button>
+                </div>
             </div>
         </div>
     );
 };
 
 export default MobileProductDetail;
-
-
-
-
-
-
