@@ -570,6 +570,7 @@ const MobileProductDetail = () => {
                 console.log(`gcode ${gcode}에 대한 제품 상세 정보 가져오기`);
 
                 // 제품 상세 정보와 추가 정보를 동시에 가져오기
+                // ssg wifi : 10.10.10.197
                 const [response1, response2, response3] = await Promise.all([
                     axios.get(`http://10.10.10.197:8090/traders/stock/gcode-data/${gcode}`),
                     axios.get(`http://10.10.10.197:8090/traders/goods/${gcode}`),
