@@ -1,8 +1,10 @@
+
 import React, { useEffect, useState } from "react";
 import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
 import logo from '../assets/logo.png';
 import mobileMain from './MobileMain2.module.css';
+
 
 const MobileMain = () => {
     const [qrCodesData, setQrCodesData] = useState([]);
