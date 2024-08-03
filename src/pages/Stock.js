@@ -30,7 +30,7 @@ const Stock = ({ columns }) => {
     const [currentPage, setCurrentPage] = useState(0);
 
     // 페이지당 항목 수
-    const itemsPerPage = 10;
+    const itemsPerPage = 7;
 
 
     //thead는 컬럼명 header

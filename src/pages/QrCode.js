@@ -13,7 +13,7 @@ const QrCode = () => {
     useEffect(() => {
         const fetchQrCode = async () => {
             try {
-                const response = await axios.get(`http://localhost:8090/traders/api/qrcode?date=${date}`, {
+                const response = await axios.get(`http://10.10.10.207:8090/traders/api/qrcode?date=${date}`, {
                     responseType: 'arraybuffer',
                 });
                 const base64Image = btoa(
@@ -34,7 +34,10 @@ const QrCode = () => {
     }, [date]);
 
     return (
-        <>
+        <div className={styles.rable}>
+            <div className={styles.warn}>
+                <h3>아이폰은 네이버앱으로 QR코드 인식 부탁드립니다.</h3>
+            </div>
             <div className={styles.container}>
                 {qrCode ? (
                     <img className={styles.image} src={qrCode} alt="QR Code" />
@@ -45,7 +48,7 @@ const QrCode = () => {
             <div className={styles.container2}>
                 <button className={styles.button} onClick={() => navigate(-1)}>뒤로가기</button>
             </div>
-        </>
+        </div>
     );
 };
 

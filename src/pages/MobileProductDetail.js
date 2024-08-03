@@ -7,7 +7,7 @@ import A_2 from '../assets/AA-B.png';
 import A_3 from '../assets/AA-C.png';
 import B from '../assets/BB-A,B,C.png';
 import C from '../assets/CC-A,B,C.png';
-import plan from '../assets/warehouse drawing.png';
+import plan from '../assets/baseProductLocation.png';
 import product from './MobileProductDetail3.module.css';
 
 // 구역별 이미지 객체
@@ -43,10 +43,17 @@ const MobileProductDetail = () => {
                 console.log(`gcode ${gcode}에 대한 제품 상세 정보 가져오기`);
 
                 // 제품 상세 정보와 추가 정보를 동시에 가져오기
+                // ssg wifi : 10.10.10.197
                 const [response1, response2, response3] = await Promise.all([
                     axios.get(`http://10.10.10.207:8090/traders/stock/gcode-data/${gcode}`),
+                    // axios.get(`http://192.168.0.109:8090/traders/stock/gcode-data/${gcode}`),
+
                     axios.get(`http://10.10.10.207:8090/traders/goods/${gcode}`),
+                    // axios.get(`http://192.168.0.109:8090/traders/goods/${gcode}`),
+
                     axios.get(`http://10.10.10.207:8090/traders/movement/${gcode}`)
+                    // axios.get(`http://192.168.0.109:8090/traders/movement/${gcode}`)
+
                 ]);
 
                 const data1 = response1.data[0];  // 배열의 첫 번째 요소를 사용
@@ -128,6 +135,8 @@ const MobileProductDetail = () => {
 
             // API 요청을 통해 위치 업데이트
             const response = await axios.put('http://10.10.10.207:8090/traders/stock/mobile-update-location', null, {
+                // const response = await axios.put('http://192.168.0.109:8090/traders/stock/mobile-update-location', null, {
+
                 params: {
                     gcode,
                     loc1: updatedLocation.loc1,
@@ -174,8 +183,8 @@ const MobileProductDetail = () => {
 
     return (
         <div className={product.mobileProductDetail_page}>
+            <img src={logo} alt="로고" className={product.logo} />
             <div className={product.mobileProductDetail_box}>
-                <img src={logo} alt="로고" className={product.logo} />
                 <div className={product.product_box}>
                     <h4 className={product.product_header}>물품 상세 정보</h4>
                 </div>
@@ -186,7 +195,9 @@ const MobileProductDetail = () => {
                         <img src={plan} alt="도면" className={product.plan} />
                     )}
                 </div>
+                <hr className={product.mobileProductDetail_hr} />
                 <div className={product.product_information}>
+                    <h4>상세정보</h4>
                     {error ? (
                         <p>에러: {error}</p>
                     ) : (
@@ -230,6 +241,7 @@ const MobileProductDetail = () => {
                         </table>
                     )}
                 </div>
+                <hr className={product.mobileProductDetail_hr} />
                 <div className={product.update_location}>
                     <h4>위치 정보 업데이트</h4>
                     <select
