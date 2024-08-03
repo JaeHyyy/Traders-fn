@@ -4,18 +4,7 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 
 const DisUse = () => {
-  const [disUseList, setDisUseList] = useState([]);
 
-  useEffect(() => {
-    axios.get('http://localhost:8090/traders/disuse')
-      .then(response => {
-        setDisUseList(response.data);
-        console.log(response.data)
-      })
-      .catch(error => {
-        console.error('There was an error fetching the goods!', error);
-      });
-  }, []);
 
 
   const columns = [
@@ -37,7 +26,7 @@ const DisUse = () => {
   ];
 
 
-  return <DisUseTable columns={columns} disUseList={disUseList} setDisUseList={setDisUseList}/>;
+  return <DisUseTable columns={columns} />;
 };
 
 export default DisUse;

@@ -2,9 +2,38 @@ import { useState, useEffect } from 'react';
 import disuse from './DisUseTable.module.css';
 import axios from 'axios';
 
-const DisUseTable = ({ columns, disUseList=[], setDisUseList }) => {
+const DisUseTable = ({ columns }) => {
+
     const [selectedRows, setSelectedRows] = useState([]);
-    const [deletedRows, setDeletedRows] = useState([]);
+        // 현재 정렬 옵션을 저장하는 상태
+        const [sortOption, setSortOption] = useState('');
+
+        // 카테고리 필터 값을 저장하는 상태
+        const [categoryFilter, setCategoryFilter] = useState('');
+    
+        // 위치 필터 값을 저장하는 상태
+        const [locationFilter, setLocationFilter] = useState('');
+    
+        // 각 정렬 체크박스의 상태를 저장하는 상태
+        const [sortStates, setSortStates] = useState({
+            disdate: false,
+            expiry: false,
+            stock: false
+        });
+
+        const [disUseList, setDisUseList] = useState([]);
+
+        useEffect(() => {
+          axios.get('http://localhost:8090/traders/disuse')
+            .then(response => {
+              setDisUseList(response.data);
+              console.log(response.data)
+            })
+            .catch(error => {
+              console.error('There was an error fetching the goods!', error);
+            });
+        }, []);
+
 
 
     //thead는 컬럼명 header
@@ -26,26 +55,26 @@ const DisUseTable = ({ columns, disUseList=[], setDisUseList }) => {
         }
     };
 
-        // 폐기완료
-        const handleCompleteSelected = async () => {
-            const selectedDisUseIds = selectedRows.map(rowIndex => disUseList[rowIndex].disid);
-    
-            try {
-                // DisUse 업데이트
-                await Promise.all(selectedDisUseIds.map(disid =>         //Date 객체를 ISO 8601 형식의 문자열로 변환  [0]으로 날짜 부분만 반환
-                    axios.put(`http://localhost:8090/traders/disuse/update/${disid}`, { disdate: new Date().toISOString().split('T')[0] })
-                ));
-    
-                // 업데이트 후 상태 업데이트
-                setDisUseList(disUseList.map((item, index) => 
-                    selectedRows.includes(index) ? { ...item, disdate: new Date().toISOString().split('T')[0] } : item
-                ));
-                setSelectedRows([]);
-                
-            } catch (error) {
-                console.error("폐기완료 실패", error);
-            }
-        };
+  // 폐기완료
+    const handleCompleteSelected = async () => {
+        const selectedDisUseIds = selectedRows.map(rowIndex => disUseList[rowIndex].disid);
+
+        try {
+            // DisUse 업데이트
+            await Promise.all(selectedDisUseIds.map(disid =>
+                axios.put(`http://localhost:8090/traders/disuse/update/${disid}`, { disdate: new Date().toISOString().split('T')[0] })
+            ));
+
+            // 업데이트 후 상태 업데이트
+            setDisUseList(disUseList.map((item, index) => 
+                selectedRows.includes(index) ? { ...item, disdate: new Date().toISOString().split('T')[0] } : item
+            ));
+            setSelectedRows([]);
+            
+        } catch (error) {
+            console.error("폐기완료 실패", error);
+        }
+    };
    
     //유통기한관리 페이지 삭제하기 버튼(stock & disuse 테이블 db데이터 동시 삭제)
     const handleDeleteSelected = async () => {
@@ -66,19 +95,70 @@ const DisUseTable = ({ columns, disUseList=[], setDisUseList }) => {
         }
     };
 
+     // 정렬 옵션을 변경하는 함수
+     const handleSortChange = (sortBy) => {
+        setSortStates(prevState => {
+            const newSortStates = { ...prevState, [sortBy]: !prevState[sortBy] };
+
+            // 체크박스가 해제되면 정렬 옵션을 기본 상태로 설정
+            if (!newSortStates[sortBy]) {
+                setSortOption('');
+            } else {
+                setSortOption(sortBy);
+            }
+
+            // 한 번에 하나의 정렬만 활성화
+            for (const key in newSortStates) {
+                if (key !== sortBy) {
+                    newSortStates[key] = false;
+                }
+            }
+            return newSortStates;
+        });
+    };
+
+    // 필터링 및 정렬된 재고 데이터를 반환하는 함수
+    const sortedAndFilteredDisuse = disUseList
+        .filter(item => {
+            return (categoryFilter ? item.stock.goods.gcategory === categoryFilter : true) &&
+                (locationFilter ? item.stock.loc2 === locationFilter : true);
+        })
+        .sort((a, b) => {
+            switch (sortOption) {
+                case 'disdate':
+                    return new Date(b.disdate) - new Date(a.disdate);
+                case 'expdate':
+                    return new Date(a.stock.expdate) - new Date(b.stock.expdate);
+                case 'stock':
+                    return b.stock.stockquantity - a.stock.stockquantity;
+                default:
+                    return 0;
+            }
+        });
+
+    // 카테고리 필터 값을 변경하는 함수
+    const handleCategoryFilterChange = (event) => {
+        setCategoryFilter(event.target.value);
+    };
+
+    // 위치 필터 값을 변경하는 함수
+    const handleLocationFilterChange = (event) => {
+        setLocationFilter(event.target.value);
+    };
+
     return (
         <div className={disuse.DisUse}>
             <div className={disuse.tableCon1}>
-                <input type='checkbox'   />
+                <input type='checkbox' checked={sortStates.disdate} onChange={() => handleSortChange('disdate')}   />
                 <span>폐기처리일 순</span>
-                <input type='checkbox'  />
+                <input type='checkbox' checked={sortStates.expdate} onChange={() => handleSortChange('expdate')} />
                 <span>유통기한 순</span>
-                <input type='checkbox'  />
+                <input type='checkbox' checked={sortStates.stock} onChange={() => handleSortChange('stock')} />
                 <span>재고량 순</span>
 
                 <form className={disuse.cate_Form1}>
-                    <select name='category' >
-                        <option disabled selected>카테고리</option>
+                    <select name='category' onChange={handleCategoryFilterChange} value={categoryFilter}>
+                        <option  value="">카테고리</option>
                         <option>간식류</option>
                         <option>곡류</option>
                         <option>소스류</option>
@@ -86,8 +166,8 @@ const DisUseTable = ({ columns, disUseList=[], setDisUseList }) => {
                 </form>
 
                 <form className={disuse.cate_Form1}>
-                    <select name='category' >
-                        <option disabled selected>위치</option>
+                    <select name='category'onChange={handleLocationFilterChange} value={locationFilter} >
+                        <option value="">위치</option>
                         <option>A</option>
                         <option>B</option>
                         <option>C</option>
@@ -97,7 +177,7 @@ const DisUseTable = ({ columns, disUseList=[], setDisUseList }) => {
             <div className={disuse.DisUseTable}>
                 <table className={disuse.custom1}>
                     <thead>
-                        <tr>
+                        <tr >
                             <th>
                                 <input
                                     type="checkbox"
@@ -112,8 +192,8 @@ const DisUseTable = ({ columns, disUseList=[], setDisUseList }) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {disUseList.map((row, rowIndex) => (
-                            <tr key={rowIndex}>
+                        {sortedAndFilteredDisuse.map((row, rowIndex) => (
+                            <tr key={rowIndex} className={row.disdate ? disuse.deletedRow : ''}>
                                 <td>
                                     <input
                                         type="checkbox"
