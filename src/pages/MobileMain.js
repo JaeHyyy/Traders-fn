@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 // import { useNavigate } from 'react-router-dom';
 import axios from 'axios'; // HTTP 요청을 위한 axios import
@@ -7,6 +8,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 
 import logo from '../assets/logo.png';
 import mobileMain from './MobileMain2.module.css'; // 스타일링을 위한 CSS 모듈
+
 
 const MobileMain = () => {
     // QR 코드 데이터를 저장하기 위한 상태
