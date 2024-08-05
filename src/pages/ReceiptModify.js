@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useSearchParams, useParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import styles from './ReceiptModify.module.css';
 import get from 'lodash/get';
