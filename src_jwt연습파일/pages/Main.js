@@ -3,8 +3,6 @@ import main from '../pages/Main.module.css';
 import Calendar from '../components/Calendar';
 import axios from 'axios';
 import { format } from 'date-fns';
-import { getAuthToken } from '../util/auth';
-import { useNavigate } from 'react-router-dom';
 
 function Main() {
   const [goods, setGoods] = useState([]);
@@ -14,37 +12,18 @@ function Main() {
   const [selectedGoods, setSelectedGoods] = useState([]);
   const prevSelectedDate = useRef(null);  // 이전에 선택한 날짜를 추적하는 ref
   const [expiringMessage, setExpiringMessage] = useState('');  // 메시지를 저장할 상태 추가
-  const navigate = useNavigate();
 
   useEffect(() => {
-    const token = getAuthToken();
-    axios.get('http://localhost:8090/traders/home', {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    })
+    axios.get('http://localhost:8090/traders/home')
       .then(response => {
         setGoods(response.data);
       })
       .catch(error => {
         console.error('goods상품 조회 불가', error);
-        const errorMessage = error.response ? error.response.data.message : '데이터를 가져오는 중 오류가 발생했습니다.';
-        if (error.message.includes('CORS')) {
-          alert('CORS 정책에 의해 요청이 차단되었습니다. 서버 설정을 확인하세요.');
-        } else {
-          alert(errorMessage);
-        }
-        if (error.response && error.response.status === 401) {
-          navigate('/login');
-        }
       });
 
     // 재고부족 상품 리스트 조회
-    axios.get('http://localhost:8090/traders/stock', {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    })
+    axios.get('http://localhost:8090/traders/stock')
       .then(response => {
         const currentDate = new Date();
         const shortage = response.data.filter(stock => {
@@ -57,17 +36,8 @@ function Main() {
       })
       .catch(error => {
         console.error('There was an error fetching the goods!', error);
-        const errorMessage = error.response ? error.response.data.message : '데이터를 가져오는 중 오류가 발생했습니다.';
-        if (error.message.includes('CORS')) {
-          alert('CORS 정책에 의해 요청이 차단되었습니다. 서버 설정을 확인하세요.');
-        } else {
-          alert(errorMessage);
-        }
-        if (error.response && error.response.status === 401) {
-          navigate('/login');
-        }
       });
-  }, [navigate]);
+  }, []);
 
   const handleSearch = (event) => {
     event.preventDefault();

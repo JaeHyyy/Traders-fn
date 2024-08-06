@@ -14,6 +14,7 @@ const Signup = () => {
         branchId: '',
         passwd: '',
         branchName: '',
+        nickname: '',
         branchNum: '',
         branchImage: null, // 파일을 null로 초기화
         post: '',
@@ -58,7 +59,7 @@ const Signup = () => {
         data.append('branchId', formData.branchId);
         data.append('passwd', formData.passwd);
         data.append('branchName', formData.branchName);
-        // data.append('nickname', formData.nickname);
+        data.append('nickname', formData.nickname);
         data.append('branchNum', formData.branchNum);
         data.append('post', formData.post);
         data.append('addr1', formData.addr1);

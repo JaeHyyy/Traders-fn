@@ -5,7 +5,7 @@ import { setAuthToken } from '../util/auth';
 import logo from '../assets/logo.png';
 import login from './Login.module.css';
 
-function Login() {
+const Login = () => {
     const [credentials, setCredentials] = useState({ branchId: '', passwd: '' });
     const [rememberMe, setRememberMe] = useState(false);
     const navigate = useNavigate();
@@ -46,6 +46,7 @@ function Login() {
 
                 // JWT 토큰 저장
                 setAuthToken(response.data.token);
+
                 // RememberMe 상태에 따라 로컬 스토리지에 저장
                 if (rememberMe) {
                     localStorage.setItem('branchId', credentials.branchId);
@@ -56,7 +57,8 @@ function Login() {
             })
             .catch(error => {
                 console.error('There was an error!', error);
-                alert('로그인 실패: ' + error.message);
+                const errorMessage = error.response ? error.response.data.message : '로그인 실패: 서버와 통신할 수 없습니다.';
+                alert(errorMessage);
             });
     };
 
