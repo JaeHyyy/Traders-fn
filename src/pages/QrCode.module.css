@@ -1,0 +1,53 @@
+.rable {
+    display: flex;
+    flex-direction: column;
+    /* 수직 정렬 */
+    width: 100%;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.warn {
+    margin-bottom: 20px;
+}
+
+.container {
+    width: 100%;
+    display: flex;
+    height: 70vh;
+    justify-content: center;
+    align-items: center;
+}
+
+.container2 {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    /* 오른쪽 정렬 */
+    align-items: center;
+}
+
+.loading {
+    font-size: 1.5em;
+    color: #666;
+}
+
+.button {
+    background-color: #aada2a; /* 녹색 배경 */
+    border: none;
+    color: white; /* 흰색 글씨 */
+    padding: 10px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+
+    cursor: pointer;
+    border-radius: 8px; /* 둥근 모서리 */
+  }
+
+  .button:hover {
+    background-color: #45a049; /* 호버 시 더 짙은 녹색 */
+  }

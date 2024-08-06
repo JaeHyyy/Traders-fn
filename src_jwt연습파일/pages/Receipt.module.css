@@ -1,0 +1,68 @@
+.rable {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.receipt-table{
+    flex: 3;
+      margin-right: 20px;
+}
+.table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+.thead {
+    background-color: #aada2a;
+  }
+
+.table th, .table td{
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+    overflow: hidden; /* 내용이 셀을 벗어나지 않도록 설정 */
+    text-overflow: ellipsis; /* 내용이 넘칠 경우 ... 으로 표시 */
+    white-space: nowrap;
+}
+
+.button {
+    background-color: #aada2a; /* 녹색 배경 */
+    border: none;
+    color: white; /* 흰색 글씨 */
+    padding: 8px 8px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 1px;
+    cursor: pointer;
+    border-radius: 8px; /* 둥근 모서리 */
+  }
+
+  .button:hover {
+    background-color: #45a049; /* 호버 시 더 짙은 녹색 */
+  }
+
+  .tableTop{
+    display: flex;
+    flex-direction: column;
+    height: 40px;
+  }
+
+.tableCon {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    height: 40px;
+}
+
+.tableCon>span {
+    margin-right: 20px;
+}

@@ -1,0 +1,135 @@
+.OrderCart{
+  display: flex;
+  flex-direction: column;
+  height: 90%;
+}
+
+
+/*발주리스트 테이블 구현  */
+.OrderCartTable{
+  flex: 1;
+  overflow-y: auto; /* 테이블 내용이 길어지면 스크롤 */
+  max-height: 560px; /* 테이블 높이 고정 */
+}
+
+.custom {
+  width: 100%; /* 테이블이 컨테이너의 전체 너비를 차지하도록 설정 */
+  table-layout: fixed; /* 컬럼 너비 조정 */
+  border-collapse: collapse;
+  /* margin-bottom: 20px;  */
+}
+
+  thead {
+    background-color:  #aada2a;
+  }
+  
+  .custom th, .custom td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+    overflow: hidden; /* 내용이 셀을 벗어나지 않도록 설정 */
+    text-overflow: ellipsis; /* 내용이 넘칠 경우 ... 으로 표시 */
+    white-space: nowrap; /* 텍스트가 줄바꿈되지 않도록 설정 */
+  }
+    /* 컬럼 너비 조정 */
+  .custom th:nth-child(1),
+  .custom td:nth-child(1) {
+    width: 4%; 
+  }
+  
+  .custom th:nth-child(2),
+  .custom td:nth-child(2) {
+    width: 5%; /* 순번 컬럼 */
+  }
+
+  .custom-table1 th:nth-child(3),
+  .custom-table1 td:nth-child(3) {
+    width: 13%; /* 상품코드 컬럼 */
+  }
+
+  .custom-table th:nth-child(4),
+  .custom-table td:nth-child(4) {
+    width: 6%; /* 이미지 컬럼 */
+  }
+
+  .custom-table th:nth-child(5),
+  .custom-table td:nth-child(5) {
+    width: 8%; /* 카테고리 컬럼 */
+  }
+
+  .custom-table th:nth-child(6),
+  .custom-table td:nth-child(6) {
+    width: 2%; /* 상품명(단위) 컬럼 */
+  }
+
+  .custom-table th:nth-child(7),
+  .custom-table td:nth-child(7) {
+    width: 4%; /* 유통기한 컬럼 */
+  }
+
+  .custom-table th:nth-child(8),
+  .custom-table td:nth-child(8) {
+    width: 13%; /* 제조사 컬럼 */
+  }
+
+
+
+/* 발주리스트 테이블 밑부분 구성 */
+.tableBottom{
+  display: flex;
+  flex-direction: row;
+  position: absolute;
+  top: 640px; 
+  right: 10px; /* 부모 요소의 오른쪽에서 10px 왼쪽  */ 
+  justify-content: flex-end; 
+  padding: 15px;
+  /* margin-right: 5px; */
+  background: white; 
+}
+
+.total {
+  margin-left: auto;
+  margin-right: 30px;
+  font-weight: 700;  
+}
+
+  .orderBtn {
+    padding: 10px 20px ; 
+    background-color: #4CAF50; 
+    color: white; /* 버튼 글자색 */
+    border: none; 
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.orderBtn:hover{
+  background-color: #45a049; /* 호버 시 버튼 배경색 변경 */
+}
+
+.delBtn {
+  padding: 10px 20px;
+  background-color: #252F81;
+  color: white; /* 버튼 글자색 */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer; 
+}
+
+.delBtn:hover{
+  background-color:#131942;
+}
+
+.saveBtn{
+  padding: 10px 20px;
+  background-color: #EDF4FD;
+  color: gray; /* 버튼 글자색 */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: 10px; 
+}
+
+.saveBtn:hover{
+  background-color:#b4cded;
+}

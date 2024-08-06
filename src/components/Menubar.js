@@ -1,17 +1,26 @@
 import menubar from './Menubar.module.css'
 import logo from '../assets/logo.png'
-import { NavLink, Outlet, useLocation } from "react-router-dom";
+import { NavLink, Outlet, useLocation, useRouteLoaderData, Form, useNavigate } from "react-router-dom";
+import { getAuthToken } from '../util/auth';
 
 function Menubar() {
     const location = useLocation();
+    const navigate = useNavigate();
+    const token = getAuthToken();
 
     const menuItems = [
         { name: '홈', path: '/' },
-        { name: '입고관리', path: '/test' },
-        { name: '재고관리', path: '/페이지만들어' },
-        { name: '발주하기', path: '/페이지만들어' },
-        { name: '유통기한관리', path: '/페이지만들어' }
+        { name: '입고관리', path: '/Receipt' },
+        { name: '재고관리', path: '/stock' },
+        { name: '발주하기', path: '/ordercart' },
+        { name: '유통기한관리', path: '/disuse' }
     ];
+
+    const handleLogout = () => {
+        localStorage.removeItem('jwtAuthToken');
+        localStorage.removeItem('branchId');
+        navigate('/login');
+    };
 
     return (
         <div className={menubar.Menubar}>
@@ -21,14 +30,20 @@ function Menubar() {
                 <div className={menubar.head_box}>
                     <div className={menubar.header}>
                         <div className={menubar.header_con1}>
-                            <img src={logo} alt='로고' className={menubar.logo} />
+                            <NavLink to="/">
+                                <img src={logo} alt='로고' className={menubar.logo} />
+                            </NavLink>
                             <span>광안점</span>
                         </div>
 
                         <div className={menubar.header_con2}>
                             <span>마이페이지&nbsp;</span>
                             <span>&nbsp;|&nbsp;</span>
-                            <span className={menubar.logout}>&nbsp;로그아웃</span>
+                            {token ? (
+                                <span className={menubar.logout} onClick={handleLogout}>&nbsp;로그아웃</span>
+                            ) : (
+                                <NavLink to="/login" className={menubar.login}>&nbsp;로그인</NavLink>
+                            )}
                         </div>
                     </div>
                 </div>

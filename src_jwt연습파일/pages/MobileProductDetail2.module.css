@@ -1,0 +1,141 @@
+/* 기본 스타일 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* 전체 페이지 스타일링 */
+.mobileProductDetail_page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    background-color: #AADA2A;
+}
+
+/* 로고 스타일링 */
+.logo {
+    width: 200px;
+    height: 100px;
+    object-fit: cover;
+}
+
+/* 제품 박스 스타일링 */
+.product_box {
+    position: relative;
+    width: 400px;
+}
+
+/* 헤더 스타일링 */
+.product_header {
+    display: block;
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+    background-color: #333333;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 5px 5px 0px 0px;
+    font-size: 16px;
+    font-weight: bold;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+}
+
+/* 위치 스타일링 */
+.product_location {
+    position: relative;
+    width: 400px;
+    height: auto;
+    margin-top: 50px;
+}
+
+/* 도면 스타일링 */
+.plan {
+    width: 100%;
+    height: auto;
+}
+
+/* 원형 깜빡이 효과 */
+.blinking_circle {
+    position: absolute;
+    width: 20px;
+    /* 조정 가능 */
+    height: 20px;
+    /* 조정 가능 */
+    border-radius: 50%;
+    background-color: black;
+    /* 원하는 색상 */
+    /* border: 2px solid white; */
+    /* 선 색상 */
+    transform: translate(-50%, -50%);
+    /* 중앙 정렬 */
+    animation: blink 1s infinite;
+    /* 깜빡이는 애니메이션 */
+}
+
+/* 깜빡이 애니메이션 */
+@keyframes blink {
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+/* SVG 오버레이 스타일링 */
+.svgOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* 제품 정보 박스 스타일링 */
+.product_information {
+    text-align: center;
+}
+
+/* 테이블 스타일 */
+.table {
+    width: 400px;
+    border-collapse: collapse;
+    margin: 20px auto;
+    text-align: center;
+}
+
+.table th,
+.table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+.table th {
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+.table td {
+    background-color: #fff;
+    color: #666;
+}
+
+.table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.table tr:hover {
+    background-color: #eaeaea;
+}
