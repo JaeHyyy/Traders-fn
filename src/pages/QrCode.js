@@ -13,7 +13,7 @@ const QrCode = () => {
     useEffect(() => {
         const fetchQrCode = async () => {
             try {
-                const response = await axios.get(`http://10.10.10.207:8090/traders/api/qrcode?date=${date}`, {
+                const response = await axios.get(`http://10.10.10.170:8090/traders/api/qrcode?date=${date}`, {
                     responseType: 'arraybuffer',
                 });
                 const base64Image = btoa(
