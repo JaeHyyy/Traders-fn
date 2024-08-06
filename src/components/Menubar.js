@@ -1,9 +1,12 @@
 import menubar from './Menubar.module.css'
 import logo from '../assets/logo.png'
-import { NavLink, Outlet, useLocation } from "react-router-dom";
+import { NavLink, Outlet, useLocation, useRouteLoaderData, Form, useNavigate } from "react-router-dom";
+import { getAuthToken } from '../util/auth';
 
 function Menubar() {
     const location = useLocation();
+    const navigate = useNavigate();
+    const token = getAuthToken();
 
     const menuItems = [
         { name: '홈', path: '/' },
@@ -12,6 +15,12 @@ function Menubar() {
         { name: '발주하기', path: '/ordercart' },
         { name: '유통기한관리', path: '/disuse' }
     ];
+
+    const handleLogout = () => {
+        localStorage.removeItem('jwtAuthToken');
+        localStorage.removeItem('branchId');
+        navigate('/login');
+    };
 
     return (
         <div className={menubar.Menubar}>
@@ -30,7 +39,11 @@ function Menubar() {
                         <div className={menubar.header_con2}>
                             <span>마이페이지&nbsp;</span>
                             <span>&nbsp;|&nbsp;</span>
-                            <span className={menubar.logout}>&nbsp;로그아웃</span>
+                            {token ? (
+                                <span className={menubar.logout} onClick={handleLogout}>&nbsp;로그아웃</span>
+                            ) : (
+                                <NavLink to="/login" className={menubar.login}>&nbsp;로그인</NavLink>
+                            )}
                         </div>
                     </div>
                 </div>
