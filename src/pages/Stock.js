@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import stockk from './StockList.module.css';
 import ReactPaginate from 'react-paginate';
+import { getAuthToken } from '../util/auth';
+import { useNavigate } from 'react-router-dom';
 
 const Stock = ({ columns }) => {
     // 선택된 행의 인덱스를 저장하는 상태
@@ -32,21 +34,37 @@ const Stock = ({ columns }) => {
     // 페이지당 항목 수
     const itemsPerPage = 7;
 
+    const navigate = useNavigate();
+
 
     //thead는 컬럼명 header
     //tbody는 데이터 accessor
 
     // 서버에서 재고 데이터 가져오기
     useEffect(() => {
-        axios.get('http://localhost:8090/traders/stock')
+        const token = getAuthToken();
+        axios.get(`http://localhost:8090/traders/stock`,{
+            headers: {
+                Authorization: `Bearer ${token}`
+              }
+        })
             .then(response => {
                 setStock(response.data);
                 // console.log(response.data);
             })
             .catch(error => {
                 console.error('There was an error fetching the goods!', error);
-            });
-    }, []);
+                const errorMessage = error.response ? error.response.data.message : '데이터를 가져오는 중 오류가 발생했습니다.';
+        if (error.message.includes('CORS')) {
+          alert('CORS 정책에 의해 요청이 차단되었습니다. 서버 설정을 확인하세요.');
+        } else {
+          alert(errorMessage);
+        }
+        if (error.response && error.response.status === 401) {
+          navigate('/login');
+        }
+       });
+    }, [navigate]);
 
     // 모든 행을 선택하거나 선택을 해제하는 함수
     const handleSelectAll = (event) => {

@@ -42,7 +42,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/stock",
-        element: <Stock />
+        element: <ProtectedRoute element={Stock} />
       },
       {
         path: "/ordercart",

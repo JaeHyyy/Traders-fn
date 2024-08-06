@@ -28,7 +28,7 @@ const Receipt = () => {
 
   useEffect(() => {
     const token = getAuthToken();
-    axios.get('http://localhost:8090/traders/receipt', {
+    axios.get(`http://localhost:8090/traders/${token}/receipt`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
