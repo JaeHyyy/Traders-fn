@@ -3,9 +3,10 @@ import axios from 'axios';
 import stockk from './StockList.module.css';
 import ReactPaginate from 'react-paginate';
 import { getAuthToken } from '../util/auth';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const Stock = ({ columns }) => {
+    
     // 선택된 행의 인덱스를 저장하는 상태
     const [selectedRows, setSelectedRows] = useState([]);
 
@@ -43,7 +44,15 @@ const Stock = ({ columns }) => {
     // 서버에서 재고 데이터 가져오기
     useEffect(() => {
         const token = getAuthToken();
-        axios.get(`http://localhost:8090/traders/stock`,{
+        const branchid = localStorage.getItem('branchId');
+
+        console.log('Branch ID from localStorage:', branchid);
+
+        if (!branchid) {
+            console.error('Branch ID를 찾을 수 없습니다.');
+            return;
+        }
+        axios.get(`http://localhost:8090/traders/stock/${branchid}`,{
             headers: {
                 Authorization: `Bearer ${token}`
               }

@@ -49,6 +49,7 @@ function Login() {
                 // RememberMe 상태에 따라 로컬 스토리지에 저장
                 if (rememberMe) {
                     localStorage.setItem('branchId', credentials.branchId);
+                    console.log('Branch ID:', credentials.branchId);// 이 로그를 추가하여 branchid가 올바르게 저장되었는지 확인
                 } else {
                     localStorage.removeItem('branchId');
                 }
