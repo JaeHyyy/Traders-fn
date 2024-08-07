@@ -9,6 +9,7 @@ function Login() {
     const [credentials, setCredentials] = useState({ branchId: '', passwd: '' });
     const [rememberMe, setRememberMe] = useState(false);
     const navigate = useNavigate();
+    const [branchid, setBranchid] = useState();
 
     useEffect(() => {
         const savedBranchId = localStorage.getItem('branchId');
@@ -46,10 +47,13 @@ function Login() {
 
                 // JWT 토큰 저장
                 setAuthToken(response.data.token);
+                setBranchid(response.data.branchid);
+                console.log(branchid);
 
-                // branchId 저장
-                localStorage.setItem('branchId', response.data.branchId);
-                localStorage.setItem('branchid', response.data.branchid);
+                // branchId를 로컬 스토리지에 저장
+                localStorage.setItem('branchId', credentials.branchId);
+                console.log(user.branchid);
+
 
                 // RememberMe 상태에 따라 로컬 스토리지에 저장
                 if (rememberMe) {
