@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { setAuthToken } from '../util/auth';
 import logo from '../assets/logo.png';
 import login from './Login.module.css';
 
@@ -42,6 +43,9 @@ function Login() {
         axios.post('http://localhost:8090/traders/login', credentials)
             .then(response => {
                 console.log(response.data);
+
+                // JWT 토큰 저장
+                setAuthToken(response.data.token);
                 // RememberMe 상태에 따라 로컬 스토리지에 저장
                 if (rememberMe) {
                     localStorage.setItem('branchId', credentials.branchId);

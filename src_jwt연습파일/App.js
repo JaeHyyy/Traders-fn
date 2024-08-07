@@ -25,7 +25,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <ProtectedRoute element={Main} />
+        element: <Main />
       },
       {
         path: "/receipt",
