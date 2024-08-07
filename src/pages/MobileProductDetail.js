@@ -21,6 +21,7 @@ const ZONE_IMAGES = {
     C: C
 };
 
+// 구역변경시 select box
 const loc1Options = ['AA', 'BB', 'CC'];
 const loc2Options = ['A', 'B', 'C'];
 const loc3Options = ['a', 'b', 'c', 'd', 'e', 'f'];
