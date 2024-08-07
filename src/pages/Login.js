@@ -136,6 +136,7 @@ function Login() {
                 setAuthToken(response.data.token);
 
                 // 토큰과 branchId를 localStorage에 저장
+
                 localStorage.setItem('token', response.data.token);
                 localStorage.setItem('branchId', credentials.branchId);
 
