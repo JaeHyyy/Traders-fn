@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import styles from './ReceiptModify.module.css';
 import get from 'lodash/get';
+import { getAuthToken } from '../util/auth';
 
 const ReceiptModify = () => {
     const [movements, setMovements] = useState([]);
@@ -10,6 +11,7 @@ const ReceiptModify = () => {
     const movdate = searchParams.get("movdate");
     const [selectedGcode, setSelectedGcode] = useState(null);
     const [locations, setLocations] = useState({ loc1: '', loc2: '', loc3: '' });
+    const navigate = useNavigate();
 
     const columns = [
         { header: '순번', accessor: null, className: styles['column-seq'] },
@@ -24,7 +26,21 @@ const ReceiptModify = () => {
     ];
 
     useEffect(() => { //날짜로 분류된 데이터 조회
-        axios.get(`http://localhost:8090/traders/join?movdate=${movdate}`)
+        const token = getAuthToken();
+        const branchId = localStorage.getItem("branchId");
+
+        if (!branchId) {
+            console.error('Branch ID가 없습니다. 로그인 정보를 확인해주세요.');
+            navigate('/login');
+            return;
+        }
+
+        axios.get(`http://localhost:8090/traders/${branchId}/join?movdate=${movdate}`, {
+            headers: {
+                method: "GET",
+                Authorization: `Bearer ${token}`
+            }
+        })
             .then(response => {
                 console.log('API Response:', response.data);
                 setMovements(response.data);
@@ -32,8 +48,11 @@ const ReceiptModify = () => {
             })
             .catch(error => {
                 console.error('Error fetching data:', error);
+                if (error.response && error.response.status === 401) {
+                    navigate('/login');
+                }
             });
-    }, [movdate]);
+    }, [movdate, navigate]);
 
 
     const handleEditClick = async (gcode) => {
