@@ -134,6 +134,7 @@ function Login() {
                 // JWT 토큰 저장
                 setAuthToken(response.data.token);
 
+
                 // Store branchId and token in localStorage
                 localStorage.setItem('token', response.data.token);
                 localStorage.setItem('branchId', credentials.branchId);
