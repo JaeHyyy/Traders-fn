@@ -328,6 +328,7 @@ function Main() {
   const [expiringMessage, setExpiringMessage] = useState('');  // 메시지를 저장할 상태 추가
   const navigate = useNavigate();
 
+  // useEffect를 사용하여 컴포넌트가 처음 렌더링될 때 localStorage에서 token과 branchId를 가져옴
   useEffect(() => {
     const token = localStorage.getItem('token');
     const branchId = localStorage.getItem('branchId');
@@ -338,6 +339,7 @@ function Main() {
       return;
     }
 
+    // 상품 리스트를 가져오는 API 요청
     axios.get('http://localhost:8090/traders/home', {
       headers: {
         Authorization: `Bearer ${token}`
@@ -642,4 +644,5 @@ function Main() {
 }
 
 export default Main;
+
 

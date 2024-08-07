@@ -97,6 +97,7 @@ function Login() {
     const [rememberMe, setRememberMe] = useState(false);
     const navigate = useNavigate();
 
+    // useEffect를 사용하여 컴포넌트가 처음 렌더링될 때 localStorage에서 branchId를 가져옴
     useEffect(() => {
         const savedBranchId = localStorage.getItem('branchId');
         if (savedBranchId) {
@@ -131,14 +132,15 @@ function Login() {
             .then(response => {
                 console.log(response.data);
 
-                // JWT 토큰 저장
+                // JWT 토큰을 저장
                 setAuthToken(response.data.token);
 
-                // Store branchId and token in localStorage
+                // 토큰과 branchId를 localStorage에 저장
+
                 localStorage.setItem('token', response.data.token);
                 localStorage.setItem('branchId', credentials.branchId);
 
-                // Navigate to the main page
+                // 메인 페이지로 이동
                 navigate('/');
             })
             .catch(error => {
@@ -170,4 +172,5 @@ function Login() {
 }
 
 export default Login;
+
 
