@@ -44,7 +44,7 @@ const Stock = ({ columns }) => {
     // 서버에서 재고 데이터 가져오기
     useEffect(() => {
         const token = getAuthToken();
-        const branchid = localStorage.getItem('branchId');
+        const branchid = localStorage.getItem("branchId");
 
         console.log('Branch ID from localStorage:', branchid);
 
@@ -54,6 +54,7 @@ const Stock = ({ columns }) => {
         }
         axios.get(`http://localhost:8090/traders/stock/${branchid}`,{
             headers: {
+                method: "GET",
                 Authorization: `Bearer ${token}`
               }
         })
