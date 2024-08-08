@@ -37,22 +37,13 @@ const Stock = ({ columns }) => {
 
     const navigate = useNavigate();
 
-
-    //thead는 컬럼명 header
-    //tbody는 데이터 accessor
-
+    const token = getAuthToken();
+    const branchId = localStorage.getItem('branchId'); // 저장된 branchId 가져오기
     // 서버에서 재고 데이터 가져오기
     useEffect(() => {
-        const token = getAuthToken();
-        const branchid = localStorage.getItem("branchId");
-
-        console.log('Branch ID from localStorage:', branchid);
-
-        if (!branchid) {
-            console.error('Branch ID를 찾을 수 없습니다.');
-            return;
-        }
-        axios.get(`http://localhost:8090/traders/stock/${branchid}`,{
+   
+        if (branchId) {
+        axios.get(`http://localhost:8090/traders/stock/branch/${branchId}`,{
             headers: {
                 method: "GET",
                 Authorization: `Bearer ${token}`
@@ -60,21 +51,15 @@ const Stock = ({ columns }) => {
         })
             .then(response => {
                 setStock(response.data);
-                // console.log(response.data);
+                console.log(response.data);
             })
             .catch(error => {
                 console.error('There was an error fetching the goods!', error);
-                const errorMessage = error.response ? error.response.data.message : '데이터를 가져오는 중 오류가 발생했습니다.';
-        if (error.message.includes('CORS')) {
-          alert('CORS 정책에 의해 요청이 차단되었습니다. 서버 설정을 확인하세요.');
-        } else {
-          alert(errorMessage);
+             });
+             } else {
+                console.error('No branchId found in localStorage!');
         }
-        if (error.response && error.response.status === 401) {
-          navigate('/login');
-        }
-       });
-    }, [navigate]);
+       },[branchId]);
 
     // 모든 행을 선택하거나 선택을 해제하는 함수
     const handleSelectAll = (event) => {
