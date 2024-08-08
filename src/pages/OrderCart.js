@@ -68,15 +68,24 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import OrderCartTable from './OrderCartTable';
+import { getAuthToken } from '../util/auth';
 
 const OrderCart = () => {
   const [orderCart, setOrderCart] = useState([]);
+  const token = getAuthToken();
   const branchId = localStorage.getItem('branchId'); // 저장된 branchId 가져오기
 
   // branchId로 ordercart db테이블 값 나타내기
   useEffect(() => {
+
+
     if (branchId) {
-      axios.get(`http://localhost:8090/traders/ordercart/branch/${branchId}`)
+      axios.get(`http://localhost:8090/traders/ordercart/branch/${branchId}`, {
+        headers: {
+          method: "GET",
+          Authorization: `Bearer ${token}`
+        }
+      })
         .then(response => {
           setOrderCart(response.data);
           console.log(response.data);
