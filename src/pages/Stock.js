@@ -74,7 +74,7 @@ const Stock = ({ columns }) => {
           navigate('/login');
         }
        });
-    }, [branchid]);
+    }, [navigate]);
 
     // 모든 행을 선택하거나 선택을 해제하는 함수
     const handleSelectAll = (event) => {
