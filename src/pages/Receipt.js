@@ -28,7 +28,7 @@ const Receipt = () => {
 
   useEffect(() => {
     const token = getAuthToken();
-    const branchId = localStorage.getItem('branchId');
+    const branchId = localStorage.getItem("branchId");
 
     if (!branchId) {
       console.error('Branch ID가 없습니다. 로그인 정보를 확인해주세요.');
@@ -36,8 +36,9 @@ const Receipt = () => {
       return;
     }
 
-    axios.get(`http://localhost:8090/${branchId}/traders/receipt`, {
+    axios.get(`http://localhost:8090/traders/${branchId}/receipt`, {
       headers: {
+        method: "GET",
         Authorization: `Bearer ${token}`
       }
     })

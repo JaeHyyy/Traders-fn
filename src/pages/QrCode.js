@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import styles from './QrCode.module.css';
+import { getAuthToken } from '../util/auth';
 
 const QrCode = () => {
     const [qrCode, setQrCode] = useState(null);
@@ -11,10 +12,22 @@ const QrCode = () => {
     const [qrData, setQrData] = useState('');
 
     useEffect(() => {
+        const token = getAuthToken();
+        const branchId = localStorage.getItem("branchId");
+
+        if (!branchId) {
+            console.error('Branch ID가 없습니다. 로그인 정보를 확인해주세요.');
+            navigate('/login');
+            return;
+        }
+
         const fetchQrCode = async () => {
             try {
-                const response = await axios.get(`http://10.10.10.207:8090/traders/api/qrcode?date=${date}`, {
+                const response = await axios.get(`http://10.10.10.207:8090/traders/api/${branchId}/qrcode?date=${date}`, {
                     responseType: 'arraybuffer',
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
                 });
                 const base64Image = btoa(
                     new Uint8Array(response.data).reduce((data, byte) => data + String.fromCharCode(byte), '')
