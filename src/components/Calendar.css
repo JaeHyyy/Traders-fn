@@ -10,15 +10,17 @@
   }
   
   .calendar-header {
+    color: white;
     background-color: #f0f0f0;
     padding: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #aada2a;
+    background-color: #AADA2A;
   }
   
   .calendar-header button {
+    color: white;
     background: none;
     border: none;
     font-size: 18px;

@@ -30,7 +30,7 @@
       display: flex; 
       flex-direction: column; 
       align-items: stretch; 
-      border-right: 1px solid grey;
+      border-right: 1px solid #333333;       
 }
 
 
@@ -52,6 +52,7 @@
     padding: 10px 10px;
     border: none;
     cursor: pointer;
+    border-radius: 5px;
 }
 
 .goodsList {
@@ -88,16 +89,18 @@
 .orBtn {
     width: 80px;
     height: 30px;
+    color: white;
     background-color: #AADA2A;
     border: none;
     margin-top: 10px;
+    border-radius: 5px;
 }
 
 .events {
     width: 100%;
     height: 190px;
     margin-top: 30px;
-    background-color: rgb(167, 203, 59);
+    background-color: #AADA2A(167, 203, 59);
 }
 
 
@@ -134,12 +137,14 @@
 }
 
 .tableLabel2{
+    color: white;
     background-color: #AADA2A;
     padding: 10px;
     border-radius: 10px 0 0 0;
 }
 
 .tableLabel3{
+    color: white;
     margin-left: 178px;
     background-color: #AADA2A;
     padding: 10px;
