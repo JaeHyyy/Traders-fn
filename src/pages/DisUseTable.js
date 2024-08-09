@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import disuse from './DisUseTable.module.css';
 import axios from 'axios';
+import { getAuthToken } from '../util/auth';
 
 const DisUseTable = ({ columns }) => {
 
@@ -23,8 +24,17 @@ const DisUseTable = ({ columns }) => {
 
         const [disUseList, setDisUseList] = useState([]);
 
+        const token = getAuthToken();
+        const branchId = localStorage.getItem('branchId'); // 저장된 branchId 가져오기
+
         useEffect(() => {
-          axios.get('http://localhost:8090/traders/disuse')
+         if (branchId) {
+          axios.get(`http://localhost:8090/traders/disuse/branch/${branchId}`,{
+            headers: {
+                method: "GET",
+                Authorization: `Bearer ${token}`
+              }
+          })
             .then(response => {
               setDisUseList(response.data);
               console.log(response.data)
@@ -32,7 +42,10 @@ const DisUseTable = ({ columns }) => {
             .catch(error => {
               console.error('There was an error fetching the goods!', error);
             });
-        }, []);
+        }else {
+            console.error('No branchId found in localStorage!');
+        }
+    }, [branchId]);
 
 
 
