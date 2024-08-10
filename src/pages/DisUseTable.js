@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import disuse from './DisUseTable.module.css';
 import axios from 'axios';
+import { getAuthToken } from '../util/auth';
 
 const DisUseTable = ({ columns }) => {
 
@@ -23,8 +24,17 @@ const DisUseTable = ({ columns }) => {
 
         const [disUseList, setDisUseList] = useState([]);
 
+        const token = getAuthToken();
+        const branchId = localStorage.getItem('branchId'); // 저장된 branchId 가져오기
+
         useEffect(() => {
-          axios.get('http://localhost:8090/traders/disuse')
+         if (branchId) {
+          axios.get(`http://localhost:8090/traders/disuse/branch/${branchId}`,{
+            headers: {
+                method: "GET",
+                Authorization: `Bearer ${token}`
+              }
+          })
             .then(response => {
               setDisUseList(response.data);
               console.log(response.data)
@@ -32,12 +42,12 @@ const DisUseTable = ({ columns }) => {
             .catch(error => {
               console.error('There was an error fetching the goods!', error);
             });
-        }, []);
+        }else {
+            console.error('No branchId found in localStorage!');
+        }
+    }, [branchId]);
 
 
-
-    //thead는 컬럼명 header
-    //tbody는 데이터 accessor
 
     const handleSelectAll = (event) => {
         if (event.target.checked) {
@@ -55,45 +65,96 @@ const DisUseTable = ({ columns }) => {
         }
     };
 
-  // 폐기완료
-    const handleCompleteSelected = async () => {
-        const selectedDisUseIds = selectedRows.map(rowIndex => disUseList[rowIndex].disid);
 
+
+    // 폐기완료
+    const handleCompleteSelected = async () => {
+        if (!branchId) {
+            console.error('No branchId found in localStorage!');
+            return;
+        }
+        const selectedDisUseIds = selectedRows.map(rowIndex => disUseList[rowIndex].disid);
         try {
             // DisUse 업데이트
             await Promise.all(selectedDisUseIds.map(disid =>
-                axios.put(`http://localhost:8090/traders/disuse/update/${disid}`, { disdate: new Date().toISOString().split('T')[0] })
+                axios.put(`http://localhost:8090/traders/disuse/update/${disid}/${branchId}`, 
+                { disdate: new Date().toISOString().split('T')[0] },
+                {
+                    headers: {
+                        method: "PUT",
+                        Authorization: `Bearer ${token}`
+                    }
+                })
             ));
-
             // 업데이트 후 상태 업데이트
             setDisUseList(disUseList.map((item, index) => 
                 selectedRows.includes(index) ? { ...item, disdate: new Date().toISOString().split('T')[0] } : item
             ));
-            setSelectedRows([]);
-            
+            setSelectedRows([]); 
         } catch (error) {
             console.error("폐기완료 실패", error);
         }
     };
+
+
+
    
-    //유통기한관리 페이지 삭제하기 버튼(stock & disuse 테이블 db데이터 동시 삭제)
-    const handleDeleteSelected = async () => {
-        const selectedDisUseIds = selectedRows.map(rowIndex => disUseList[rowIndex].disid);
-        const selectedStockIds = selectedRows.map(rowIndex => disUseList[rowIndex].stock?.stockid);
+    // //유통기한관리 페이지 삭제하기 버튼(stock & disuse 테이블 db데이터 동시 삭제)
+    // const handleDeleteSelected = async () => {
+    //     const selectedDisUseIds = selectedRows.map(rowIndex => disUseList[rowIndex].disid);
+    //     const selectedStockIds = selectedRows.map(rowIndex => disUseList[rowIndex].stock?.stockid);
 
-        try {
-            // DisUse 삭제
-            await Promise.all(selectedDisUseIds.map(disid => axios.delete(`http://localhost:8090/traders/disuse/delete/${disid}`)));
-            // Stock 삭제
-            await Promise.all(selectedStockIds.filter(stockid => stockid !== null).map(stockid => axios.delete(`http://localhost:8090/traders/stock/delete/${stockid}`)));
+    //     try {
+    //         // DisUse 삭제
+    //         await Promise.all(selectedDisUseIds.map(disid => axios.delete(`http://localhost:8090/traders/disuse/delete/${disid}/${branchId}`)));
+    //         // Stock 삭제
+    //         await Promise.all(selectedStockIds.filter(stockid => stockid !== null).map(stockid => axios.delete(`http://localhost:8090/traders/stock/delete/${stockid}/${branchId}`)));
 
-            // 삭제 후 상태 업데이트
-            setDisUseList(disUseList.filter((_, index) => !selectedRows.includes(index)));
-            setSelectedRows([]);
-        } catch (error) {
-            console.error("삭제불가", error);
-        }
-    };
+    //         // 삭제 후 상태 업데이트
+    //         setDisUseList(disUseList.filter((_, index) => !selectedRows.includes(index)));
+    //         setSelectedRows([]);
+    //     } catch (error) {
+    //         console.error("삭제불가", error);
+    //     }
+    // };
+
+
+        // 유통기한관리 페이지 삭제하기 버튼 (stock & disuse 테이블 db 데이터 동시 삭제)
+        const handleDeleteSelected = async () => {
+            if (!branchId || !token) {
+                console.error('branchId 또는 token을 찾을 수 없습니다.');
+                return;
+            }
+            const selectedDisUseIds = selectedRows.map(rowIndex => disUseList[rowIndex].disid);
+            const selectedStockIds = selectedRows.map(rowIndex => disUseList[rowIndex].stock?.stockid);
+            try {
+                // DisUse 삭제
+                await Promise.all(selectedDisUseIds.map(disid => 
+                    axios.delete(`http://localhost:8090/traders/disuse/delete/${disid}/${branchId}`, {
+                        headers: {
+                            method: "DELETE", 
+                            Authorization: `Bearer ${token}`
+                        }
+                    })
+                ));
+                // Stock 삭제
+                await Promise.all(selectedStockIds.filter(stockid => stockid !== null).map(stockid => 
+                    axios.delete(`http://localhost:8090/traders/stock/delete/${stockid}/${branchId}`, {
+                        headers: {
+                            method: "DELETE",
+                            Authorization: `Bearer ${token}`
+                        }
+                    })
+                ));
+                // 삭제 후 상태 업데이트
+                setDisUseList(disUseList.filter((_, index) => !selectedRows.includes(index)));
+                setSelectedRows([]);
+            } catch (error) {
+                console.error("삭제불가", error);
+            }
+        };
+
+
 
      // 정렬 옵션을 변경하는 함수
      const handleSortChange = (sortBy) => {

@@ -2,10 +2,13 @@ import { useState, useEffect } from 'react';
 import order from './OrderCartTable.module.css';
 import axios from 'axios';
 import { loadTossPayments } from '@tosspayments/payment-sdk';
+import { getAuthToken } from '../util/auth';
 
-const OrderCartTable = ({ columns, orderCart, setOrderCart, handleGcount, branchid}) => {
+const OrderCartTable = ({ columns, orderCart, setOrderCart, handleGcount }) => {
   const [selectedRows, setSelectedRows] = useState([]);
   const [totalCostPrice, setTotalCostPrice] = useState(0);
+  const token = getAuthToken(); // token 값 저장
+  const branchId = localStorage.getItem('branchId'); // 저장된 branchId 가져오기
 
   //체크박스 전체 선택
   const handleSelectAll = (event) => {
@@ -31,7 +34,12 @@ const OrderCartTable = ({ columns, orderCart, setOrderCart, handleGcount, branch
     const selectedItems = selectedRows.map(rowIndex => orderCart[rowIndex].ordercode);
     selectedItems.forEach(ordercode => {
       if (ordercode !== undefined) {
-        axios.delete(`http://localhost:8090/traders/ordercart/delete/${ordercode}`)
+        axios.delete(`http://localhost:8090/traders/ordercart/delete/${branchId}/${ordercode}`, {
+          headers: {
+            // method: "DELETE",
+            Authorization: `Bearer ${token}`
+          }
+        })
           .then(response => {
             console.log(`삭제완료`);
             setOrderCart(prevOrderCart => prevOrderCart.filter(item => item.ordercode !== ordercode));
@@ -42,6 +50,7 @@ const OrderCartTable = ({ columns, orderCart, setOrderCart, handleGcount, branch
       }
     });
   };
+
 
   //발주하기 페이지에 있는 상품들의 총합계
   useEffect(() => {
@@ -59,9 +68,15 @@ const OrderCartTable = ({ columns, orderCart, setOrderCart, handleGcount, branch
   // 변경사항 저장하기
   const handleSave = () => {
     orderCart.forEach(item => {
-      axios.put(`http://localhost:8090/traders/ordercart/update/${item.ordercode}`, item)
+      axios.put(`http://localhost:8090/traders/ordercart/update/${branchId}/${item.ordercode}`, item, {
+        headers: {
+          // method: "PUT",
+          Authorization: `Bearer ${token}`
+        }
+      })
         .then(response => {
           console.log(`저장완료: ${item.ordercode}`);
+          console.log(response.data);
         })
         .catch(error => {
           console.error('저장불가', error);
