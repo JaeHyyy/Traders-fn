@@ -1,0 +1,24 @@
+.container {
+    display: flex;
+    justify-content: flex-start;
+    /* 차트를 왼쪽으로 정렬 */
+    align-items: flex-start;
+    /* 차트를 위쪽으로 정렬 */
+    padding: 20px;
+    background-color: #EEEEEE;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    height: calc(100vh - 60px);
+    /* 화면 높이에서 메뉴바 높이만큼 뺀 값 */
+}
+
+.bar {
+    background-color: #FFFFFF;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 25%;
+    /* 화면의 1/4 너비 */
+    height: 25%;
+    /* 화면의 1/4 높이 */
+}

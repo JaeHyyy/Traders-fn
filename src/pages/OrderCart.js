@@ -68,9 +68,8 @@ const OrderCart = () => {
     { header: '합계(단위: won)', render: (row) => (row.goods.gcostprice * row.gcount).toLocaleString('ko-KR') }
   ];
 
-  return <OrderCartTable columns={columns} orderCart={orderCart} setOrderCart={setOrderCart} handleGcount={handleGcount} />
-  
-  
+
+  return <OrderCartTable columns={columns} orderCart={orderCart} setOrderCart={setOrderCart} handleGcount={handleGcount} branchId={branchId}/>;
 
 };
 
