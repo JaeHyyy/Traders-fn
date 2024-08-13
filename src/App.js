@@ -15,6 +15,7 @@ import OrderCart from './pages/OrderCart';
 import QrCode from './pages/QrCode';
 import ReceiptModify from './pages/ReceiptModify';
 import ProtectedRoute from './ProtectedRoute';
+import PaymentSuccess from './pages/PaymentSuccess';
 
 
 const router = createBrowserRouter([
@@ -74,6 +75,10 @@ const router = createBrowserRouter([
   {
     path: "/mobile/productDetail/:gcode",
     element: <MobileProductDetail />
+  },
+  {
+    path: "/traders/payment/PaymentSuccess",
+    element: <PaymentSuccess />
   }
 ])
 
