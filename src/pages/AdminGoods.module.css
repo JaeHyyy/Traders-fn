@@ -1,0 +1,64 @@
+.container {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    width: 100%;
+    max-width: 1200px;
+    /* 고정된 최대 너비 */
+    margin: 0 auto;
+    gap: 1rem;
+    /* 두 섹션 간의 간격 */
+}
+
+.card {
+    flex: 7;
+    height: 600px;
+    /* 테이블 높이 고정 */
+    overflow-y: auto;
+    /* 내용이 넘칠 경우 스크롤 */
+    background-color: white;
+    /* 배경색 고정 */
+    padding: 1rem;
+    box-sizing: border-box;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.addgoods {
+    flex: 3;
+    text-align: center;
+    height: 600px;
+    /* addgoods 높이 고정 */
+    background-color: lightgray;
+    padding: 1rem;
+    box-sizing: border-box;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.addgoods form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    /* 입력 요소 간의 간격 */
+}
+
+.addgoods .p-inputtext,
+.p-inputnumber,
+.p-fileupload {
+    width: 100%;
+}
+
+.addgoods .p-button {
+    align-self: flex-end;
+    margin-top: 20px;
+    color : gray;
+}
+
+.addtitle {
+    margin-bottom: 20px;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.addtitle{
+    display: center;
+}
