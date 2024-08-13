@@ -7,6 +7,7 @@ function Menubar() {
     const location = useLocation();
     const navigate = useNavigate();
     const token = getAuthToken();
+    const branchName = localStorage.getItem('branchName');
 
     const menuItems = [
         { name: '홈', path: '/' },
@@ -19,6 +20,7 @@ function Menubar() {
     const handleLogout = () => {
         localStorage.removeItem('jwtAuthToken');
         localStorage.removeItem('branchId');
+        localStorage.removeItem('branchName');
         navigate('/login');
     };
 
@@ -33,7 +35,7 @@ function Menubar() {
                             <NavLink to="/">
                                 <img src={logo} alt='로고' className={menubar.logo} />
                             </NavLink>
-                            <span>광안점</span>
+                            <span>{branchName || '지점명'}</span>
                         </div>
 
                         <div className={menubar.header_con2}>

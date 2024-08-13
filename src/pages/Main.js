@@ -186,6 +186,7 @@ function Main() {
     }
   };
 
+  //발주하기 버튼 
   const handleOrder = () => {
     // const token = localStorage.getItem('token');
     const selectedItems = goods.filter(item => selectedGoods.includes(item.gcode));

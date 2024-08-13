@@ -1,7 +1,9 @@
 .DisUse{
   display: flex;
   flex-direction: column;
-  /* height: 80%; */
+  height: 80%;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  background-color: #f9f9f9;
 }
 
 /* 폐기완료 상품 회색처리 */
