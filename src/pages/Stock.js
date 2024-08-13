@@ -2,8 +2,11 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import stockk from './StockList.module.css';
 import ReactPaginate from 'react-paginate';
+import { getAuthToken } from '../util/auth';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const Stock = ({ columns }) => {
+    
     // 선택된 행의 인덱스를 저장하는 상태
     const [selectedRows, setSelectedRows] = useState([]);
 
@@ -32,21 +35,31 @@ const Stock = ({ columns }) => {
     // 페이지당 항목 수
     const itemsPerPage = 7;
 
+    const navigate = useNavigate();
 
-    //thead는 컬럼명 header
-    //tbody는 데이터 accessor
-
+    const token = getAuthToken();
+    const branchId = localStorage.getItem('branchId'); // 저장된 branchId 가져오기
     // 서버에서 재고 데이터 가져오기
     useEffect(() => {
-        axios.get('http://localhost:8090/traders/stock')
+   
+        if (branchId) {
+        axios.get(`http://localhost:8090/traders/stock/branch/${branchId}`,{
+            headers: {
+                method: "GET",
+                Authorization: `Bearer ${token}`
+              }
+        })
             .then(response => {
                 setStock(response.data);
-                // console.log(response.data);
+                console.log(response.data);
             })
             .catch(error => {
                 console.error('There was an error fetching the goods!', error);
-            });
-    }, []);
+             });
+             } else {
+                console.error('No branchId found in localStorage!');
+        }
+       },[branchId]);
 
     // 모든 행을 선택하거나 선택을 해제하는 함수
     const handleSelectAll = (event) => {
