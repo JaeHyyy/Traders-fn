@@ -43,6 +43,7 @@ const OrderCartTable = ({ columns, orderCart, setOrderCart, handleGcount }) => {
           .then(response => {
             console.log(`삭제완료`);
             setOrderCart(prevOrderCart => prevOrderCart.filter(item => item.ordercode !== ordercode));
+            alert("삭제가 완료되었습니다.");
           })
           .catch(error => {
             console.error('삭제불가', error);
@@ -73,15 +74,15 @@ const OrderCartTable = ({ columns, orderCart, setOrderCart, handleGcount }) => {
           Authorization: `Bearer ${token}`
         }
       })
-        .then(response => {
-          console.log(`저장완료: ${item.ordercode}`);
-          console.log(response.data);
-
-        })
-        .catch(error => {
-          console.error('저장불가', error);
-        });
+      .then(response => {
+        console.log(`저장완료: ${item.ordercode}`);
+        console.log(response.data);
+      })
+      .catch(error => {
+        console.error('저장불가', error);
+      });
     });
+    alert("변경사항 저장 완료되었습니다.");
   };
 
 

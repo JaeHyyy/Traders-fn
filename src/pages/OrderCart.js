@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import OrderCartTable from './OrderCartTable';
 import { getAuthToken } from '../util/auth';
+import Stock from './Stock'; //동일상품 중복 담기 불가 시키기 위해 필요한 것
 
 const OrderCart = () => {
   const [orderCart, setOrderCart] = useState([]);
@@ -30,6 +31,7 @@ const OrderCart = () => {
       console.error('No branchId found in localStorage!');
     }
   }, [branchId]);
+
 
   //수량 동적 변경 처리 
   const handleGcount = (rowIndex, value) => {
@@ -66,7 +68,10 @@ const OrderCart = () => {
     { header: '합계(단위: won)', render: (row) => (row.goods.gcostprice * row.gcount).toLocaleString('ko-KR') }
   ];
 
-  return <OrderCartTable columns={columns} orderCart={orderCart} setOrderCart={setOrderCart} handleGcount={handleGcount} />;
+  return <OrderCartTable columns={columns} orderCart={orderCart} setOrderCart={setOrderCart} handleGcount={handleGcount} />
+  
+  
+
 };
 
 export default OrderCart;

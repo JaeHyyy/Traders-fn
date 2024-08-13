@@ -44,15 +44,55 @@ const Signup = () => {
         });
     };
 
-    const handleFileChange = (e) => {
+    const handleFileChange = async (e) => {
+        const file = e.target.files[0];
         setFormData({
             ...formData,
-            branchImage: e.target.files[0] // 파일 객체로 업데이트
+            branchImage: e.target.files[0]
         });
+
+        // OCR API 호출
+        const ocrFormData = new FormData();
+        ocrFormData.append('theFile', file);
+
+        try {
+            const response = await axios.post('http://localhost:8090/traders/uploadForm/uploadOcr', ocrFormData, {
+                headers: {
+                    method: "post",
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+
+            const ocrData = response.data.parseData;
+            const branchName = response.data.branchName;
+
+            //지점명 추출
+            setFormData((prevFormData) => ({
+                ...prevFormData,
+                branchName: branchName || "" // 지점명 자동 설정
+            }));
+
+            // 사업자 등록번호를 추출하고 설정
+            const businessNumber = ocrData.find(text => /\d{3}-\d{2}-\d{5}/.test(text));
+            if (businessNumber) {
+                setFormData(prevState => ({
+                    ...prevState,
+                    branchNum: businessNumber.replace(/-/g, '') // 하이픈 제거
+                }));
+            }
+        } catch (error) {
+            console.error('OCR 처리 중 오류가 발생했습니다.', error);
+        }
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
+
+          // 필수 필드 검증
+          if (!formData.branchName || !formData.branchNum) {
+            alert("사업자등록증 첨부하여 지점명 및 사업자번호를 등록하세요.");
+            return;
+        }
 
         const data = new FormData();
         data.append('branchId', formData.branchId);
@@ -173,12 +213,12 @@ const Signup = () => {
                     <br />
                     <div className={styles.inputContainer}>
                         <img src={ofName} alt="office name icon" className={styles.icon} />
-                        <input type="text" name="branchName" className={styles.input} placeholder="지점명" value={formData.branchName} onChange={handleChange} />
+                        <input type="text" name="branchName" className={styles.input} placeholder="지점명" value={formData.branchName} onChange={handleChange} readOnly  />
                     </div>
                     <br />
                     <div className={styles.inputContainer}>
                         <img src={ofPhone} alt="office phone number icon" className={styles.icon} />
-                        <input type="text" name="branchNum" className={styles.input} placeholder="사업자번호" value={formData.branchNum} onChange={handleChange} />
+                        <input type="text" name="branchNum" className={styles.input} placeholder="사업자번호" value={formData.branchNum} onChange={handleChange} readOnly  />
                     </div>
                     <br />
                     <div className={styles.signup}>
