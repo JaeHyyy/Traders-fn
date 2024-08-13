@@ -92,14 +92,44 @@ const OrderCartTable = ({ columns, orderCart, setOrderCart, handleGcount }) => {
     const clientKey = 'test_ck_KNbdOvk5rkOogZa2Qvm4rn07xlzm'; // 하드코딩된 클라이언트 키
     const tossPayments = await loadTossPayments(clientKey);
 
-    tossPayments.requestPayment('카드', {
+    const paymentData = {
       amount: totalCostPrice, // 결제 금액
-      orderId: 'YOUR_ORDER_ID', // 주문 ID
-      orderName: 'test1', // 주문명
-      customerName: '고객 이름',
-      successUrl: 'http://localhost:3000/success', // 결제 성공 시 리다이렉트될 URL
-      failUrl: 'http://localhost:3000/fail', // 결제 실패 시 리다이렉트될 URL
-    });
+      orderId: '1234-4321-0001', // 주문 ID
+      orderName: `${branchId} 발주`, // 주문명
+      customerName: `${branchId}` // 고객명
+    };
+
+    // 오더 카트의 모든 상품 정보를 문자열로 변환
+    const itemsString = encodeURIComponent(JSON.stringify(orderCart));
+
+    try {
+      // 백엔드에 결제 정보 저장 요청
+      await axios.post(`http://localhost:8090/traders/payment/${branchId}`, paymentData,
+        {
+          headers: {
+
+            Authorization: `Bearer ${token}`,
+            "content-type": 'application/json'
+          }
+        });
+
+      // URL 쿼리 파라미터에 결제 정보를 추가하여 결제 성공 페이지로 리다이렉트
+      const queryString = new URLSearchParams({
+        orderId: paymentData.orderId,
+        amount: paymentData.amount,
+        customerName: paymentData.customerName,
+        items: itemsString, // 전체 상품 정보 추가
+      }).toString();
+
+      // 결제 요청
+      tossPayments.requestPayment('카드', {
+        ...paymentData,
+        successUrl: `http://localhost:3000/traders/payment/PaymentSuccess?${queryString}`,
+        failUrl: 'http://localhost:3000/traders/payment/fail'
+      });
+    } catch (error) {
+      console.error('결제 요청 중 오류 발생:', error);
+    }
   };
 
   return (

@@ -15,6 +15,7 @@ import OrderCart from './pages/OrderCart';
 import QrCode from './pages/QrCode';
 import ReceiptModify from './pages/ReceiptModify';
 import ProtectedRoute from './ProtectedRoute';
+import PaymentSuccess from './pages/PaymentSuccess';
 
 //관리자 페이지 
 import AdminMain from './pages/AdminMain';
@@ -83,6 +84,10 @@ const router = createBrowserRouter([
   {
     path: "/mobile/productDetail/:gcode",
     element: <MobileProductDetail />
+  },
+  {
+    path: "/traders/payment/PaymentSuccess",
+    element: <PaymentSuccess />
   },
   {
     path: "/adminMain",
