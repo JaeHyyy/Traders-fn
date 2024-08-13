@@ -17,6 +17,15 @@ import ReceiptModify from './pages/ReceiptModify';
 import ProtectedRoute from './ProtectedRoute';
 import PaymentSuccess from './pages/PaymentSuccess';
 
+//관리자 페이지 
+import AdminMain from './pages/AdminMain';
+import AdminGoods from './pages/AdminGoods';
+import AdminMovement from './pages/AdminMovement';
+import { PrimeReactProvider } from 'primereact/api';
+import 'primereact/resources/themes/saga-blue/theme.css';  // 테마
+import 'primereact/resources/primereact.min.css';           // 기본 스타일
+import 'primeicons/primeicons.css';                         // 아이콘
+
 
 const router = createBrowserRouter([
 
@@ -79,11 +88,28 @@ const router = createBrowserRouter([
   {
     path: "/traders/payment/PaymentSuccess",
     element: <PaymentSuccess />
+  },
+  {
+    path: "/adminMain",
+    element: <ProtectedRoute element={AdminMain} />
+  },
+  {
+    path: "/adminGoods",
+    element: <ProtectedRoute element={AdminGoods} />
+  },
+  {
+    path: "/adminMovement",
+    element: <ProtectedRoute element={AdminMovement} />
   }
 ])
 
 function App() {
-  return <RouterProvider router={router} />
+  return (
+    <PrimeReactProvider>
+      <RouterProvider router={router} />
+    </PrimeReactProvider>
+  );
+
 
 }
 

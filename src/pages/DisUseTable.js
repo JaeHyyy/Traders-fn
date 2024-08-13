@@ -98,27 +98,6 @@ const DisUseTable = ({ columns }) => {
 
 
 
-   
-    // //유통기한관리 페이지 삭제하기 버튼(stock & disuse 테이블 db데이터 동시 삭제)
-    // const handleDeleteSelected = async () => {
-    //     const selectedDisUseIds = selectedRows.map(rowIndex => disUseList[rowIndex].disid);
-    //     const selectedStockIds = selectedRows.map(rowIndex => disUseList[rowIndex].stock?.stockid);
-
-    //     try {
-    //         // DisUse 삭제
-    //         await Promise.all(selectedDisUseIds.map(disid => axios.delete(`http://localhost:8090/traders/disuse/delete/${disid}/${branchId}`)));
-    //         // Stock 삭제
-    //         await Promise.all(selectedStockIds.filter(stockid => stockid !== null).map(stockid => axios.delete(`http://localhost:8090/traders/stock/delete/${stockid}/${branchId}`)));
-
-    //         // 삭제 후 상태 업데이트
-    //         setDisUseList(disUseList.filter((_, index) => !selectedRows.includes(index)));
-    //         setSelectedRows([]);
-    //     } catch (error) {
-    //         console.error("삭제불가", error);
-    //     }
-    // };
-
-
         // 유통기한관리 페이지 삭제하기 버튼 (stock & disuse 테이블 db 데이터 동시 삭제)
         const handleDeleteSelected = async () => {
             if (!branchId || !token) {
