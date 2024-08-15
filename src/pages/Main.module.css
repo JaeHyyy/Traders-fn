@@ -145,10 +145,11 @@
 
 .tableLabel3{
     color: white;
-    margin-left: 178px;
+    /* margin-left: 178px; */
     background-color: #AADA2A;
     padding: 10px;
     border-radius: 10px 0 0 0;
+    margin-left: calc(190px + 0.05%);
 }
 
 .rightSectionBox {
