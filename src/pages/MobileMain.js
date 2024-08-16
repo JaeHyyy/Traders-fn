@@ -6,11 +6,6 @@ import logo from '../assets/logo.png';
 import mobileMain from './MobileMain2.module.css';
 import { getAuthToken } from '../util/auth';
 
-/////////////////////////////////
-// 08/14 
-// import { getAuthToken } from "../util/auth";
-/////////////////////////////////
-
 const MobileMain = () => {
     const [qrCodesData, setQrCodesData] = useState([]);
     const [error, setError] = useState(null);
