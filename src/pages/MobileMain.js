@@ -62,7 +62,7 @@ const MobileMain = () => {
             .map(item => ({ movidx: item.movidx.toString(), newStatus: "완료" }));
 
         try {
-            const response = await axios.post('http://10.10.10.207:8090/traders/api/updateMovStatus', itemsToUpdate);
+            const response = await axios.post('http://10.10.10.61:8090/traders/api/updateMovStatus', itemsToUpdate);
             if (response.status === 200) {
                 setQrCodesData(prevData =>
                     prevData.map(item =>
