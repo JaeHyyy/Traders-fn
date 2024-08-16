@@ -48,8 +48,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/qrcode",
-        // element: <ProtectedRoute element={QrCode} />
-        element: <QrCode />
+        element: <ProtectedRoute element={QrCode} />
       },
       {
         path: "/stock",
@@ -76,18 +75,15 @@ const router = createBrowserRouter([
   },
   {
     path: "/mobile/login",
-    // element: <ProtectedRoute element={MobileLogin} />
-    element: <MobileLogin />
+    element: <ProtectedRoute element={MobileLogin} />
   },
   {
     path: "/mobile/main",
-    // element: <ProtectedRoute element={MobileMain} />
-    element: <MobileMain />
+    element: <ProtectedRoute element={MobileMain} />
   },
   {
     path: "/mobile/productDetail/:gcode",
-    // element: <ProtectedRoute element={MobileProductDetail} />
-    element: <MobileProductDetail />
+    element: <ProtectedRoute element={MobileProductDetail} />
   },
   {
     path: "/traders/payment/PaymentSuccess",
