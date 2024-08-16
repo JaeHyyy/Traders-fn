@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { FilterMatchMode } from 'primereact/api';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
@@ -22,7 +23,8 @@ const AdminGoods = () => {
     const [globalFilterValue, setGlobalFilterValue] = useState('');
     const [visible, setVisible] = useState(false);
     const toast = useRef(null);
-
+    const savedBranchId = localStorage.getItem('branchId');
+    const navigate = useNavigate();
 
     const [newGoods, setNewGoods] = useState({
         gcode: '',
@@ -42,8 +44,13 @@ const AdminGoods = () => {
             }
         })
             .then(response => {
-                setGoods(response.data);
-                setLoading(false);
+                if (savedBranchId != 'admin') {
+                    navigate('/');
+                    alert("접근 권한이 없습니다.");
+                } else {
+                    setGoods(response.data);
+                    setLoading(false);
+                }
             })
             .catch(error => {
                 console.error('Error fetching data:', error);
