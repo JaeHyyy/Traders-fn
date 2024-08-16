@@ -152,7 +152,6 @@ const MobileProductDetail = () => {
             // const response = await axios.put('http://10.10.10.58:8090/traders/stock/mobile-update-location', null, {
             const response = await axios.put('http://172.30.1.8:8090/traders/stock/mobile-update-location', null, {
 
-
                 params: {
                     gcode,
                     loc1: updatedLocation.loc1,
