@@ -14,6 +14,9 @@ const QrCode = () => {
     useEffect(() => {
         const token = getAuthToken();
         const branchId = localStorage.getItem("branchId");
+        console.log("id 값 확인 ", branchId);
+        console.log("token 값 확인: ", token);
+
 
         if (!branchId) {
             console.error('Branch ID가 없습니다. 로그인 정보를 확인해주세요.');
@@ -23,7 +26,9 @@ const QrCode = () => {
 
         const fetchQrCode = async () => {
             try {
-                const response = await axios.get(`http://10.10.10.61:8090/traders/api/${branchId}/qrcode?date=${date}`, {
+
+                // const response = await axios.get(`http://10.10.10.58:8090/traders/api/${branchId}/qrcode?date=${date}`, {
+                const response = await axios.get(`http://172.30.1.8:8090/traders/api/${branchId}/qrcode?date=${date}`, {
 
                     responseType: 'arraybuffer',
                     headers: {

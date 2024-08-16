@@ -10,6 +10,10 @@ import C from '../assets/CC-A,B,C.png';
 import plan from '../assets/baseProductLocation.png';
 import product from './MobileProductDetail3.module.css';
 
+////////////////////////////////////////
+// import { getAuthToken } from "../util/auth";
+////////////////////////////////////////
+
 // 구역별 이미지 객체
 const ZONE_IMAGES = {
     A: {
@@ -43,17 +47,27 @@ const MobileProductDetail = () => {
             try {
                 console.log(`gcode ${gcode}에 대한 제품 상세 정보 가져오기`);
 
+                ////////////////////////////////////////////
+                // 08/14
+                // const token = getAuthToken();
+                // const branchId = localStorage.getItem("branchId");
+
+                // console.log("token 값 확인(디바이스-상세페이지): ", token);
+                // console.log("id 값 확인(디바이스-상세페이지): ", branchId);
+                ////////////////////////////////////////////
+
                 // 제품 상세 정보와 추가 정보를 동시에 가져오기
                 // ssg wifi : 10.10.10.197
                 const [response1, response2, response3] = await Promise.all([
-                    axios.get(`http://10.10.10.61:8090/traders/stock/gcode-data/${gcode}`),
-                    // axios.get(`http://192.168.0.109:8090/traders/stock/gcode-data/${gcode}`),
+                    // axios.get(`http://10.10.10.58:8090/traders/stock/gcode-data/${gcode}`),
+                    axios.get(`http://172.30.1.8:8090/traders/stock/gcode-data/${gcode}`),
 
-                    axios.get(`http://10.10.10.61:8090/traders/goods/${gcode}`),
-                    // axios.get(`http://192.168.0.109:8090/traders/goods/${gcode}`),
 
-                    axios.get(`http://10.10.10.61:8090/traders/movement/${gcode}`)
-                    // axios.get(`http://192.168.0.109:8090/traders/movement/${gcode}`)
+                    // axios.get(`http://10.10.10.58:8090/traders/goods/${gcode}`),
+                    axios.get(`http://172.30.1.8:8090/traders/goods/${gcode}`),
+
+                    // axios.get(`http://10.10.10.58:8090/traders/movement/${gcode}`)
+                    axios.get(`http://172.30.1.8:8090/traders/movement/${gcode}`)
 
                 ]);
 
@@ -135,8 +149,8 @@ const MobileProductDetail = () => {
             };
 
             // API 요청을 통해 위치 업데이트
-            const response = await axios.put('http://10.10.10.61:8090/traders/stock/mobile-update-location', null, {
-                // const response = await axios.put('http://192.168.0.109:8090/traders/stock/mobile-update-location', null, {
+            // const response = await axios.put('http://10.10.10.58:8090/traders/stock/mobile-update-location', null, {
+            const response = await axios.put('http://172.30.1.8:8090/traders/stock/mobile-update-location', null, {
 
                 params: {
                     gcode,
