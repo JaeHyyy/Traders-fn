@@ -187,7 +187,7 @@ const handleOrder = async () => {
 
     // 선택된 재고 항목을 OrderCartDTO 형태로 변환
     const orderCartDTOs = selectedRows.map(rowIndex => ({
-        ordercode: null, // 서버에서 자동 생성되므로 null 또는 생략 가능
+        ordercode: '1234-1234-0001', // 서버에서 자동 생성되므로 null 또는 생략 가능
         gcount: 1, // gcount에 재고 수량을 할당
         goods: { // GoodsDTO 형태에 맞춰 데이터 변환
             gcode: stock[rowIndex].goods.gcode, 

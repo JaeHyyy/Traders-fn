@@ -26,8 +26,10 @@ const QrCode = () => {
 
         const fetchQrCode = async () => {
             try {
+
                 // const response = await axios.get(`http://10.10.10.58:8090/traders/api/${branchId}/qrcode?date=${date}`, {
                 const response = await axios.get(`http://172.30.1.8:8090/traders/api/${branchId}/qrcode?date=${date}`, {
+
                     responseType: 'arraybuffer',
                     headers: {
                         Authorization: `Bearer ${token}`
