@@ -6,6 +6,10 @@ import logo from '../assets/logo.png';
 import mobileMain from './MobileMain2.module.css';
 import { getAuthToken } from '../util/auth';
 
+/////////////////////////////////
+// 08/14 
+import { getAuthToken } from "../util/auth";
+/////////////////////////////////
 
 const MobileMain = () => {
     const [qrCodesData, setQrCodesData] = useState([]);
@@ -41,6 +45,18 @@ const MobileMain = () => {
             console.log('Processed Data:', processData);
             setQrCodesData(processData);
         }
+
+        //////////////////////////////////////////////////////////////
+        // 08/14
+        const token = getAuthToken();
+        const branchId = localStorage.getItem("branchId");
+
+        console.log("token 값 확인(디바이스): ", token);
+        console.log("id 값 확인(디바이스): ", branchId);
+
+        //////////////////////////////////////////////////////////////
+
+
     }, [qrData]);
 
     const handleSelectAll = () => {
@@ -65,11 +81,8 @@ const MobileMain = () => {
             .map(item => ({ movidx: item.movidx.toString(), newStatus: "완료" }));
 
         try {
-            const response = await axios.post('http://10.10.10.207:8090/traders/api/updateMovStatus', itemsToUpdate, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
+            // const response = await axios.post('http://10.10.10.58:8090/traders/api/updateMovStatus', itemsToUpdate);
+            const response = await axios.post('http://172.30.1.8:8090/traders/api/updateMovStatus', itemsToUpdate);
             if (response.status === 200) {
                 setQrCodesData(prevData =>
                     prevData.map(item =>
