@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
 import logo from '../assets/logo.png';
 import mobileMain from './MobileMain2.module.css';
+import { getAuthToken } from '../util/auth';
 
 
 const MobileMain = () => {
@@ -14,6 +15,7 @@ const MobileMain = () => {
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
     const qrData = searchParams.get('data');
+
 
     useEffect(() => {
         if (qrData) {
@@ -57,12 +59,17 @@ const MobileMain = () => {
     };
 
     const handleSubmit = async () => {
+        const token = getAuthToken();
         const itemsToUpdate = qrCodesData
             .filter(item => item.isChecked && item.movstatus === "대기")
             .map(item => ({ movidx: item.movidx.toString(), newStatus: "완료" }));
 
         try {
-            const response = await axios.post('http://10.10.10.207:8090/traders/api/updateMovStatus', itemsToUpdate);
+            const response = await axios.post('http://10.10.10.207:8090/traders/api/updateMovStatus', itemsToUpdate, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
             if (response.status === 200) {
                 setQrCodesData(prevData =>
                     prevData.map(item =>

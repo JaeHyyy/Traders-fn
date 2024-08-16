@@ -11,6 +11,7 @@ function Login() {
     const [rememberMe, setRememberMe] = useState(false);
     const navigate = useNavigate();
     const token = getAuthToken(); // token 값 저장 //aelin추가
+    const [role, setRole] = useState();
 
     // useEffect를 사용하여 컴포넌트가 처음 렌더링될 때 localStorage에서 branchId를 가져옴
     useEffect(() => {
@@ -50,29 +51,34 @@ function Login() {
                 // JWT 토큰을 저장
                 setAuthToken(response.data.token);
 
-              // branchId를 이용해 서버에서 branchName을 가져옴   //aelin추가 여기 시작해서
-            axios.get(`http://localhost:8090/traders/branchname/${credentials.branchId}`,{
-                headers: {
-                    Authorization: `Bearer ${response.data.token}`
-                  }
-            })//aelin추가 여기까지
-            
-            .then(branchResponse => {
-                const branchName = branchResponse.data;  
+                // branchId를 이용해 서버에서 branchName을 가져옴   //aelin추가 여기 시작해서
+                axios.get(`http://localhost:8090/traders/branchname/${credentials.branchId}`, {
+                    headers: {
+                        Authorization: `Bearer ${response.data.token}`
+                    }
+                })//aelin추가 여기까지
 
-                // 토큰과 branchId를 localStorage에 저장
-                localStorage.setItem('token', response.data.token);
-                localStorage.setItem('branchId', credentials.branchId);
-                localStorage.setItem('branchName', branchName);  //aelin추가
+                    .then(branchResponse => {
+                        const branchName = branchResponse.data;
 
-                // 메인 페이지로 이동
-                navigate('/');
+                        // 토큰과 branchId를 localStorage에 저장
+                        localStorage.setItem('token', response.data.token);
+                        localStorage.setItem('branchId', credentials.branchId);
+                        localStorage.setItem('branchName', branchName);  //aelin추가
+
+                        if (credentials.branchId === 'admin') {
+                            navigate('/adminMain');
+                        } else {
+                            navigate('/');
+                        }
+
+
+                    })
+                    .catch(error => {
+                        console.error('Error fetching branchName:', error);
+                        alert('로그인 실패: 지점 이름을 가져오지 못했습니다.');
+                    });
             })
-            .catch(error => {
-                console.error('Error fetching branchName:', error);
-                alert('로그인 실패: 지점 이름을 가져오지 못했습니다.');
-            });
-        })  
             .catch(error => {
                 console.error('There was an error!', error);
                 alert('로그인 실패: ' + error.message);

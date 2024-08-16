@@ -154,7 +154,7 @@ const AdminGoods = () => {
             <AdminMenu />
             <div className={styles.container}>
                 <div className={styles.card}>
-                    <DataTable value={goods} paginator showGridlines rows={10} loading={loading} dataKey="gcode"
+                    <DataTable value={goods} paginator showGridlines rows={9} loading={loading} dataKey="gcode"
                         filters={filters} globalFilterFields={['gcode', 'gname', 'gcompany', 'gcategory']} header={header}
                         emptyMessage="No goods found." onFilter={(e) => setFilters(e.filters)}>
                         <Column field="gcode" header="Code" />
