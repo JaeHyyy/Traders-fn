@@ -1,24 +1,76 @@
 .container {
     display: flex;
-    justify-content: flex-start;
-    /* 차트를 왼쪽으로 정렬 */
-    align-items: flex-start;
-    /* 차트를 위쪽으로 정렬 */
-    padding: 20px;
-    background-color: #EEEEEE;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    height: calc(100vh - 60px);
-    /* 화면 높이에서 메뉴바 높이만큼 뺀 값 */
+        flex-direction: row;
+        /* 요소들을 가로로 나란히 배치 */
+        justify-content: space-between;
+        /* 두 요소 사이에 여유 공간을 확보 */
+        align-items: flex-start;
+        /* 요소들을 위쪽에 정렬 */
+        padding: 20px;
+        background-color: #EEEEEE;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        /* container가 전체 너비를 차지하도록 설정 */
+        box-sizing: border-box;
 }
 
-.bar {
+.chartContainer {
+    display: flex;
+    justify-content: space-between;
+    background-color: #EEEEEE;
+    width: 100%;
+}
+
+.bar,.doughnut {
     background-color: #FFFFFF;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 50%;
-    /* 화면의 1/4 너비 */
-    height: 50%;
-    /* 화면의 1/4 높이 */
+    width: 49%;/* 두 그래프가 나란히 배치되도록 너비를 조정 */
+    height: 400px;
+    margin-bottom: 20px;/* 두 그래프 간 간격을 추가 */
+}
+
+.card,
+.floatLabelContainer {
+    background-color: #FFFFFF;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 49%;
+    height: 200px;
+    margin-bottom: 10px;
+}
+
+.inputTextarea {
+    width: 100%;
+        height: 100px;
+        /* 텍스트박스의 높이를 줄여 컨테이너에 맞춤 */
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #54A687;
+        border-radius: 5px;
+        box-sizing: border-box;
+        resize: none;
+        margin-bottom: 10px;
+}
+
+.customButton {
+    background-color: #36A287 !important;
+        border-color: #36A287 !important;
+        color: #FFFFFF !important;
+        width: 100%;
+        /* 버튼이 부모의 너비를 가득 채우도록 설정 */
+        padding: 10px;
+        font-size: 16px;
+        border-radius: 5px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        box-sizing: border-box;
+}
+
+.customButton:hover {
+    background-color: #1E5A45 !important;
+    /* hover 시 더 어두운 초록색으로 변경 */
+    border-color: #1E5A45 !important;
 }
