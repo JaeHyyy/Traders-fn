@@ -29,7 +29,7 @@ const DisUseTable = ({ columns }) => {
 
         useEffect(() => {
          if (branchId) {
-          axios.get(`http://localhost:8090/traders/disuse/branch/${branchId}`,{
+          axios.get(`http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/disuse/branch/${branchId}`,{
             headers: {
                 method: "GET",
                 Authorization: `Bearer ${token}`
@@ -77,7 +77,7 @@ const DisUseTable = ({ columns }) => {
         try {
             // DisUse 업데이트
             await Promise.all(selectedDisUseIds.map(disid =>
-                axios.put(`http://localhost:8090/traders/disuse/update/${disid}/${branchId}`, 
+                axios.put(`http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/disuse/update/${disid}/${branchId}`, 
                 { disdate: new Date().toISOString().split('T')[0] },
                 {
                     headers: {
@@ -109,7 +109,7 @@ const DisUseTable = ({ columns }) => {
             try {
                 // DisUse 삭제
                 await Promise.all(selectedDisUseIds.map(disid => 
-                    axios.delete(`http://localhost:8090/traders/disuse/delete/${disid}/${branchId}`, {
+                    axios.delete(`http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/disuse/delete/${disid}/${branchId}`, {
                         headers: {
                             method: "DELETE", 
                             Authorization: `Bearer ${token}`
@@ -118,7 +118,7 @@ const DisUseTable = ({ columns }) => {
                 ));
                 // Stock 삭제
                 await Promise.all(selectedStockIds.filter(stockid => stockid !== null).map(stockid => 
-                    axios.delete(`http://localhost:8090/traders/stock/delete/${stockid}/${branchId}`, {
+                    axios.delete(`http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/stock/delete/${stockid}/${branchId}`, {
                         headers: {
                             method: "DELETE",
                             Authorization: `Bearer ${token}`
