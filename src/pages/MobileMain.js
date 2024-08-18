@@ -4,11 +4,7 @@ import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
 import logo from '../assets/logo.png';
 import mobileMain from './MobileMain2.module.css';
-
-/////////////////////////////////
-// 08/14 
-import { getAuthToken } from "../util/auth";
-/////////////////////////////////
+import { getAuthToken } from '../util/auth';
 
 const MobileMain = () => {
     const [qrCodesData, setQrCodesData] = useState([]);
@@ -18,6 +14,7 @@ const MobileMain = () => {
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
     const qrData = searchParams.get('data');
+
 
     useEffect(() => {
         if (qrData) {
@@ -73,13 +70,15 @@ const MobileMain = () => {
     };
 
     const handleSubmit = async () => {
+        const token = getAuthToken();
         const itemsToUpdate = qrCodesData
             .filter(item => item.isChecked && item.movstatus === "대기")
             .map(item => ({ movidx: item.movidx.toString(), newStatus: "완료" }));
 
         try {
-            const response = await axios.post('http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/api/updateMovStatus', itemsToUpdate);
             // const response = await axios.post('http://172.30.1.8:8090/traders/api/updateMovStatus', itemsToUpdate);
+            // const response = await axios.post('http://10.10.10.58:8090/traders/api/updateMovStatus', itemsToUpdate);
+            const response = await axios.post('http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/api/updateMovStatus', itemsToUpdate);
             if (response.status === 200) {
                 setQrCodesData(prevData =>
                     prevData.map(item =>

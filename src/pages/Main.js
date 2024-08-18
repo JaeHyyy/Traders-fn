@@ -32,7 +32,8 @@ function Main() {
     }
 
     // 상품 리스트를 가져오는 API 요청
-    axios.get('http://10.10.10.31:8090/traders/home', {
+    // axios.get('http://10.10.10.31:8090/traders/home', {
+    axios.get('http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/home', {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -54,7 +55,8 @@ function Main() {
       });
 
     // 재고부족 상품 리스트 조회
-    axios.get('http://10.10.10.31:8090/traders/stock', {
+    // axios.get('http://10.10.10.31:8090/traders/stock', {
+    axios.get('http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/stock', {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -89,7 +91,8 @@ function Main() {
 
     if (searchGoods.trim() === '') {
       // 검색어가 없으면 모든 상품을 조회
-      axios.get('http://10.10.10.31:8090/traders/home', {
+      // axios.get('http://10.10.10.31:8090/traders/home', {
+      axios.get('http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/home', {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -102,7 +105,8 @@ function Main() {
         });
     } else {
       // 검색어가 있으면 해당 검색어로 상품 조회
-      axios.get(`http://10.10.10.31:8090/traders/home/${searchGoods}`, {
+      // axios.get(`http://10.10.10.31:8090/traders/home/${searchGoods}`, {
+      axios.get(`http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/home/${searchGoods}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -131,7 +135,8 @@ function Main() {
 
     // 날짜가 어떤 형식으로 들어오는지 검증
     const formattedDate = format(selectedDate, 'yyyy-MM-dd');
-    axios.get(`http://10.10.10.31:8090/traders/stock?date=${formattedDate}`, {
+    // axios.get(`http://10.10.10.31:8090/traders/stock?date=${formattedDate}`, {
+    axios.get(`http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/stock?date=${formattedDate}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -202,7 +207,8 @@ function Main() {
         gunit: item.gunit,
       }
     }));
-    axios.post(`http://10.10.10.31:8090/traders/ordercart/saveAll/${branchId}`, orderCartDTOs, {
+    // axios.post(`http://10.10.10.31:8090/traders/ordercart/saveAll/${branchId}`, orderCartDTOs, {
+    axios.post(`http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/ordercart/saveAll/${branchId}`, orderCartDTOs, {
       headers: {
         // method: "POST",
         Authorization: `Bearer ${token}`

@@ -11,6 +11,7 @@ function Login() {
     const [rememberMe, setRememberMe] = useState(false);
     const navigate = useNavigate();
     const token = getAuthToken(); // token 값 저장 //aelin추가
+    const [role, setRole] = useState();
 
     // useEffect를 사용하여 컴포넌트가 처음 렌더링될 때 localStorage에서 branchId를 가져옴
     useEffect(() => {
@@ -43,7 +44,8 @@ function Login() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        axios.post('http://10.10.10.31:8090/traders/login', credentials)
+        // axios.post('http://10.10.10.31:8090/traders/login', credentials)
+        axios.post('http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/login', credentials)
             .then(response => {
                 console.log(response.data);
 
@@ -51,7 +53,8 @@ function Login() {
                 setAuthToken(response.data.token);
 
                 // branchId를 이용해 서버에서 branchName을 가져옴   //aelin추가 여기 시작해서
-                axios.get(`http://10.10.10.31:8090/traders/branchname/${credentials.branchId}`, {
+                // axios.get(`http://10.10.10.31:8090/traders/branchname/${credentials.branchId}`, {
+                axios.get(`http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/branchname/${credentials.branchId}`, {
                     headers: {
                         Authorization: `Bearer ${response.data.token}`
                     }
@@ -67,6 +70,13 @@ function Login() {
 
                         // 메인 페이지로 이동
                         navigate('/');
+                        if (credentials.branchId === 'admin') {
+                            navigate('/adminMain');
+                        } else {
+                            navigate('/');
+                        }
+
+
                     })
                     .catch(error => {
                         console.error('Error fetching branchName:', error);

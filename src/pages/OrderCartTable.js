@@ -34,7 +34,8 @@ const OrderCartTable = ({ columns, orderCart, setOrderCart, handleGcount }) => {
     const selectedItems = selectedRows.map(rowIndex => orderCart[rowIndex].ordercode);
     selectedItems.forEach(ordercode => {
       if (ordercode !== undefined) {
-        axios.delete(`http://10.10.10.31:8090/traders/ordercart/delete/${branchId}/${ordercode}`, {
+        // axios.delete(`http://10.10.10.31:8090/traders/ordercart/delete/${branchId}/${ordercode}`, {
+        axios.delete(`http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/ordercart/delete/${branchId}/${ordercode}`, {
           headers: {
             // method: "DELETE",
             Authorization: `Bearer ${token}`

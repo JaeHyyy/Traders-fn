@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Dialog } from 'primereact/dialog';
@@ -20,34 +21,42 @@ const AdminMovement = () => {
     const [checkedStates, setCheckedStates] = useState({});
     const [dialogVisible, setDialogVisible] = useState(false);
     const toast = useRef(null);
+    const savedBranchId = localStorage.getItem('branchId');
+    const navigate = useNavigate();
 
     useEffect(() => {
         const token = getAuthToken();
-        axios.get('http://localhost:8090/traders/adminmovement', {
+        axios.get('http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/adminmovement', {
             headers: {
                 Authorization: `Bearer ${token}`
             }
         })
             .then(response => {
-                if (response.data && response.data.length > 0) {
-                    console.log('Fetched data:', response.data); // 응답 데이터 확인
+                if (savedBranchId != 'admin') {
+                    navigate('/');
+                    alert("접근 권한이 없습니다.");
+                } else {
+                    if (response.data && response.data.length > 0) {
+                        console.log('Fetched data:', response.data); // 응답 데이터 확인
 
-                    // 데이터 변환: 배열을 객체로 변환
-                    const transformedData = response.data.map(item => ({
-                        branchName: item[0],  // 배열의 첫 번째 요소
-                        movdate: item[1],     // 배열의 두 번째 요소
-                        count: item[2],        // 배열의 세 번째 요소
-                        movstatus: '출고 대기'
-                    }));
+                        // 데이터 변환: 배열을 객체로 변환
+                        const transformedData = response.data.map(item => ({
+                            branchName: item[0],  // 배열의 첫 번째 요소
+                            movdate: item[1],     // 배열의 두 번째 요소
+                            count: item[2],        // 배열의 세 번째 요소
+                            movstatus: '출고 대기'
+                        }));
 
-                    const initialCheckedStates = {};
-                    transformedData.forEach(item => {
-                        initialCheckedStates[item.branchName + item.movdate] = item.movstatus === '출고 완료';
-                    });
+                        const initialCheckedStates = {};
+                        transformedData.forEach(item => {
+                            initialCheckedStates[item.branchName + item.movdate] = item.movstatus === '출고 완료';
+                        });
 
-                    setMovement(transformedData);
-                    setCheckedStates(initialCheckedStates);
+                        setMovement(transformedData);
+                        setCheckedStates(initialCheckedStates);
+                    }
                 }
+
             })
             .catch(error => {
                 console.error('Error fetching data:', error);
@@ -64,7 +73,7 @@ const AdminMovement = () => {
     const handleButtonClick = (rowData) => {
         setDialogVisible(true);
         const token = getAuthToken();
-        axios.get('http://localhost:8090/traders/adminmov', {
+        axios.get('http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/adminmov', {
             params: {
                 branchName: rowData.branchName,
                 movdate: rowData.movdate,
@@ -86,7 +95,7 @@ const AdminMovement = () => {
 
     const handleStatusUpdate = (rowData, newStatus) => {
         const token = getAuthToken();
-        axios.post('http://localhost:8090/traders/updateStatus', {
+        axios.post('http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/updateStatus', {
             branchName: rowData.branchName,
             movdate: rowData.movdate,
             movstatus: newStatus

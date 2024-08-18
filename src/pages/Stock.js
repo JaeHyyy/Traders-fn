@@ -44,7 +44,7 @@ const Stock = ({ columns }) => {
     useEffect(() => {
 
         if (branchId) {
-            axios.get(`http://10.10.10.31:8090/traders/stock/branch/${branchId}`, {
+            axios.get(`http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/stock/branch/${branchId}`, {
                 headers: {
                     method: "GET",
                     Authorization: `Bearer ${token}`
@@ -140,7 +140,7 @@ const Stock = ({ columns }) => {
         const selectedStockIds = selectedRows.map(rowIndex => stock[rowIndex].stockid);
         try {
             await Promise.all(selectedStockIds.filter(stockid => stockid !== null).map(stockid =>
-                axios.delete(`http://10.10.10.31:8090/traders/stock/delete/${stockid}/${branchId}`, {
+                axios.delete(`http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/stock/delete/${stockid}/${branchId}`, {
                     headers: {
                         method: "DELETE",
                         Authorization: `Bearer ${token}`
@@ -187,7 +187,7 @@ const Stock = ({ columns }) => {
 
         // 선택된 재고 항목을 OrderCartDTO 형태로 변환
         const orderCartDTOs = selectedRows.map(rowIndex => ({
-            ordercode: null, // 서버에서 자동 생성되므로 null 또는 생략 가능
+            ordercode: '1234-1234-0001', // 서버에서 자동 생성되므로 null 또는 생략 가능
             gcount: 1, // gcount에 재고 수량을 할당
             goods: { // GoodsDTO 형태에 맞춰 데이터 변환
                 gcode: stock[rowIndex].goods.gcode,
@@ -198,7 +198,7 @@ const Stock = ({ columns }) => {
         try {
             // 서버에 발주 요청 전송
             const response = await axios.post(
-                `http://10.10.10.31:8090/traders/ordercart/saveAll/${branchId}`,
+                `http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/ordercart/saveAll/${branchId}`,
                 orderCartDTOs,
                 {
                     headers: {
