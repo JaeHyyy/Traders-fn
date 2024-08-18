@@ -34,7 +34,7 @@ const OrderCartTable = ({ columns, orderCart, setOrderCart, handleGcount }) => {
     const selectedItems = selectedRows.map(rowIndex => orderCart[rowIndex].ordercode);
     selectedItems.forEach(ordercode => {
       if (ordercode !== undefined) {
-        axios.delete(`http://localhost:8090/traders/ordercart/delete/${branchId}/${ordercode}`, {
+        axios.delete(`http://10.10.10.31:8090/traders/ordercart/delete/${branchId}/${ordercode}`, {
           headers: {
             // method: "DELETE",
             Authorization: `Bearer ${token}`
@@ -69,7 +69,7 @@ const OrderCartTable = ({ columns, orderCart, setOrderCart, handleGcount }) => {
   // 변경사항 저장하기
   const handleSave = () => {
     orderCart.forEach(item => {
-      axios.put(`http://localhost:8090/traders/ordercart/update/${branchId}/${item.ordercode}`, item, {
+      axios.put(`http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/ordercart/update/${branchId}/${item.ordercode}`, item, {
         headers: {
           // method: "PUT",
           Authorization: `Bearer ${token}`
@@ -104,7 +104,7 @@ const OrderCartTable = ({ columns, orderCart, setOrderCart, handleGcount }) => {
 
     try {
       // 백엔드에 결제 정보 저장 요청
-      await axios.post(`http://localhost:8090/traders/payment/${branchId}`, paymentData,
+      await axios.post(`http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/payment/${branchId}`, paymentData,
         {
           headers: {
 
@@ -124,8 +124,8 @@ const OrderCartTable = ({ columns, orderCart, setOrderCart, handleGcount }) => {
       // 결제 요청
       tossPayments.requestPayment('카드', {
         ...paymentData,
-        successUrl: `http://localhost:3000/traders/payment/PaymentSuccess?${queryString}`,
-        failUrl: 'http://localhost:3000/traders/payment/fail'
+        successUrl: `http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/payment/PaymentSuccess?${queryString}`,
+        failUrl: 'http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/payment/fail'
       });
     } catch (error) {
       console.error('결제 요청 중 오류 발생:', error);

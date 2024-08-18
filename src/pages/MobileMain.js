@@ -78,8 +78,8 @@ const MobileMain = () => {
             .map(item => ({ movidx: item.movidx.toString(), newStatus: "완료" }));
 
         try {
-            // const response = await axios.post('http://10.10.10.58:8090/traders/api/updateMovStatus', itemsToUpdate);
-            const response = await axios.post('http://172.30.1.8:8090/traders/api/updateMovStatus', itemsToUpdate);
+            const response = await axios.post('http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/api/updateMovStatus', itemsToUpdate);
+            // const response = await axios.post('http://172.30.1.8:8090/traders/api/updateMovStatus', itemsToUpdate);
             if (response.status === 200) {
                 setQrCodesData(prevData =>
                     prevData.map(item =>
@@ -172,7 +172,7 @@ const MobileMain = () => {
                                     </tr>
                                 </tbody>
                             </table>
-                        )) : <p>로딩 중...</p>}
+                        )) : <p className={mobileMain.load}>금일 입고된 상품이 없습니다.</p>}
                     </div>
                     <div className={mobileMain.mobileLogin}>
                         <input type="submit" value="검수완료" className={mobileMain.btn_mobileLogin} onClick={handleSubmit} />

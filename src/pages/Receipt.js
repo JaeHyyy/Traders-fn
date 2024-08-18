@@ -36,7 +36,7 @@ const Receipt = () => {
       return;
     }
 
-    axios.get(`http://localhost:8090/traders/${branchId}/receipt`, {
+    axios.get(`http://10.10.10.31:8090/traders/${branchId}/receipt`, {
       headers: {
         method: "GET",
         Authorization: `Bearer ${token}`
