@@ -26,7 +26,7 @@ const AdminMovement = () => {
 
     useEffect(() => {
         const token = getAuthToken();
-        axios.get('http://localhost:8090/traders/adminmovement', {
+        axios.get('http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/adminmovement', {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -73,7 +73,7 @@ const AdminMovement = () => {
     const handleButtonClick = (rowData) => {
         setDialogVisible(true);
         const token = getAuthToken();
-        axios.get('http://localhost:8090/traders/adminmov', {
+        axios.get('http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/adminmov', {
             params: {
                 branchName: rowData.branchName,
                 movdate: rowData.movdate,
@@ -95,7 +95,7 @@ const AdminMovement = () => {
 
     const handleStatusUpdate = (rowData, newStatus) => {
         const token = getAuthToken();
-        axios.post('http://localhost:8090/traders/updateStatus', {
+        axios.post('http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/updateStatus', {
             branchName: rowData.branchName,
             movdate: rowData.movdate,
             movstatus: newStatus

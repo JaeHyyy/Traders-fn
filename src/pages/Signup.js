@@ -56,7 +56,7 @@ const Signup = () => {
         ocrFormData.append('theFile', file);
 
         try {
-            const response = await axios.post('http://localhost:8090/traders/uploadForm/uploadOcr', ocrFormData, {
+            const response = await axios.post('http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/uploadForm/uploadOcr', ocrFormData, {
                 headers: {
                     method: "post",
                     'Content-Type': 'multipart/form-data'
@@ -109,7 +109,7 @@ const Signup = () => {
             data.append('branchImage', formData.branchImage);
         }
 
-        axios.post('http://localhost:8090/traders/signup', data, {
+        axios.post('http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/signup', data, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }

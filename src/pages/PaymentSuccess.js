@@ -30,7 +30,7 @@ function PaymentSuccess() {
   
       try {
         // 무브먼트 DB에 저장하기 위한 POST 요청
-        const response = await axios.post('http://localhost:8090/traders/movement/ordersave', movementData,
+        const response = await axios.post('http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/movement/ordersave', movementData,
             {
                 headers: {
                     "content-type": 'application/json',

@@ -22,7 +22,7 @@ const AdminMain = () => {
 
     useEffect(() => {
         const token = getAuthToken();
-        axios.get('http://localhost:8090/traders/barchart', {
+        axios.get('http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/barchart', {
             headers: {
                 Authorization: `Bearer ${token}`
             }
