@@ -38,17 +38,14 @@ const AdminGoods = () => {
     });
 
     useEffect(() => {
-<<<<<<< HEAD
-        const token = getAuthToken();
-        // axios.get('http://10.10.10.31:8090/traders/home', {
-        axios.get('http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/home', {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
-=======
+        // const token = getAuthToken();
+        // // axios.get('http://10.10.10.31:8090/traders/home', {
+        // axios.get('http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/home', {
+        //     headers: {
+        //         Authorization: `Bearer ${token}`
+        //     }
+        // })
         api.get('/traders/home')
->>>>>>> 34d6bb51ac5bae36b5e79e4505d1a53f876e7c45
             .then(response => {
                 if (savedBranchId != 'admin') {
                     navigate('/');
