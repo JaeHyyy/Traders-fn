@@ -7,6 +7,7 @@ import { Button } from 'primereact/button';
 import { InputSwitch } from "primereact/inputswitch";
 import { Toast } from 'primereact/toast';
 import axios from 'axios';
+import api from '../util/api';
 import AdminMenu from '../components/AdminMenu';
 import styles from './AdminMovement.module.css';
 import { getAuthToken } from '../util/auth';
@@ -25,12 +26,7 @@ const AdminMovement = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const token = getAuthToken();
-        axios.get('http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/adminmovement', {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
+        api.get('/traders/adminmovement')
             .then(response => {
                 if (savedBranchId != 'admin') {
                     navigate('/');

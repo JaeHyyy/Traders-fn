@@ -10,6 +10,7 @@ import { FileUpload } from 'primereact/fileupload';
 import { Button } from 'primereact/button';
 import { Toast } from 'primereact/toast';
 import axios from 'axios';
+import api from '../util/api';
 import AdminMenu from '../components/AdminMenu';
 import styles from './AdminGoods.module.css';
 import { getAuthToken } from '../util/auth';
@@ -37,6 +38,7 @@ const AdminGoods = () => {
     });
 
     useEffect(() => {
+<<<<<<< HEAD
         const token = getAuthToken();
         // axios.get('http://10.10.10.31:8090/traders/home', {
         axios.get('http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/home', {
@@ -44,6 +46,9 @@ const AdminGoods = () => {
                 Authorization: `Bearer ${token}`
             }
         })
+=======
+        api.get('/traders/home')
+>>>>>>> 34d6bb51ac5bae36b5e79e4505d1a53f876e7c45
             .then(response => {
                 if (savedBranchId != 'admin') {
                     navigate('/');

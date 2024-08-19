@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../util/api';
 import AdminMenu from '../components/AdminMenu';
 import styles from './AdminMain.module.css';
-import { getAuthToken } from '../util/auth';
 import { Bar, Doughnut } from 'react-chartjs-2';
 import { InputTextarea } from "primereact/inputtextarea";
 import { FloatLabel } from "primereact/floatlabel";
@@ -21,12 +20,7 @@ const AdminMain = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const token = getAuthToken();
-        axios.get('http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/barchart', {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
+        api.get('/traders/barchart')
             .then(response => {
                 if (savedBranchId != 'admin') {
                     navigate('/');
@@ -39,11 +33,7 @@ const AdminMain = () => {
                 console.error('Error fetching data:', error);
             });
 
-        axios.get('http://localhost:8090/traders/chart2', {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
+        api.get('/traders/chart2')
             .then(response => {
                 const topProducts = response.data.slice(0, 10);
                 setPopularProducts(topProducts);
