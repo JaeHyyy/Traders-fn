@@ -68,19 +68,16 @@ const AdminMovement = () => {
     // 버튼 클릭 시 실행되는 함수
     const handleButtonClick = (rowData) => {
         setDialogVisible(true);
-        const token = getAuthToken();
-        axios.get('http://Traders5BootApp.ap-northeast-1.elasticbeanstalk.com/traders/adminmov', {
+        api.get('/traders/adminmov', {
             params: {
                 branchName: rowData.branchName,
                 movdate: rowData.movdate,
                 movstatus: rowData.movstatus
             },
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
         })
             .then(response => {
                 setSelectedMovement(response.data);
+                console(selectedMovement);
                 toast.current.show({ severity: 'success', summary: 'Success', detail: 'Message Content', life: 3000 });
             })
             .catch(error => {
@@ -90,15 +87,10 @@ const AdminMovement = () => {
     };
 
     const handleStatusUpdate = (rowData, newStatus) => {
-        const token = getAuthToken();
-        axios.post('http://Traders5BootApp.ap-northeast-1.elasticbeanstalk.com/traders/updateStatus', {
+        api.post('/traders/updateStatus', {
             branchName: rowData.branchName,
             movdate: rowData.movdate,
             movstatus: newStatus
-        }, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
         })
             .then(response => {
                 console.log("Status updated successfully:", response.data);
