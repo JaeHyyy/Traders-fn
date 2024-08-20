@@ -59,15 +59,24 @@ const MobileProductDetail = () => {
                 // 제품 상세 정보와 추가 정보를 동시에 가져오기
                 // ssg wifi : 10.10.10.197
                 const [response1, response2, response3] = await Promise.all([
+                    axios.get(`http://Traders5BootApp.ap-northeast-1.elasticbeanstalk.com/traders/stock/gcode-data/${gcode}`),
+                    // axios.get(`http://172.30.1.8:8090/traders/stock/gcode-data/${gcode}`),
+
+
+                    axios.get(`http://Traders5BootApp.ap-northeast-1.elasticbeanstalk.com/traders/goods/${gcode}`),
+                    // axios.get(`http://172.30.1.8:8090/traders/goods/${gcode}`),
+
+                    axios.get(`http://Traders5BootApp.ap-northeast-1.elasticbeanstalk.com/traders/movement/${gcode}`)
+                    // axios.get(`http://172.30.1.8:8090/traders/movement/${gcode}`)
                     // axios.get(`http://10.10.10.58:8090/traders/stock/gcode-data/${gcode}`),
-                    axios.get(`http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/stock/gcode-data/${gcode}`),
+                    // axios.get(`http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/stock/gcode-data/${gcode}`),
 
 
-                    // axios.get(`http://10.10.10.58:8090/traders/goods/${gcode}`),
-                    axios.get(`http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/goods/${gcode}`),
+                    // // axios.get(`http://10.10.10.58:8090/traders/goods/${gcode}`),
+                    // axios.get(`http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/goods/${gcode}`),
 
-                    // axios.get(`http://10.10.10.58:8090/traders/movement/${gcode}`)
-                    axios.get(`http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/movement/${gcode}`)
+                    // // axios.get(`http://10.10.10.58:8090/traders/movement/${gcode}`)
+                    // axios.get(`http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/movement/${gcode}`)
 
                 ]);
 
@@ -149,8 +158,11 @@ const MobileProductDetail = () => {
             };
 
             // API 요청을 통해 위치 업데이트
+            // const response = await axios.put('http://10.10.10.31:8090/traders/stock/mobile-update-location', null, {
+            // const response = await axios.put('http://172.30.1.8:8090/traders/stock/mobile-update-location', null, {
+
             // const response = await axios.put('http://10.10.10.58:8090/traders/stock/mobile-update-location', null, {
-            const response = await axios.put('http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/stock/mobile-update-location', null, {
+            const response = await axios.put('http://Traders5BootApp.ap-northeast-1.elasticbeanstalk.com/traders/stock/mobile-update-location', null, {
 
                 params: {
                     gcode,

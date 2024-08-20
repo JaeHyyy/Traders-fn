@@ -5,7 +5,7 @@ import ReactPaginate from 'react-paginate';
 import { getAuthToken } from '../util/auth';
 import { useNavigate, useParams } from 'react-router-dom';
 
-const Stock = ({ columns}) => {
+const Stock = ({ columns }) => {
     const [orderCart, setOrderCart] = useState([]);
 
     // 선택된 행의 인덱스를 저장하는 상태
@@ -42,25 +42,25 @@ const Stock = ({ columns}) => {
     const branchId = localStorage.getItem('branchId'); // 저장된 branchId 가져오기
     // 서버에서 재고 데이터 가져오기
     useEffect(() => {
-   
+
         if (branchId) {
-        axios.get(`http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/stock/branch/${branchId}`,{
-            headers: {
-                method: "GET",
-                Authorization: `Bearer ${token}`
-              }
-        })
-            .then(response => {
-                setStock(response.data);
-                console.log(response.data);
+            axios.get(`http://Traders5BootApp.ap-northeast-1.elasticbeanstalk.com/traders/stock/branch/${branchId}`, {
+                headers: {
+                    method: "GET",
+                    Authorization: `Bearer ${token}`
+                }
             })
-            .catch(error => {
-                console.error('There was an error fetching the goods!', error);
-             });
-             } else {
-                console.error('No branchId found in localStorage!');
+                .then(response => {
+                    setStock(response.data);
+                    console.log(response.data);
+                })
+                .catch(error => {
+                    console.error('There was an error fetching the goods!', error);
+                });
+        } else {
+            console.error('No branchId found in localStorage!');
         }
-       },[branchId]);
+    }, [branchId]);
 
     // 모든 행을 선택하거나 선택을 해제하는 함수
     const handleSelectAll = (event) => {
@@ -133,27 +133,27 @@ const Stock = ({ columns}) => {
 
     //삭제하기 버튼
     const handleDeleteSelected = async () => {
-            if (!branchId || !token) {
-                console.error('branchId 또는 token을 찾을 수 없습니다.');
-                return;
-            }
-            const selectedStockIds = selectedRows.map(rowIndex => stock[rowIndex].stockid);
-            try {
-                await Promise.all(selectedStockIds.filter(stockid => stockid !== null).map(stockid => 
-                    axios.delete(`http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/stock/delete/${stockid}/${branchId}`, {
-                        headers: {
-                            method: "DELETE",
-                            Authorization: `Bearer ${token}`
-                        }
-                    })
-                ));
-                // 삭제 후 상태 업데이트
-                setStock(stock.filter((_, index) => !selectedRows.includes(index)));
-                setSelectedRows([]);
-            } catch (error) {
-                console.error("삭제불가", error);
-            }
-        };
+        if (!branchId || !token) {
+            console.error('branchId 또는 token을 찾을 수 없습니다.');
+            return;
+        }
+        const selectedStockIds = selectedRows.map(rowIndex => stock[rowIndex].stockid);
+        try {
+            await Promise.all(selectedStockIds.filter(stockid => stockid !== null).map(stockid =>
+                axios.delete(`http://Traders5BootApp.ap-northeast-1.elasticbeanstalk.com/traders/stock/delete/${stockid}/${branchId}`, {
+                    headers: {
+                        method: "DELETE",
+                        Authorization: `Bearer ${token}`
+                    }
+                })
+            ));
+            // 삭제 후 상태 업데이트
+            setStock(stock.filter((_, index) => !selectedRows.includes(index)));
+            setSelectedRows([]);
+        } catch (error) {
+            console.error("삭제불가", error);
+        }
+    };
 
     // 추가한 useEffect: orderCart의 상태를 로깅
     useEffect(() => {
@@ -161,12 +161,12 @@ const Stock = ({ columns}) => {
     }, [orderCart]);
 
     // 발주하기 버튼
-const handleOrder = async () => {
-    if (!branchId || !token) {
-        console.error('branchId 또는 token을 찾을 수 없습니다.');
-        return;
-    }   
-    
+    const handleOrder = async () => {
+        if (!branchId || !token) {
+            console.error('branchId 또는 token을 찾을 수 없습니다.');
+            return;
+        }
+
         // 이미 orderCart에 있는 gcode들을 추출
         const existingGcodes = orderCart.map(item => item.goods.gcode);
 
@@ -174,7 +174,7 @@ const handleOrder = async () => {
         const duplicateItems = selectedRows.filter(rowIndex =>
             existingGcodes.includes(stock[rowIndex].goods.gcode)
         );
-    
+
         if (duplicateItems.length > 0) {
             alert("해당 상품은 이미 존재합니다.");
             return;
@@ -185,98 +185,98 @@ const handleOrder = async () => {
             return;
         }
 
-    // 선택된 재고 항목을 OrderCartDTO 형태로 변환
-    const orderCartDTOs = selectedRows.map(rowIndex => ({
-        ordercode: '1234-1234-0001', // 서버에서 자동 생성되므로 null 또는 생략 가능
-        gcount: 1, // gcount에 재고 수량을 할당
-        goods: { // GoodsDTO 형태에 맞춰 데이터 변환
-            gcode: stock[rowIndex].goods.gcode, 
-            goodsname: stock[rowIndex].goods.goodsname,
-            price: stock[rowIndex].goods.price
-        }
-    }));
-    try {
-        // 서버에 발주 요청 전송
-        const response = await axios.post(
-            `http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/ordercart/saveAll/${branchId}`, 
-            orderCartDTOs, 
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
+        // 선택된 재고 항목을 OrderCartDTO 형태로 변환
+        const orderCartDTOs = selectedRows.map(rowIndex => ({
+            ordercode: '1234-1234-0001', // 서버에서 자동 생성되므로 null 또는 생략 가능
+            gcount: 1, // gcount에 재고 수량을 할당
+            goods: { // GoodsDTO 형태에 맞춰 데이터 변환
+                gcode: stock[rowIndex].goods.gcode,
+                goodsname: stock[rowIndex].goods.goodsname,
+                price: stock[rowIndex].goods.price
             }
-        );      
-        // 요청 성공 시의 처리
-        console.log("Order saved successfully:", response.data);
-        alert("발주가 완료되었습니다.");
+        }));
+        try {
+            // 서버에 발주 요청 전송
+            const response = await axios.post(
+                `http://Traders5BootApp.ap-northeast-1.elasticbeanstalk.com/traders/ordercart/saveAll/${branchId}`,
+                orderCartDTOs,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+            // 요청 성공 시의 처리
+            console.log("Order saved successfully:", response.data);
+            alert("발주가 완료되었습니다.");
 
-    } catch (error) {
-        console.error("발주 요청 실패:", error);
-        alert("발주 중 오류가 발생했습니다.");
-    }
-};    
+        } catch (error) {
+            console.error("발주 요청 실패:", error);
+            alert("발주 중 오류가 발생했습니다.");
+        }
+    };
 
-// const handleOrder = async () => {
-//     if (!branchId || !token) {
-//         console.error('branchId 또는 token을 찾을 수 없습니다.');
-//         return;
-//     }
+    // const handleOrder = async () => {
+    //     if (!branchId || !token) {
+    //         console.error('branchId 또는 token을 찾을 수 없습니다.');
+    //         return;
+    //     }
 
-//     const selectedGcodes = selectedRows.map(rowIndex => stock[rowIndex].goods.gcode);
+    //     const selectedGcodes = selectedRows.map(rowIndex => stock[rowIndex].goods.gcode);
 
-//     try {
-//         // disuse 테이블에서 중복된 gcode가 있는지 확인
-//         const response = await axios.post(
-//             `http://localhost:8090/traders/disuse/checkDuplicates/${branchId}`,
-//             selectedGcodes,
-//             {
-//                 headers: {
-//                     Authorization: `Bearer ${token}`
-//                 }
-//             }
-//         );
-//         console.log("selectedGcodes", selectedGcodes);
-//         console.log("Server response for duplicates check: ", response);
+    //     try {
+    //         // disuse 테이블에서 중복된 gcode가 있는지 확인
+    //         const response = await axios.post(
+    //             `http://localhost:8090/traders/disuse/checkDuplicates/${branchId}`,
+    //             selectedGcodes,
+    //             {
+    //                 headers: {
+    //                     Authorization: `Bearer ${token}`
+    //                 }
+    //             }
+    //         );
+    //         console.log("selectedGcodes", selectedGcodes);
+    //         console.log("Server response for duplicates check: ", response);
 
-//         // 중복된 항목이 있는 경우 처리
-//         if (response.data && response.data.duplicates && response.data.duplicates.length > 0) {
-//             alert("해당 상품은 이미 존재합니다.");
-//             return;
-//         }
+    //         // 중복된 항목이 있는 경우 처리
+    //         if (response.data && response.data.duplicates && response.data.duplicates.length > 0) {
+    //             alert("해당 상품은 이미 존재합니다.");
+    //             return;
+    //         }
 
-//         // 중복이 없을 경우 발주 데이터 저장
-//         const orderCartDTOs = selectedRows.map(rowIndex => ({
-//             ordercode: null,
-//             gcount: 1,
-//             goods: {
-//                 gcode: stock[rowIndex].goods.gcode,
-//                 goodsname: stock[rowIndex].goods.goodsname,
-//                 price: stock[rowIndex].goods.price
-//             }
-//         }));
-//      if()
-//         const saveResponse = await axios.post(
-//             `http://localhost:8090/traders/ordercart/saveAll/${branchId}`, 
-//             orderCartDTOs, 
-//             {
-//                 headers: {
-//                     Authorization: `Bearer ${token}`
-//                 }
-//             }
-//         );
+    //         // 중복이 없을 경우 발주 데이터 저장
+    //         const orderCartDTOs = selectedRows.map(rowIndex => ({
+    //             ordercode: null,
+    //             gcount: 1,
+    //             goods: {
+    //                 gcode: stock[rowIndex].goods.gcode,
+    //                 goodsname: stock[rowIndex].goods.goodsname,
+    //                 price: stock[rowIndex].goods.price
+    //             }
+    //         }));
+    //      if()
+    //         const saveResponse = await axios.post(
+    //             `http://localhost:8090/traders/ordercart/saveAll/${branchId}`, 
+    //             orderCartDTOs, 
+    //             {
+    //                 headers: {
+    //                     Authorization: `Bearer ${token}`
+    //                 }
+    //             }
+    //         );
 
-//         console.log("Order saved successfully:", saveResponse.data);
-//         alert("발주가 완료되었습니다.");
-//         setSelectedRows([]);
+    //         console.log("Order saved successfully:", saveResponse.data);
+    //         alert("발주가 완료되었습니다.");
+    //         setSelectedRows([]);
 
-//     } catch (error) {
-//         console.error("발주 요청 실패:", error);
-//         alert("발주 중 오류가 발생했습니다.");
-//     }
-// };
+    //     } catch (error) {
+    //         console.error("발주 요청 실패:", error);
+    //         alert("발주 중 오류가 발생했습니다.");
+    //     }
+    // };
 
-    
-  
+
+
 
     //페이지네이션
     // 현재 페이지에 표시할 항목을 반환하는 함수

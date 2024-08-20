@@ -35,7 +35,8 @@ const ReceiptModify = () => {
             return;
         }
 
-        axios.get(`http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/${branchId}/join?movdate=${movdate}`, {
+        // axios.get(`http://10.10.10.31:8090/traders/${branchId}/join?movdate=${movdate}`, {
+        axios.get(`http://Traders5BootApp.ap-northeast-1.elasticbeanstalk.com/traders/${branchId}/join?movdate=${movdate}`, {
             headers: {
                 method: "GET",
                 Authorization: `Bearer ${token}`
@@ -58,7 +59,8 @@ const ReceiptModify = () => {
     const handleEditClick = async (gcode) => {
         setSelectedGcode(gcode);
         try {
-            const response = await axios.get('http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/getLocation', {
+            // const response = await axios.get('http://10.10.10.31:8090/traders/getLocation', {
+            const response = await axios.get('http://Traders5BootApp.ap-northeast-1.elasticbeanstalk.com/traders/getLocation', {
                 params: { gcode }
             });
             if (response.data.length > 0) {
@@ -85,7 +87,8 @@ const ReceiptModify = () => {
     const handleSubmit = async (e) => {//위치 update 기능
         e.preventDefault();
         try {
-            await axios.put('http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/updateLocation', null, {
+            // await axios.put('http://10.10.10.31:8090/traders/updateLocation', null, {
+            await axios.put('http://Traders5BootApp.ap-northeast-1.elasticbeanstalk.com/traders/updateLocation', null, {
                 params: {
                     gcode: selectedGcode,
                     loc1: locations.loc1,

@@ -56,7 +56,8 @@ const Signup = () => {
         ocrFormData.append('theFile', file);
 
         try {
-            const response = await axios.post('http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/uploadForm/uploadOcr', ocrFormData, {
+            // const response = await axios.post('http://10.10.10.31:8090/traders/uploadForm/uploadOcr', ocrFormData, {
+            const response = await axios.post('http://Traders5BootApp.ap-northeast-1.elasticbeanstalk.com/traders/uploadForm/uploadOcr', ocrFormData, {
                 headers: {
                     method: "post",
                     'Content-Type': 'multipart/form-data'
@@ -88,8 +89,8 @@ const Signup = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-          // 필수 필드 검증
-          if (!formData.branchName || !formData.branchNum) {
+        // 필수 필드 검증
+        if (!formData.branchName || !formData.branchNum) {
             alert("사업자등록증 첨부하여 지점명 및 사업자번호를 등록하세요.");
             return;
         }
@@ -109,7 +110,8 @@ const Signup = () => {
             data.append('branchImage', formData.branchImage);
         }
 
-        axios.post('http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/signup', data, {
+        // axios.post('http://10.10.10.31:8090/traders/signup', data, {
+        axios.post('http://Traders5BootApp.ap-northeast-1.elasticbeanstalk.com/traders/signup', data, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }
@@ -213,12 +215,12 @@ const Signup = () => {
                     <br />
                     <div className={styles.inputContainer}>
                         <img src={ofName} alt="office name icon" className={styles.icon} />
-                        <input type="text" name="branchName" className={styles.input} placeholder="지점명" value={formData.branchName} onChange={handleChange} readOnly  />
+                        <input type="text" name="branchName" className={styles.input} placeholder="지점명" value={formData.branchName} onChange={handleChange} readOnly />
                     </div>
                     <br />
                     <div className={styles.inputContainer}>
                         <img src={ofPhone} alt="office phone number icon" className={styles.icon} />
-                        <input type="text" name="branchNum" className={styles.input} placeholder="사업자번호" value={formData.branchNum} onChange={handleChange} readOnly  />
+                        <input type="text" name="branchNum" className={styles.input} placeholder="사업자번호" value={formData.branchNum} onChange={handleChange} readOnly />
                     </div>
                     <br />
                     <div className={styles.signup}>

@@ -14,7 +14,7 @@ const OrderCart = () => {
 
 
     if (branchId) {
-      axios.get(`http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/ordercart/branch/${branchId}`, {
+      axios.get(`http://Traders5BootApp.ap-northeast-1.elasticbeanstalk.com/traders/ordercart/branch/${branchId}`, {
         headers: {
           method: "GET",
           Authorization: `Bearer ${token}`
@@ -51,7 +51,7 @@ const OrderCart = () => {
     {
       header: '이미지',
       accessor: 'gimage',
-      render: (row) => <img src={`http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/images/items/${row.goods.gimage}.png`} alt={row.goods.gname} style={{ width: '50px', height: '50px' }} />
+      render: (row) => <img src={`http://Traders5BootApp.ap-northeast-1.elasticbeanstalk.com/traders/images/items/${row.goods.gimage}.png`} alt={row.goods.gname} style={{ width: '50px', height: '50px' }} />
     },
     { header: '카테고리', accessor: 'gcategory', render: (row) => row.goods.gcategory },
     { header: '상품명(단위)', accessor: 'gname', render: (row) => row.goods.gname },
@@ -69,7 +69,7 @@ const OrderCart = () => {
   ];
 
 
-  return <OrderCartTable columns={columns} orderCart={orderCart} setOrderCart={setOrderCart} handleGcount={handleGcount} branchId={branchId}/>;
+  return <OrderCartTable columns={columns} orderCart={orderCart} setOrderCart={setOrderCart} handleGcount={handleGcount} branchId={branchId} />;
 
 };
 
