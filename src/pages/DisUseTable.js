@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import disuse from './DisUseTable.module.css';
 import axios from 'axios';
+import api from '../util/api';
 import { getAuthToken } from '../util/auth';
 
 const DisUseTable = ({ columns }) => {
@@ -36,12 +37,7 @@ const DisUseTable = ({ columns }) => {
     //             }
     useEffect(() => {
         if (branchId) {
-            axios.get(`http://Traders5BootApp.ap-northeast-1.elasticbeanstalk.com/traders/disuse/branch/${branchId}`, {
-                headers: {
-                    method: "GET",
-                    Authorization: `Bearer ${token}`
-                }
-            })
+            api.get(`/traders/disuse/branch/${branchId}`)
                 .then(response => {
                     setDisUseList(response.data);
                     console.log(response.data)
@@ -84,6 +80,7 @@ const DisUseTable = ({ columns }) => {
         try {
             // DisUse 업데이트
             await Promise.all(selectedDisUseIds.map(disid =>
+                api.put(`traders/disuse/update/${disid}/${branchId}`, { disdate: new Date().toISOString().split('T')[0] })
                 // axios.put(`http://10.10.10.31:8090/traders/disuse/update/${disid}/${branchId}`,
                 //     { disdate: new Date().toISOString().split('T')[0] },
                 //     {
@@ -92,14 +89,14 @@ const DisUseTable = ({ columns }) => {
                 //             Authorization: `Bearer ${token}`
                 //         }
                 //     })
-                axios.put(`http://Traders5BootApp.ap-northeast-1.elasticbeanstalk.com/traders/disuse/update/${disid}/${branchId}`,
-                    { disdate: new Date().toISOString().split('T')[0] },
-                    {
-                        headers: {
-                            method: "PUT",
-                            Authorization: `Bearer ${token}`
-                        }
-                    })
+                // axios.put(`http://Traders5BootApp.ap-northeast-1.elasticbeanstalk.com/traders/disuse/update/${disid}/${branchId}`,
+                //     { disdate: new Date().toISOString().split('T')[0] },
+                //     {
+                //         headers: {
+                //             method: "PUT",
+                //             Authorization: `Bearer ${token}`
+                //         }
+                //     })
             ));
             // 업데이트 후 상태 업데이트
             setDisUseList(disUseList.map((item, index) =>
@@ -158,21 +155,11 @@ const DisUseTable = ({ columns }) => {
         try {
             // DisUse 삭제
             await Promise.all(selectedDisUseIds.map(disid =>
-                axios.delete(`http://Traders5BootApp.ap-northeast-1.elasticbeanstalk.com/traders/disuse/delete/${disid}/${branchId}`, {
-                    headers: {
-                        method: "DELETE",
-                        Authorization: `Bearer ${token}`
-                    }
-                })
+                api.delete(`/traders/disuse/delete/${disid}/${branchId}`)
             ));
             // Stock 삭제
             await Promise.all(selectedStockIds.filter(stockid => stockid !== null).map(stockid =>
-                axios.delete(`http://Traders5BootApp.ap-northeast-1.elasticbeanstalk.com/traders/stock/delete/${stockid}/${branchId}`, {
-                    headers: {
-                        method: "DELETE",
-                        Authorization: `Bearer ${token}`
-                    }
-                })
+                api.delete(`/traders/stock/delete/${stockid}/${branchId}`)
             ));
             // 삭제 후 상태 업데이트
             setDisUseList(disUseList.filter((_, index) => !selectedRows.includes(index)));
