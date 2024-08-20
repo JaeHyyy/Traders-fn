@@ -36,16 +36,12 @@ const DisUseTable = ({ columns }) => {
     //             }
     useEffect(() => {
         if (branchId) {
-            axios.get(`http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/disuse/branch/${branchId}`, {
+            axios.get(`http://Traders5BootApp.ap-northeast-1.elasticbeanstalk.com/traders/disuse/branch/${branchId}`, {
                 headers: {
                     method: "GET",
                     Authorization: `Bearer ${token}`
                 }
             })
-                .then(response => {
-                    setDisUseList(response.data);
-                    console.log(response.data)
-                })
                 .then(response => {
                     setDisUseList(response.data);
                     console.log(response.data)
@@ -96,7 +92,7 @@ const DisUseTable = ({ columns }) => {
                 //             Authorization: `Bearer ${token}`
                 //         }
                 //     })
-                axios.put(`http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/disuse/update/${disid}/${branchId}`,
+                axios.put(`http://Traders5BootApp.ap-northeast-1.elasticbeanstalk.com/traders/disuse/update/${disid}/${branchId}`,
                     { disdate: new Date().toISOString().split('T')[0] },
                     {
                         headers: {
@@ -162,7 +158,7 @@ const DisUseTable = ({ columns }) => {
         try {
             // DisUse 삭제
             await Promise.all(selectedDisUseIds.map(disid =>
-                axios.delete(`http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/disuse/delete/${disid}/${branchId}`, {
+                axios.delete(`http://Traders5BootApp.ap-northeast-1.elasticbeanstalk.com/traders/disuse/delete/${disid}/${branchId}`, {
                     headers: {
                         method: "DELETE",
                         Authorization: `Bearer ${token}`
@@ -171,7 +167,7 @@ const DisUseTable = ({ columns }) => {
             ));
             // Stock 삭제
             await Promise.all(selectedStockIds.filter(stockid => stockid !== null).map(stockid =>
-                axios.delete(`http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/stock/delete/${stockid}/${branchId}`, {
+                axios.delete(`http://Traders5BootApp.ap-northeast-1.elasticbeanstalk.com/traders/stock/delete/${stockid}/${branchId}`, {
                     headers: {
                         method: "DELETE",
                         Authorization: `Bearer ${token}`

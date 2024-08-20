@@ -69,7 +69,7 @@ const AdminMovement = () => {
     const handleButtonClick = (rowData) => {
         setDialogVisible(true);
         const token = getAuthToken();
-        axios.get('http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/adminmov', {
+        axios.get('http://Traders5BootApp.ap-northeast-1.elasticbeanstalk.com/traders/adminmov', {
             params: {
                 branchName: rowData.branchName,
                 movdate: rowData.movdate,
@@ -91,7 +91,7 @@ const AdminMovement = () => {
 
     const handleStatusUpdate = (rowData, newStatus) => {
         const token = getAuthToken();
-        axios.post('http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/updateStatus', {
+        axios.post('http://Traders5BootApp.ap-northeast-1.elasticbeanstalk.com/traders/updateStatus', {
             branchName: rowData.branchName,
             movdate: rowData.movdate,
             movstatus: newStatus

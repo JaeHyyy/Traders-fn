@@ -126,7 +126,7 @@ const AdminGoods = () => {
 
         const token = getAuthToken();
         // axios.post('http://10.10.10.31:8090/home/save', formData, {
-        axios.post('http://TradersApp5.us-east-2.elasticbeanstalk.com/home/save', formData, {
+        axios.post('http://Traders5BootApp.ap-northeast-1.elasticbeanstalk.com/home/save', formData, {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'multipart/form-data',
@@ -153,7 +153,7 @@ const AdminGoods = () => {
         return (
             <img
                 // src={`http://10.10.10.31:8090/traders/images/items/${rowData.gimage}.png`}
-                src={`http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/images/items/${rowData.gimage}.png`}
+                src={`http://Traders5BootApp.ap-northeast-1.elasticbeanstalk.com/traders/images/items/${rowData.gimage}.png`}
                 alt={rowData.gname}
                 style={{ width: '50px', height: '50px' }}
             />
@@ -209,7 +209,7 @@ const AdminGoods = () => {
                         <div>
                             <label htmlFor="gimage" />
                             <Toast ref={toast}></Toast>
-                            <FileUpload mode="basic" name="file" placeholder="상품 이미지 업로드" url="http://localhost:8090/home/save" multiple accept="image/*" maxFileSize={1000000} onUpload={onUpload} />
+                            <FileUpload mode="basic" name="file" placeholder="상품 이미지 업로드" url="http://Traders5BootApp.ap-northeast-1.elasticbeanstalk.com/home/save" multiple accept="image/*" maxFileSize={1000000} onUpload={onUpload} />
                         </div>
                         <Button type="submit" label="Add Goods" className="p-mt-3" />
                     </form>

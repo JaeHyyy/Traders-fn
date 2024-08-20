@@ -78,7 +78,7 @@ const MobileMain = () => {
         try {
             // const response = await axios.post('http://172.30.1.8:8090/traders/api/updateMovStatus', itemsToUpdate);
             // const response = await axios.post('http://10.10.10.58:8090/traders/api/updateMovStatus', itemsToUpdate);
-            const response = await axios.post('http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/api/updateMovStatus', itemsToUpdate);
+            const response = await axios.post('http://Traders5BootApp.ap-northeast-1.elasticbeanstalk.com/traders/api/updateMovStatus', itemsToUpdate);
             if (response.status === 200) {
                 setQrCodesData(prevData =>
                     prevData.map(item =>

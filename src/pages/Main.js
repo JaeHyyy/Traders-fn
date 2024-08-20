@@ -16,6 +16,8 @@ function Main() {
   const navigate = useNavigate();
 
   const branchId = localStorage.getItem('branchId'); // 저장된 branchId 가져오기
+  console.log("branchId 확인: ", branchId);
+
 
 
   // useEffect를 사용하여 컴포넌트가 처음 렌더링될 때 localStorage에서 token과 branchId를 가져옴
