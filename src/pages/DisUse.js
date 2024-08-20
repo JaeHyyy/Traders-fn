@@ -14,7 +14,7 @@ const DisUse = () => {
       header: '이미지',
       accessor: 'gimage',
       // render: (row) => <img src={`http://10.10.10.31:8090/traders/images/items/${row.stock.goods.gimage}.png`} alt={row.stock.goods.gname} style={{ width: '50px', height: '50px' }} />
-      render: (row) => <img src={`http://Traders5BootApp.ap-northeast-1.elasticbeanstalk.com/traders/images/items/${row.stock.goods.gimage}.png`} alt={row.stock.goods.gname} style={{ width: '50px', height: '50px' }} />
+      render: (row) => <img src={`http://localhost:8090/traders/images/items/${row.stock.goods.gimage}.png`} alt={row.stock.goods.gname} style={{ width: '50px', height: '50px' }} />
     },
     { header: '카테고리', accessor: 'gcategory', render: (row) => row.stock.goods.gcategory },
     { header: '상품명(단위)', accessor: 'gname', render: (row) => row.stock.goods.gname },

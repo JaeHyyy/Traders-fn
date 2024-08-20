@@ -11,7 +11,7 @@ const StockList = () => {
     // { header: '카테고리', accessor: 'goods.gcategory', render: (row) => row.goods.gcategory },
     // {
     //   header: '재고수량',
-    { header: "이미지", accessor: 'goods.gimage', render: (row) => <img src={`http://Traders5BootApp.ap-northeast-1.elasticbeanstalk.com/traders/images/items/${row.goods.gimage}.png`} alt={row.goods.gname} style={{ width: '50px', height: '50px' }} /> },
+    { header: "이미지", accessor: 'goods.gimage', render: (row) => <img src={`http://localhost:8090/traders/images/items/${row.goods.gimage}.png`} alt={row.goods.gname} style={{ width: '50px', height: '50px' }} /> },
     { header: '카테고리', accessor: 'goods.gcategory', render: (row) => row.goods.gcategory },
     {
       header: '재고수량',

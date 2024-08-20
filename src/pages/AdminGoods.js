@@ -126,7 +126,7 @@ const AdminGoods = () => {
 
         const token = getAuthToken();
         // axios.post('http://10.10.10.31:8090/home/save', formData, {
-        axios.post('http://Traders5BootApp.ap-northeast-1.elasticbeanstalk.com/home/save', formData, {
+        axios.post('http://localhost:8090/home/save', formData, {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'multipart/form-data',
@@ -153,7 +153,7 @@ const AdminGoods = () => {
         return (
             <img
                 // src={`http://10.10.10.31:8090/traders/images/items/${rowData.gimage}.png`}
-                src={`http://Traders5BootApp.ap-northeast-1.elasticbeanstalk.com/traders/images/items/${rowData.gimage}.png`}
+                src={`http://localhost:8090/traders/images/items/${rowData.gimage}.png`}
                 alt={rowData.gname}
                 style={{ width: '50px', height: '50px' }}
             />

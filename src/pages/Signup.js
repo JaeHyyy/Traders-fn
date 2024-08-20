@@ -57,7 +57,7 @@ const Signup = () => {
 
         try {
             // const response = await axios.post('http://10.10.10.31:8090/traders/uploadForm/uploadOcr', ocrFormData, {
-            const response = await axios.post('http://Traders5BootApp.ap-northeast-1.elasticbeanstalk.com/traders/uploadForm/uploadOcr', ocrFormData, {
+            const response = await axios.post('http://localhost:8090/traders/uploadForm/uploadOcr', ocrFormData, {
                 headers: {
                     method: "post",
                     'Content-Type': 'multipart/form-data'
@@ -111,7 +111,7 @@ const Signup = () => {
         }
 
         // axios.post('http://10.10.10.31:8090/traders/signup', data, {
-        axios.post('http://Traders5BootApp.ap-northeast-1.elasticbeanstalk.com/traders/signup', data, {
+        axios.post('http://localhost:8090/traders/signup', data, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }
