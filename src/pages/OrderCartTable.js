@@ -2,10 +2,12 @@ import { useState, useEffect } from 'react';
 import order from './OrderCartTable.module.css';
 import { loadTossPayments } from '@tosspayments/payment-sdk';
 import api from '../util/api';
+import { getAuthToken } from '../util/auth';
 
 const OrderCartTable = ({ columns, orderCart, setOrderCart, handleGcount }) => {
   const [selectedRows, setSelectedRows] = useState([]);
   const [totalCostPrice, setTotalCostPrice] = useState(0);
+  const token = getAuthToken();
   const branchId = localStorage.getItem('branchId'); // 저장된 branchId 가져오기
 
   //체크박스 전체 선택
@@ -78,7 +80,7 @@ const OrderCartTable = ({ columns, orderCart, setOrderCart, handleGcount }) => {
 
     const paymentData = {
       amount: totalCostPrice, // 결제 금액
-      orderId: '1234-4321-0001', // 주문 ID
+      orderId: '1234-1234-0001', // 주문 ID
       orderName: `${branchId} 발주`, // 주문명
       customerName: `${branchId}` // 고객명
     };
@@ -101,8 +103,8 @@ const OrderCartTable = ({ columns, orderCart, setOrderCart, handleGcount }) => {
       // 결제 요청
       tossPayments.requestPayment('카드', {
         ...paymentData,
-        successUrl: `http://localhost:8090/traders/payment/PaymentSuccess?${queryString}`,
-        failUrl: 'http://localhost:8090/traders/payment/fail'
+        successUrl: `http://localhost:3000/traders/payment/PaymentSuccess?${queryString}`,
+        failUrl: 'http://localhost:3000/traders/payment/fail'
       });
     } catch (error) {
       console.error('결제 요청 중 오류 발생:', error);
