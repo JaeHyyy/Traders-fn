@@ -18,7 +18,7 @@ const StockList = () => {
       accessor: 'stockquantity'
     },
     { header: '유통기한', accessor: 'expdate' },
-    { header: '상품판매가', accessor: 'gprice' },
+    { header: '상품판매가', accessor: 'gprice', render: (row) => row.gprice.toLocaleString('ko-KR') },
     { header: '대분류', accessor: 'loc1' },
     { header: '중분류', accessor: 'loc2' },
     { header: '소분류', accessor: 'loc3' },

@@ -46,7 +46,7 @@ const OrderCart = () => {
   };
 
   const columns = [
-    { header: '순번' },
+    { header: '순번', render: (_, rowIndex) => rowIndex + 1 },
     { header: '상품코드', accessor: 'gcode', render: (row) => row.goods.gcode },
     {
       header: '이미지',
