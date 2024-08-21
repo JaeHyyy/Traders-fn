@@ -2,10 +2,12 @@ import { useState, useEffect } from 'react';
 import order from './OrderCartTable.module.css';
 import { loadTossPayments } from '@tosspayments/payment-sdk';
 import api from '../util/api';
+import { getAuthToken } from '../util/auth';
 
 const OrderCartTable = ({ columns, orderCart, setOrderCart, handleGcount }) => {
   const [selectedRows, setSelectedRows] = useState([]);
   const [totalCostPrice, setTotalCostPrice] = useState(0);
+  const token = getAuthToken();
   const branchId = localStorage.getItem('branchId'); // 저장된 branchId 가져오기
 
   //체크박스 전체 선택
@@ -124,6 +126,7 @@ const OrderCartTable = ({ columns, orderCart, setOrderCart, handleGcount }) => {
     const paymentData = {
       amount: totalCostPrice, // 결제 금액
       orderId: '1234-4321-0001', // 주문 ID (중복되지 않도록 확인)
+
       orderName: `${branchId} 발주`, // 주문명
       customerName: `${branchId}` // 고객명
     };
