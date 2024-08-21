@@ -137,12 +137,13 @@ const Stock = ({ columns }) => {
             console.error('branchId 또는 token을 찾을 수 없습니다.');
             return;
         }
+
         const selectedStockIds = selectedRows.map(rowIndex => stock[rowIndex].stockid);
+
         try {
             await Promise.all(selectedStockIds.filter(stockid => stockid !== null).map(stockid =>
                 axios.delete(`http://localhost:8090/traders/stock/delete/${stockid}/${branchId}`, {
                     headers: {
-                        method: "DELETE",
                         Authorization: `Bearer ${token}`
                     }
                 })
@@ -151,9 +152,10 @@ const Stock = ({ columns }) => {
             setStock(stock.filter((_, index) => !selectedRows.includes(index)));
             setSelectedRows([]);
         } catch (error) {
-            console.error("삭제불가", error);
+            console.error("삭제 불가", error);
         }
     };
+
 
     // 추가한 useEffect: orderCart의 상태를 로깅
     useEffect(() => {
