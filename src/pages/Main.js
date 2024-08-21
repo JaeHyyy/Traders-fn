@@ -189,40 +189,78 @@ function Main() {
     }
   };
 
-  //발주하기 버튼 
+  //발주하기 버튼
+  // const handleOrder = () => {
+  //   // const token = localStorage.getItem('token');
+  //   const selectedItems = goods.filter(item => selectedGoods.includes(item.gcode));
+  //   const orderCartDTOs = selectedItems.map(item => ({
+  //     gcount: 1, // 필요에 따라 수정, 기본 1개만 담기게 설정되어져 있음
+  //     goods: {
+  //       gcode: item.gcode,
+  //       gcategory: item.gcategory,
+  //       gname: item.gname,
+  //       gcostprice: item.gcostprice,
+  //       gimage: item.gimage,
+  //       gcompany: item.gcompany,
+  //       gunit: item.gunit,
+  //     }
+  //   }));
+
+  //   api.post(`/traders/ordercart/saveAll/${branchId}`, orderCartDTOs)
+  //     .then(response => {
+  //       console.log('발주하기에 담기 성공:', response);
+  //       console.log('Response data:', response.data);
+  //       alert('발주하기에 담겼습니다.');
+  //       setSelectedGoods([]);
+  //     })
+  //     .catch(error => {
+  //       console.error('발주하기에 담기 불가', error);
+  //     });
+  // };
   const handleOrder = () => {
-    // const token = localStorage.getItem('token');
-    const selectedItems = goods.filter(item => selectedGoods.includes(item.gcode));
-    const orderCartDTOs = selectedItems.map(item => ({
-      gcount: 1, // 필요에 따라 수정, 기본 1개만 담기게 설정되어져 있음
-      goods: {
-        gcode: item.gcode,
-        gcategory: item.gcategory,
-        gname: item.gname,
-        gcostprice: item.gcostprice,
-        gimage: item.gimage,
-        gcompany: item.gcompany,
-        gunit: item.gunit,
-      }
-    }));
-    // axios.post(`http://10.10.10.31:8090/traders/ordercart/saveAll/${branchId}`, orderCartDTOs, {
-    // axios.post(`http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/ordercart/saveAll/${branchId}`, orderCartDTOs, {
-    //   headers: {
-    //     // method: "POST",
-    //     Authorization: `Bearer ${token}`
-    //   }
-    // })
-    api.post(`/traders/ordercart/saveAll/${branchId}`, orderCartDTOs)
+    // 기존 orderCart 데이터를 가져옴
+    api.get(`/traders/ordercart/branch/${branchId}`)
       .then(response => {
-        console.log('발주하기에 담기 성공:', response);
-        console.log('Response data:', response.data);
-        alert('발주하기에 담겼습니다.');
-        setSelectedGoods([]);
+        const existingOrderCart = response.data;
+
+        // 선택된 상품 중 이미 orderCart에 있는 gcode가 있는지 확인
+        const duplicates = selectedGoods.filter(gcode =>
+          existingOrderCart.some(cartItem => cartItem.goods.gcode === gcode)
+        );
+
+        if (duplicates.length > 0) {
+          alert('선택한 상품 중 이미 발주된 상품이 있습니다. 중복된 상품을 제거하고 다시 시도하세요.');
+        } else {
+          // 중복이 없으면 발주를 진행
+          const selectedItems = goods.filter(item => selectedGoods.includes(item.gcode));
+          const orderCartDTOs = selectedItems.map(item => ({
+            gcount: 1, // 필요에 따라 수정
+            goods: {
+              gcode: item.gcode,
+              gcategory: item.gcategory,
+              gname: item.gname,
+              gcostprice: item.gcostprice,
+              gimage: item.gimage,
+              gcompany: item.gcompany,
+              gunit: item.gunit,
+            }
+          }));
+
+          api.post(`/traders/ordercart/saveAll/${branchId}`, orderCartDTOs)
+            .then(response => {
+              alert('발주하기에 담겼습니다.');
+              setSelectedGoods([]);
+            })
+            .catch(error => {
+              console.error('발주하기에 담기 불가', error);
+            });
+        }
       })
       .catch(error => {
-        console.error('발주하기에 담기 불가', error);
+        console.error('OrderCart 데이터를 가져오는 중 오류가 발생했습니다.', error);
       });
   };
+
 
   return (
     <div className={main.Main}>
@@ -343,5 +381,3 @@ function Main() {
 }
 
 export default Main;
-
-
