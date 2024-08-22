@@ -1,18 +1,14 @@
 import Stock from './Stock';
 
+
 const StockList = () => {
   const columns = [
     { header: '재고코드', accessor: 'stockid' },
     { header: '상품코드', accessor: 'goods.gcode', render: (row) => row.goods.gcode },
-    //stock 테이블의 값은 그냥 키값으로 들고와지는데
-    //외래키나 조인으로 연결된 goods 테이블의 정보는
-    //render를 써서 가져와야한다
-    // { header: "이미지", accessor: 'goods.gimage', render: (row) => <img src={`http://10.10.10.31:8090/traders/images/items/${row.goods.gimage}.png`} alt={row.goods.gname} style={{ width: '50px', height: '50px' }} /> },
-    // { header: '카테고리', accessor: 'goods.gcategory', render: (row) => row.goods.gcategory },
-    // {
-    //   header: '재고수량',
     { header: "이미지", accessor: 'goods.gimage', render: (row) => <img src={`http://localhost:8090/traders/images/items/${row.goods.gimage}.png`} alt={row.goods.gname} style={{ width: '50px', height: '50px' }} /> },
+    { header: "상품명(단위)", accessor: 'goods.gname', render: (row) => row.goods.gname},
     { header: '카테고리', accessor: 'goods.gcategory', render: (row) => row.goods.gcategory },
+    { header: "단위", accessor: 'goods.gunit', render: (row) => row.goods.gunit},
     {
       header: '재고수량',
       accessor: 'stockquantity'

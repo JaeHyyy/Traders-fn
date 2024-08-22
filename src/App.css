@@ -36,3 +36,46 @@
     transform: rotate(360deg);
   }
 }
+
+
+/* stock.js 재고관리페이지에 있는 Paginator부분 css 커스텀 */
+.my-custom-paginator {
+  background-color: #f9f9f9 !important;
+  margin-top: 3px;
+}
+
+.my-custom-paginator .p-dropdown {
+  background-color: #f9f9f9 !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  line-height: 1.5;
+  outline: none;
+  box-shadow: none; 
+}
+
+/* stock.js 재고관리페이지에 있는 검색창 부분 css 커스텀 */
+.p-inputgroup .p-button-warning {
+  background-color: #e3f2fd !important;
+  border: none; 
+  color: #333; 
+}
+
+.p-inputgroup {
+  max-width: 740px;
+  display: flex; 
+}
+
+.p-inputtext {
+  outline: none; 
+  box-shadow: none; 
+}
+
+.p-button-warning {
+  outline: none;
+  box-shadow: none; 
+}
+
+
+
