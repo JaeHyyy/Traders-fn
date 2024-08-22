@@ -28,23 +28,30 @@ const OrderCartTable = ({ columns, orderCart, setOrderCart, handleGcount }) => {
     }
   };
 
-  //체크한 상품 삭제하기
+  // 체크한 상품 삭제하기
   const handleDelete = () => {
-    const selectedItems = selectedRows.map(rowIndex => orderCart[rowIndex].ordercode);
+    // 중복된 ordercode를 제거하고 고유한 값만 남기기
+    const selectedItems = Array.from(new Set(selectedRows.map(rowIndex => orderCart[rowIndex].ordercode)));
+
     selectedItems.forEach(ordercode => {
       if (ordercode !== undefined) {
         api.delete(`/traders/ordercart/delete/${branchId}/${ordercode}`)
           .then(response => {
             console.log(`삭제완료`);
+            // 삭제된 ordercode에 해당하는 항목들을 모두 필터링하여 상태 업데이트
             setOrderCart(prevOrderCart => prevOrderCart.filter(item => item.ordercode !== ordercode));
             alert("삭제가 완료되었습니다.");
           })
           .catch(error => {
             console.error('삭제불가', error);
+            alert('삭제 중 오류가 발생했습니다. 다시 시도해주세요.');
           });
       }
     });
   };
+
+
+
 
   //발주하기 페이지에 있는 상품들의 총합계
   useEffect(() => {
@@ -61,9 +68,10 @@ const OrderCartTable = ({ columns, orderCart, setOrderCart, handleGcount }) => {
   // 변경사항 저장하기
   const handleSave = () => {
     orderCart.forEach(item => {
-      api.put(`/traders/ordercart/update/${branchId}/${item.ordercode}`, item)
+      const gcode = item.goods.gcode;
+      api.put(`/traders/ordercart/updateByGcode/${branchId}/${gcode}`, item)
         .then(response => {
-          console.log(`저장완료: ${item.ordercode}`);
+          console.log(`저장완료: ${gcode}`);
           console.log(response.data);
         })
         .catch(error => {
@@ -73,14 +81,14 @@ const OrderCartTable = ({ columns, orderCart, setOrderCart, handleGcount }) => {
     alert("변경사항 저장 완료되었습니다.");
   };
 
-  //결제하기 
   const handlePayment = async () => {
     const clientKey = 'test_ck_KNbdOvk5rkOogZa2Qvm4rn07xlzm'; // 하드코딩된 클라이언트 키
     const tossPayments = await loadTossPayments(clientKey);
 
     const paymentData = {
       amount: totalCostPrice, // 결제 금액
-      orderId: '1234-1234-0001', // 주문 ID
+      orderId: '1234-4321-0001', // 주문 ID (중복되지 않도록 확인)
+
       orderName: `${branchId} 발주`, // 주문명
       customerName: `${branchId}` // 고객명
     };
@@ -100,12 +108,15 @@ const OrderCartTable = ({ columns, orderCart, setOrderCart, handleGcount }) => {
         items: itemsString, // 전체 상품 정보 추가
       }).toString();
 
+      console.log("paymentData: ", paymentData);
+
       // 결제 요청
       tossPayments.requestPayment('카드', {
         ...paymentData,
         successUrl: `http://localhost:3000/traders/payment/PaymentSuccess?${queryString}`,
         failUrl: 'http://localhost:3000/traders/payment/fail'
       });
+
     } catch (error) {
       console.error('결제 요청 중 오류 발생:', error);
     }
