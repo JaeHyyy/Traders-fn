@@ -271,8 +271,15 @@ const Stock = ({ columns }) => {
 
     // 검색 버튼 클릭 핸들러
     const handleSearchClick = () => {
-    fetchStockByKeyword(); // 검색어에 맞는 데이터를 가져옴
+    fetchStockByKeyword(searchTerm); // 검색어에 맞는 데이터를 가져옴
      };
+     //엔터키 눌렀을때 검색 기능 작동 핸들러
+     const handleKeyPress = (event) => {
+        if (event.key === 'Enter') {
+            handleSearchClick();
+        }
+    };
+  
 
 
 
@@ -283,7 +290,8 @@ const Stock = ({ columns }) => {
                 <InputText 
                     placeholder="검색"
                     value={searchTerm} 
-                    onChange={handleSearchChange} // 검색어 변경 시 상태 업데이트 
+                    onChange={(e) => setSearchTerm(e.target.value)} // 검색어 변경 시 상태 업데이트 
+                    onKeyPress={handleKeyPress}
                 />
                 <Button 
                     icon="pi pi-search" 
@@ -336,7 +344,15 @@ const Stock = ({ columns }) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {displayStock.map((row, rowIndex) => (
+                   {displayStock.length === 0 ? (
+                    <tr>
+                      <td colSpan={columns.length + 1} style={{ textAlign: 'center', padding: '20px' }}>
+                        해당되는 상품이 없습니다.
+                      </td>
+                    </tr>
+                   ) : (
+
+                    displayStock.map((row, rowIndex) => (
                         <tr key={rowIndex}>
                             <td>
                                 <input
@@ -351,7 +367,8 @@ const Stock = ({ columns }) => {
                                 </td>
                             ))}
                         </tr>
-                    ))}
+                    ))
+                )}
                 </tbody>
             </table>
             </div>
