@@ -119,6 +119,11 @@
     width: 100%;
 }
 
+.tableWrapper {
+    max-height: 142px; /* 원하는 최대 높이 설정 */
+    overflow-y: auto;
+}
+
 .locCalender{
     width: 100%; /* 부모 요소의 전체 너비를 차지하게 설정 */
     /* height: 100%; */
@@ -186,7 +191,7 @@
 .disuseTable th, .disuseTable td {
     padding: 5px;
     text-align: center;
-    font-size: 10px;
+    font-size: 13px;
 }
 
 .disuseTable th {
@@ -205,7 +210,7 @@
 .stockTable th, .stockTable td {
     padding: 5px;
     text-align: center;
-    font-size: 10px;
+    font-size: 13px;
 }
 
 .stockTable th {
