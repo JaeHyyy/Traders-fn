@@ -2,8 +2,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import main from '../pages/Main.module.css';
 import Calendar from '../components/Calendar';
 import api from '../util/api';
+import axios from 'axios';
 import { format } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
+import { getAuthToken } from '../util/auth';
 
 function Main() {
   const [goods, setGoods] = useState([]);
@@ -206,13 +208,14 @@ function Main() {
       }
     }));
     // axios.post(`http://10.10.10.31:8090/traders/ordercart/saveAll/${branchId}`, orderCartDTOs, {
-    // axios.post(`http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/ordercart/saveAll/${branchId}`, orderCartDTOs, {
-    //   headers: {
-    //     // method: "POST",
-    //     Authorization: `Bearer ${token}`
-    //   }
-    // })
-    api.post(`/traders/ordercart/saveAll/${branchId}`, orderCartDTOs)
+    const token = getAuthToken();
+    axios.post(`http://localhost:8090/traders/ordercart/saveAll/${branchId}`, orderCartDTOs, {
+      headers: {
+        // method: "POST",
+        Authorization: `Bearer ${token}`
+      }
+    })
+      //api.post(`/traders/ordercart/saveAll/${branchId}`, orderCartDTOs)
       .then(response => {
         console.log('발주하기에 담기 성공:', response);
         console.log('Response data:', response.data);

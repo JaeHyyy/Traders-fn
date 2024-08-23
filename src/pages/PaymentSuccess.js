@@ -22,7 +22,7 @@ function PaymentSuccess() {
       gcode: item.goods.gcode, // 상품 코드
       movquantity: item.gcount, // 수량
       movdate: new Date().toISOString().split('T')[0], // 오늘 날짜 (YYYY-MM-DD 형식)
-      movstatus: '출고대기' // 고정된 상태
+      movstatus: '출고 대기' // 고정된 상태
     }));
 
     try {

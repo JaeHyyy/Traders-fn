@@ -101,8 +101,8 @@ const OrderCartTable = ({ columns, orderCart, setOrderCart, handleGcount }) => {
       // 결제 요청
       tossPayments.requestPayment('카드', {
         ...paymentData,
-        successUrl: `http://localhost:8090/traders/payment/PaymentSuccess?${queryString}`,
-        failUrl: 'http://localhost:8090/traders/payment/fail'
+        successUrl: `http://localhost:3000/traders/payment/PaymentSuccess?${queryString}`,
+        failUrl: 'http://localhost:3000/traders/payment/fail'
       });
     } catch (error) {
       console.error('결제 요청 중 오류 발생:', error);

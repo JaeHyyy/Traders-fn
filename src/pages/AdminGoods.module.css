@@ -24,21 +24,22 @@
 }
 
 .addgoods {
-    flex: 3;
-    text-align: center;
-    height: 600px;
-    /* addgoods 높이 고정 */
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    width: 25vw;
     background-color: lightgray;
     padding: 1rem;
     box-sizing: border-box;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
 }
 
 .addgoods form {
     display: flex;
     flex-direction: column;
     gap: 15px;
-    /* 입력 요소 간의 간격 */
 }
 
 .addgoods .p-inputtext,
@@ -50,7 +51,7 @@
 .addgoods .p-button {
     align-self: flex-end;
     margin-top: 20px;
-    color : gray;
+    color: lightgray;
 }
 
 .addtitle {
@@ -59,6 +60,37 @@
     font-weight: bold;
 }
 
-.addtitle{
-    display: center;
+.inputText,
+.inputNumber,
+.fileUpload {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 4px;
+    background-color: white;
+}
+
+.dropdown {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 4px;
+    background-color: white;
+}
+
+.button {
+    align-self: flex-end;
+    margin-top: 20px;
+    color: lightgray;
+}
+
+.label {
+    margin-bottom: 0.5rem;
+    display: block;
+    font-weight: bold;
+}
+
+.addtitle {
+    margin-bottom: 20px;
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
 }
