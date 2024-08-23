@@ -58,8 +58,14 @@ const Stock = ({ columns }) => {
     setCurrentPage(event.page);
     setItemsPerPage(event.rows); // 페이지당 항목 수 변경 처리
     };
-    //재고 통합검색
-    const [searchTerm, setSearchTerm] = useState(''); // 검색어를 저장하는 상태
+
+    // 검색어를 저장하는 상태
+    const [searchTerm, setSearchTerm] = useState('');
+
+    // 검색어 변경 함수
+    const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+    };
 
     
 
@@ -245,17 +251,44 @@ const Stock = ({ columns }) => {
     const displayStock = sortedAndFilteredStock.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
 
 
+    //검색 시 해당 키워드로 stock 조회
+    const fetchStockByKeyword = async () => {
+        if (branchId) {
+            try {
+                const response = await axios.get(`http://localhost:8090/traders/stock/branch/${branchId}/search?keyword=${encodeURIComponent(searchTerm)}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                setStock(response.data);
+            } catch (error) {
+                console.error('Failed to fetch stock data:', error);
+            }
+        } else {
+            console.error('No branchId found in localStorage!');
+        }
+    };
+
+    // 검색 버튼 클릭 핸들러
+    const handleSearchClick = () => {
+    fetchStockByKeyword(); // 검색어에 맞는 데이터를 가져옴
+     };
+
+
 
     return (
         <div className={stockk.tableTop}>
         <div className={stockk.totalTableTop}>
             <div className="p-inputgroup flex-1">
                 <InputText 
-                    placeholder="검색" 
+                    placeholder="검색"
+                    value={searchTerm} 
+                    onChange={handleSearchChange} // 검색어 변경 시 상태 업데이트 
                 />
                 <Button 
                     icon="pi pi-search" 
-                    className="p-button-warning" 
+                    className="p-button-warning"
+                    onClick={handleSearchClick} // 검색 버튼 클릭 시 API 호출 
                 />
             </div>
             <div className={stockk.tableCon}>
