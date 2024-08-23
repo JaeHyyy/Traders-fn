@@ -4,6 +4,8 @@ import Calendar from '../components/Calendar';
 import api from '../util/api';
 import { format } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
+import { Stepper } from 'primereact/stepper';  // PrimeReact Steps 컴포넌트 임포트
+import { StepperPanel } from 'primereact/stepperpanel';
 
 function Main() {
   const [goods, setGoods] = useState([]);
@@ -224,6 +226,11 @@ function Main() {
       });
   };
 
+  const steps = [
+    { label: '유통기한 임박 상품 리스트' },
+    { label: '재고 부족 상품 리스트' },
+  ];
+
   return (
     <div className={main.Main}>
       <div className={main.goods_page}>
@@ -276,16 +283,14 @@ function Main() {
         </div>
       </div>
 
-      <div className={main.rightsection}>
+      <div className={main.rightSection}>
         <div className={main.locCalender}>
           <Calendar onDateSelect={handleDateSelect} />
         </div>
-        <div className={main.tableLabel}>
-          <div className={main.tableLabel2}>유통기한 임박 상품 리스트</div>
-          <div className={main.tableLabel3}>재고 부족 상품 리스트</div>
-        </div>
-        <div className={main.rightSectionBox}>
-          <div className={main.disuseList}>
+
+        {/* Stepper 부분 */}
+        <Stepper orientation="vertical" className={main.stepper}>
+          <StepperPanel header="유통기한 임박 상품 리스트">
             <table className={main.disuseTable}>
               <thead>
                 <tr>
@@ -312,9 +317,8 @@ function Main() {
                 )}
               </tbody>
             </table>
-          </div>
-
-          <div className={main.stockList}>
+          </StepperPanel>
+          <StepperPanel header="재고 부족 상품 리스트">
             <table className={main.stockTable}>
               <thead>
                 <tr>
@@ -335,8 +339,8 @@ function Main() {
                 ))}
               </tbody>
             </table>
-          </div>
-        </div>
+          </StepperPanel>
+        </Stepper>
       </div>
     </div>
   );
