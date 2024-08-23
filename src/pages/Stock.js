@@ -4,6 +4,12 @@ import stockk from './StockList.module.css';
 import ReactPaginate from 'react-paginate';
 import { getAuthToken } from '../util/auth';
 import { useNavigate, useParams } from 'react-router-dom';
+import { Paginator } from 'primereact/paginator';
+import { Button } from 'primereact/button';
+import { InputText } from 'primereact/inputtext';
+import api from '../util/api';
+import '../App.css'
+
 
 const Stock = ({ columns }) => {
     const [orderCart, setOrderCart] = useState([]);
@@ -25,7 +31,7 @@ const Stock = ({ columns }) => {
 
     // 각 정렬 체크박스의 상태를 저장하는 상태
     const [sortStates, setSortStates] = useState({
-        quantity: false,
+        gprice: false,
         expiry: false,
         stock: false
     });
@@ -34,12 +40,29 @@ const Stock = ({ columns }) => {
     const [currentPage, setCurrentPage] = useState(0);
 
     // 페이지당 항목 수
-    const itemsPerPage = 7;
+    const [itemsPerPage, setItemsPerPage] = useState(5); // 초기값은 5로 설정
 
     const navigate = useNavigate();
 
     const token = getAuthToken();
     const branchId = localStorage.getItem('branchId'); // 저장된 branchId 가져오기
+
+   // 현재 페이지의 첫 번째 항목 인덱스를 계산하는 함수
+    const first = currentPage * itemsPerPage;
+
+   // 페이지당 항목 수를 rows로 할당
+    const rows = itemsPerPage;
+
+   // 페이지 변경 핸들러 함수
+    const onPageChange = (event) => {
+    setCurrentPage(event.page);
+    setItemsPerPage(event.rows); // 페이지당 항목 수 변경 처리
+    };
+    //재고 통합검색
+    const [searchTerm, setSearchTerm] = useState(''); // 검색어를 저장하는 상태
+
+    
+
     // 서버에서 재고 데이터 가져오기
     useEffect(() => {
 
@@ -110,8 +133,8 @@ const Stock = ({ columns }) => {
         })
         .sort((a, b) => {
             switch (sortOption) {
-                case 'quantity':
-                    return b.stockquantity - a.stockquantity;
+                case 'gprice':
+                    return b.gprice - a.gprice;
                 case 'expiry':
                     return new Date(a.expdate) - new Date(b.expdate);
                 case 'stock':
@@ -137,12 +160,13 @@ const Stock = ({ columns }) => {
             console.error('branchId 또는 token을 찾을 수 없습니다.');
             return;
         }
+
         const selectedStockIds = selectedRows.map(rowIndex => stock[rowIndex].stockid);
+
         try {
             await Promise.all(selectedStockIds.filter(stockid => stockid !== null).map(stockid =>
                 axios.delete(`http://localhost:8090/traders/stock/delete/${stockid}/${branchId}`, {
                     headers: {
-                        method: "DELETE",
                         Authorization: `Bearer ${token}`
                     }
                 })
@@ -151,9 +175,10 @@ const Stock = ({ columns }) => {
             setStock(stock.filter((_, index) => !selectedRows.includes(index)));
             setSelectedRows([]);
         } catch (error) {
-            console.error("삭제불가", error);
+            console.error("삭제 불가", error);
         }
     };
+
 
     // 추가한 useEffect: orderCart의 상태를 로깅
     useEffect(() => {
@@ -216,85 +241,26 @@ const Stock = ({ columns }) => {
         }
     };
 
-    // const handleOrder = async () => {
-    //     if (!branchId || !token) {
-    //         console.error('branchId 또는 token을 찾을 수 없습니다.');
-    //         return;
-    //     }
-
-    //     const selectedGcodes = selectedRows.map(rowIndex => stock[rowIndex].goods.gcode);
-
-    //     try {
-    //         // disuse 테이블에서 중복된 gcode가 있는지 확인
-    //         const response = await axios.post(
-    //             `http://localhost:8090/traders/disuse/checkDuplicates/${branchId}`,
-    //             selectedGcodes,
-    //             {
-    //                 headers: {
-    //                     Authorization: `Bearer ${token}`
-    //                 }
-    //             }
-    //         );
-    //         console.log("selectedGcodes", selectedGcodes);
-    //         console.log("Server response for duplicates check: ", response);
-
-    //         // 중복된 항목이 있는 경우 처리
-    //         if (response.data && response.data.duplicates && response.data.duplicates.length > 0) {
-    //             alert("해당 상품은 이미 존재합니다.");
-    //             return;
-    //         }
-
-    //         // 중복이 없을 경우 발주 데이터 저장
-    //         const orderCartDTOs = selectedRows.map(rowIndex => ({
-    //             ordercode: null,
-    //             gcount: 1,
-    //             goods: {
-    //                 gcode: stock[rowIndex].goods.gcode,
-    //                 goodsname: stock[rowIndex].goods.goodsname,
-    //                 price: stock[rowIndex].goods.price
-    //             }
-    //         }));
-    //      if()
-    //         const saveResponse = await axios.post(
-    //             `http://localhost:8090/traders/ordercart/saveAll/${branchId}`, 
-    //             orderCartDTOs, 
-    //             {
-    //                 headers: {
-    //                     Authorization: `Bearer ${token}`
-    //                 }
-    //             }
-    //         );
-
-    //         console.log("Order saved successfully:", saveResponse.data);
-    //         alert("발주가 완료되었습니다.");
-    //         setSelectedRows([]);
-
-    //     } catch (error) {
-    //         console.error("발주 요청 실패:", error);
-    //         alert("발주 중 오류가 발생했습니다.");
-    //     }
-    // };
-
-
-
-
-    //페이지네이션
-    // 현재 페이지에 표시할 항목을 반환하는 함수
+    // // 현재 페이지에 표시할 항목을 반환하는 함수
     const displayStock = sortedAndFilteredStock.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
 
-    // 총 페이지 수를 계산하는 함수
-    const pageCount = Math.ceil(sortedAndFilteredStock.length / itemsPerPage);
 
-    // 페이지를 변경하는 함수
-    const handlePageChange = ({ selected }) => {
-        setCurrentPage(selected);
-    };
 
     return (
         <div className={stockk.tableTop}>
+        <div className={stockk.totalTableTop}>
+            <div className="p-inputgroup flex-1">
+                <InputText 
+                    placeholder="검색" 
+                />
+                <Button 
+                    icon="pi pi-search" 
+                    className="p-button-warning" 
+                />
+            </div>
             <div className={stockk.tableCon}>
-                <input type='checkbox' checked={sortStates.quantity} onChange={() => handleSortChange('quantity')} />
-                <span>판매량</span>
+                <input type='checkbox' checked={sortStates.gprice} onChange={() => handleSortChange('gprice')} />
+                <span>상품판매가 순</span>
                 <input type='checkbox' checked={sortStates.expiry} onChange={() => handleSortChange('expiry')} />
                 <span>유통기한 순</span>
                 <input type='checkbox' checked={sortStates.stock} onChange={() => handleSortChange('stock')} />
@@ -317,7 +283,9 @@ const Stock = ({ columns }) => {
                         <option>C</option>
                     </select>
                 </form>
-            </div>
+            </div >
+        </div> 
+            <div className={stockk.tableScroll}>
             <table className={stockk.stockT}>
                 <thead>
                     <tr>
@@ -347,33 +315,23 @@ const Stock = ({ columns }) => {
                             {columns.map((column, colIndex) => (
                                 <td key={colIndex}>
                                     {column.render ? column.render(row) : row[column.accessor]}
-                                    {/* render는 이미지나 입력필드 같은 특수한 데이터
-                 accessor는 데이터 키값 */}
                                 </td>
                             ))}
                         </tr>
                     ))}
-                    {displayStock.length < itemsPerPage &&
-                        Array.from({ length: itemsPerPage - displayStock.length }).map((_, index) => (
-                            <tr key={`empty-${index}`}>
-                                <td colSpan={columns.length + 1}>&nbsp;</td>
-                            </tr>
-                        ))}
                 </tbody>
             </table>
-            <hr className={stockk.pageLine} />
-            <ReactPaginate
-                previousLabel={"Previous"}
-                nextLabel={"Next"}
-                pageCount={pageCount}
-                onPageChange={handlePageChange}
-                containerClassName={"paginationBttns"}
-                previousLinkClassName={"previousBttn"}
-                nextLinkClassName={"nextBttn"}
-                disabledClassName={"paginationDisabled"}
-                activeClassName={"paginationActive"}
-                className={stockk.page}
-            />
+            </div>
+            <div className={stockk.pageLine} />
+            <Paginator 
+            first={first} 
+            rows={rows} 
+            totalRecords={sortedAndFilteredStock.length} 
+            rowsPerPageOptions={[5, 10, 20]} 
+            onPageChange={onPageChange}
+            className="my-custom-paginator" 
+             />
+     
             <div className={stockk.stockBtn}>
                 <button className={stockk.orderStockBtn} onClick={handleOrder}>발주하기</button>
                 <button className={stockk.delStockBtn} onClick={handleDeleteSelected}>삭제하기</button>

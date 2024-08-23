@@ -2,13 +2,31 @@ import { render } from '@testing-library/react';
 import DisUseTable from './DisUseTable';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
+import api from '../util/api';
 
 const DisUse = () => {
 
+  const [disUseList, setDisUseList] = useState([]);
+  const branchId = localStorage.getItem('branchId');
+
+  useEffect(() => {
+    if (branchId) {
+        api.get(`/traders/disuse/branch/${branchId}`)
+            .then(response => {
+                setDisUseList(response.data);
+                console.log(response.data)
+            })
+            .catch(error => {
+                console.error('There was an error fetching the goods!', error);
+            });
+    } else {
+        console.error('No branchId found in localStorage!');
+    }
+}, [branchId]);
 
 
   const columns = [
-    { header: '순번', accessor: 'index + 1' },
+    { header: '순번', render: (_, rowIndex) => rowIndex + 1 },
     { header: '상품코드', accessor: 'gcode', render: (row) => row.stock.goods.gcode },
     {
       header: '이미지',
