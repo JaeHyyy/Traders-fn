@@ -96,6 +96,7 @@ const MobileMain = () => {
                     }
                 }
             );
+
             if (response.status === 200) {
                 setQrCodesData(prevData =>
                     prevData.map(item =>

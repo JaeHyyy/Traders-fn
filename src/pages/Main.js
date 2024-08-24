@@ -2,8 +2,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import main from '../pages/Main.module.css';
 import Calendar from '../components/Calendar';
 import api from '../util/api';
+import axios from 'axios';
 import { format } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
+import { Stepper } from 'primereact/stepper';  // PrimeReact Steps 컴포넌트 임포트
+import { StepperPanel } from 'primereact/stepperpanel';
 
 function Main() {
   const [goods, setGoods] = useState([]);
@@ -261,7 +264,6 @@ function Main() {
       });
   };
 
-
   return (
     <div className={main.Main}>
       <div className={main.goods_page}>
@@ -314,67 +316,68 @@ function Main() {
         </div>
       </div>
 
-      <div className={main.rightsection}>
+      <div className={main.rightSection}>
         <div className={main.locCalender}>
           <Calendar onDateSelect={handleDateSelect} />
         </div>
-        <div className={main.tableLabel}>
-          <div className={main.tableLabel2}>유통기한 임박 상품 리스트</div>
-          <div className={main.tableLabel3}>재고 부족 상품 리스트</div>
-        </div>
-        <div className={main.rightSectionBox}>
-          <div className={main.disuseList}>
-            <table className={main.disuseTable}>
-              <thead>
-                <tr>
-                  <th style={{ width: '12%' }}>번호</th>
-                  <th style={{ width: '28%' }}>제품코드</th>
-                  <th style={{ width: '35%' }}>상품명</th>
-                  <th style={{ width: '25%' }}>유통기한</th>
-                </tr>
-              </thead>
-              <tbody>
-                {stock.length > 0 ? (
-                  stock.map((stock, index) => (
+
+        {/* Stepper 부분 */}
+        <Stepper orientation="vertical" className={main.stepper}>
+          <StepperPanel header="유통기한 임박 상품 리스트">
+            <div className={main.tableWrapper}>
+              <table className={main.disuseTable}>
+                <thead>
+                  <tr>
+                    <th style={{ width: '12%' }}>번호</th>
+                    <th style={{ width: '28%' }}>제품코드</th>
+                    <th style={{ width: '35%' }}>상품명</th>
+                    <th style={{ width: '25%' }}>유통기한</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {stock.length > 0 ? (
+                    stock.map((stock, index) => (
+                      <tr key={index} className={main.stockItem}>
+                        <td>{index + 1}</td>
+                        <td>{stock.goods.gcode}</td>
+                        <td>{stock.goods.gname}</td>
+                        <td>{stock.expdate}</td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="4">{expiringMessage}</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </StepperPanel>
+          <StepperPanel header="재고 부족 상품 리스트">
+            <div className={main.tableWrapper}>
+              <table className={main.stockTable}>
+                <thead>
+                  <tr>
+                    <th style={{ width: '12%' }}>번호</th>
+                    <th style={{ width: '28%' }}>제품코드</th>
+                    <th style={{ width: '35%' }}>상품명</th>
+                    <th style={{ width: '12%' }}>수량</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {stockk.map((stock, index) => (
                     <tr key={index} className={main.stockItem}>
                       <td>{index + 1}</td>
                       <td>{stock.goods.gcode}</td>
                       <td>{stock.goods.gname}</td>
-                      <td>{stock.expdate}</td>
+                      <td>{stock.stockquantity}</td>
                     </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="4">{expiringMessage}</td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-
-          <div className={main.stockList}>
-            <table className={main.stockTable}>
-              <thead>
-                <tr>
-                  <th style={{ width: '12%' }}>번호</th>
-                  <th style={{ width: '28%' }}>제품코드</th>
-                  <th style={{ width: '35%' }}>상품명</th>
-                  <th style={{ width: '12%' }}>수량</th>
-                </tr>
-              </thead>
-              <tbody>
-                {stockk.map((stock, index) => (
-                  <tr key={index} className={main.stockItem}>
-                    <td>{index + 1}</td>
-                    <td>{stock.goods.gcode}</td>
-                    <td>{stock.goods.gname}</td>
-                    <td>{stock.stockquantity}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </StepperPanel>
+        </Stepper>
       </div>
     </div>
   );

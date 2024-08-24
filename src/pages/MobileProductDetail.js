@@ -121,7 +121,9 @@ const MobileProductDetail = () => {
                 loc3: newLoc3
             };
 
+            // API 요청을 통해 위치 업데이트
             const response = await axios.put('http://10.10.10.153:8090/traders/stock/mobile-update-location', null, {
+
                 params: {
                     gcode,
                     loc1: updatedLocation.loc1,
