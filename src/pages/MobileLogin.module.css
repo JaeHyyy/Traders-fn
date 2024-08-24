@@ -55,3 +55,12 @@
 .loginButton:hover {
     background-color: #133A00;
 }
+
+.inputField:read-only {
+    background-color: #f0f0f0;
+    /* Light gray background */
+    color: #888888;
+    /* Gray text color */
+    cursor: not-allowed;
+    /* Optional: change the cursor to indicate the field is not editable */
+}
