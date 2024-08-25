@@ -14,3 +14,7 @@ export function setAuthToken(token) {
 export function removeAuthToken() {
   localStorage.removeItem('jwtAuthToken');
 }
+
+export const clearAuthToken = () => {
+  localStorage.removeItem('token');
+};

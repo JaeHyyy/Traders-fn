@@ -1,10 +1,9 @@
-
 import React, { useEffect, useState } from "react";
 import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
 import logo from '../assets/logo.png';
 import mobileMain from './MobileMain2.module.css';
-// import { getAuthToken } from '../util/auth';
+import { getAuthToken } from "../util/auth";
 
 const MobileMain = () => {
     const [qrCodesData, setQrCodesData] = useState([]);
@@ -13,46 +12,59 @@ const MobileMain = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
-    const qrData = searchParams.get('data');
-
+    const branchId = searchParams.get('branchId');
+    const date = searchParams.get('date'); // URL에서 date 값을 가져옴
+    const branchName = localStorage.getItem('branchName');
+    const token = getAuthToken(); // Retrieve the token
 
     useEffect(() => {
-        if (qrData) {
-            console.log('Received QR Data:', qrData);
-
-            const processData = qrData.split('\n').map((item, index) => {
-                const dataObject = {};
-                const keyValuePairs = item.match(/(\w+)=([^,]+)/g);
-                if (keyValuePairs) {
-                    keyValuePairs.forEach(pair => {
-                        const [key, value] = pair.split("=");
-                        if (key && value) {
-                            dataObject[key.trim()] = value.trim();
-                        }
-                    });
-                    console.log(`Parsed item ${index}:`, dataObject);
-                    return { ...dataObject, isChecked: false };
-                }
-                console.log(`Failed to parse item ${index}:`, item);
-                return null;
-            }).filter(Boolean);
-
-            console.log('Processed Data:', processData);
-            setQrCodesData(processData);
+        if (!branchId || !date) {
+            console.error('Branch ID 또는 날짜가 없습니다. 로그인 정보를 확인해주세요.');
+            alert("로그인을 먼저해주세요.");
+            navigate(`mobile/login?date=${date}`);
+            return;
         }
 
-        //////////////////////////////////////////////////////////////
-        // 08/14
-        // const token = getAuthToken();
-        // const branchId = localStorage.getItem("branchId");
+        console.log("branchId: ", branchId);
+        console.log("date: ", date);
+        console.log("token: ", token);
 
-        // console.log("token 값 확인(디바이스): ", token);
-        // console.log("id 값 확인(디바이스): ", branchId);
+        // 서버에서 데이터를 가져오는 부분
+        const fetchData = async () => {
+            try {
+                const response = await axios.get(
+                    `http://10.10.10.153:8090/traders/movement/${branchId}/${date}`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}` // Include the token in the header
+                        }
+                    }
+                );
 
-        //////////////////////////////////////////////////////////////
+                let fetchedData = response.data;
 
+                // 데이터를 순회하면서 필요한 대로 movstatus를 수정합니다.
+                fetchedData = fetchedData.map(item => {
+                    if (item.movstatus === '출고 완료') { // 이 조건은 필요에 따라 조정할 수 있습니다.
+                        return {
+                            ...item,
+                            movstatus: '입고 대기' // 상태를 적절하게 변경합니다.
+                        };
+                    }
+                    return item;
+                });
 
-    }, [qrData]);
+                setQrCodesData(fetchedData);
+                console.log("data: ", fetchedData);
+            } catch (error) {
+                console.error('Error fetching data from server', error);
+                setError('데이터를 가져오는 중 오류가 발생했습니다.');
+            }
+        };
+
+        fetchData();
+    }, [branchId, date, navigate, token]);
+
 
     const handleSelectAll = () => {
         setSelectAll(!selectAll);
@@ -70,15 +82,21 @@ const MobileMain = () => {
     };
 
     const handleSubmit = async () => {
-        // const token = getAuthToken();
         const itemsToUpdate = qrCodesData
             .filter(item => item.isChecked && item.movstatus === "대기")
             .map(item => ({ movidx: item.movidx.toString(), newStatus: "완료" }));
 
         try {
-            // const response = await axios.post('http://172.30.1.8:8090/traders/api/updateMovStatus', itemsToUpdate);
-            // const response = await axios.post('http://10.10.10.58:8090/traders/api/updateMovStatus', itemsToUpdate);
-            const response = await axios.post('http://10.10.10.193:8090/traders/api/updateMovStatus', itemsToUpdate);
+            const response = await axios.post(
+                'http://10.10.10.153:8090/traders/api/updateMovStatus',
+                itemsToUpdate,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}` // Include the token in the header
+                    }
+                }
+            );
+
             if (response.status === 200) {
                 setQrCodesData(prevData =>
                     prevData.map(item =>
@@ -88,7 +106,6 @@ const MobileMain = () => {
                     )
                 );
                 alert('검수완료되었습니다.');
-
             } else {
                 alert(`검수완료 처리 중 오류가 발생했습니다: ${response.data}`);
             }
@@ -98,17 +115,13 @@ const MobileMain = () => {
         }
     };
 
-
     const handleRowClick = (gcode) => {
-        navigate(`/mobile/productDetail/${gcode}`);
-        console.log(gcode);
+        navigate(`/mobile/productDetail/${gcode}?date=${date}`);
     };
 
     if (error) {
         return <div>에러: {error}</div>;
     }
-
-    const filteredQrCodesData = qrCodesData.filter(item => item.movstatus === "완료" || item.movstatus === "대기");
 
     return (
         <div className={mobileMain.mainMobile_page}>
@@ -116,15 +129,14 @@ const MobileMain = () => {
                 <img src={logo} alt="로고" className={mobileMain.logo} />
                 <div className={mobileMain.card_box}>
                     <div className={mobileMain.card_title}>
-                        <h6>입고내역서</h6>
+                        <h6>입고내역서 - {branchName}</h6>
                         <input type="checkbox" checked={selectAll} onChange={handleSelectAll} />
                     </div>
                     <div className={mobileMain.card_content}>
-                        {filteredQrCodesData.length > 0 ? filteredQrCodesData.map((item, idx) => (
+                        {qrCodesData.length > 0 ? qrCodesData.map((item, idx) => (
                             <table
                                 key={idx}
-                                className={`${mobileMain.table_container} ${item.movstatus === '완료' ? mobileMain.completed : ''}`}
-                            >
+                                className={`${mobileMain.table_container} ${item.movstatus === '완료' ? mobileMain.completed : ''}`}>
                                 <thead>
                                     <tr>
                                         <th colSpan="2">QR 코드 정보</th>
@@ -134,40 +146,36 @@ const MobileMain = () => {
                                 <tbody>
                                     <tr onClick={() => handleRowClick(item.gcode)}>
                                         <th>입고날짜</th>
-                                        <td>{item.movdate || ''}</td>
+                                        <td>{item.movdate}</td>
                                         <td rowSpan="7" className={mobileMain.checkbox_cell}>
                                             <input
                                                 type="checkbox"
                                                 checked={item.isChecked || false}
                                                 onClick={(e) => e.stopPropagation()} // 이벤트 전파 중지
                                                 onChange={() => handleCheckboxChange(idx)}
-                                                disabled={item.movstatus === '완료'}
+                                                disabled={item.movstatus === '입고 완료'}
                                             />
                                         </td>
                                     </tr>
                                     <tr onClick={() => handleRowClick(item.gcode)}>
-                                        <th>입고코드</th>
-                                        <td>{item.movcode || ''}</td>
-                                    </tr>
-                                    <tr onClick={() => handleRowClick(item.gcode)}>
                                         <th>발주코드</th>
-                                        <td>{item.ordercode || ''}</td>
+                                        <td>{item.ordercode}</td> {/* ordercode 사용 */}
                                     </tr>
                                     <tr onClick={() => handleRowClick(item.gcode)}>
                                         <th>지점아이디</th>
-                                        <td>{item.branchid || ''}</td>
+                                        <td>{item.branchid}</td>
                                     </tr>
                                     <tr onClick={() => handleRowClick(item.gcode)}>
                                         <th>상품코드</th>
-                                        <td>{item.gcode || ''}</td>
+                                        <td>{item.gcode}</td>
                                     </tr>
                                     <tr onClick={() => handleRowClick(item.gcode)}>
                                         <th>입고수량</th>
-                                        <td>{item.movquantity || ''}</td>
+                                        <td>{item.movquantity}</td>
                                     </tr>
                                     <tr onClick={() => handleRowClick(item.gcode)}>
                                         <th>입고상태</th>
-                                        <td>{item.movstatus || ''}</td>
+                                        <td>{item.movstatus}</td>
                                     </tr>
                                 </tbody>
                             </table>
