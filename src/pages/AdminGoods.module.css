@@ -4,20 +4,15 @@
     align-items: flex-start;
     width: 100%;
     max-width: 1200px;
-    /* 고정된 최대 너비 */
     margin: 0 auto;
     gap: 1rem;
-    /* 두 섹션 간의 간격 */
 }
 
 .card {
     flex: 7;
     height: 600px;
-    /* 테이블 높이 고정 */
-    overflow-y: auto;
-    /* 내용이 넘칠 경우 스크롤 */
+    overflow-y: auto;/* 내용이 넘칠 경우 스크롤 */
     background-color: white;
-    /* 배경색 고정 */
     padding: 1rem;
     box-sizing: border-box;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -29,7 +24,7 @@
     right: 0;
     height: 100vh;
     width: 25vw;
-    background-color: lightgray;
+    background-color: whitesmoke;
     padding: 1rem;
     box-sizing: border-box;
     box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
@@ -76,10 +71,16 @@
     background-color: white;
 }
 
-.button {
-    align-self: flex-end;
-    margin-top: 20px;
-    color: lightgray;
+.addb{
+    margin-top: 10px;
+    background-color: #36A287;
+    color:white;
+}
+
+.addbutton {
+    height : 40px;
+    background-color: #36A287;
+    border-radius: 4px;
 }
 
 .label {

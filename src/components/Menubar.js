@@ -76,8 +76,8 @@ function Menubar() {
                         </div>
 
                         <div className={menubar.header_con2}>
-                            <span type="button" className="pi pi-bell p-overlay-badge" style={{ fontSize: '1.5rem' }} onClick={(e) => op.current.toggle(e)}>
-                                <Badge value={badgeCount}></Badge>
+                            <span type="button" className="pi pi-bell p-overlay-badge" style={{ fontSize: '1.4rem', cursor: 'pointer' }} onClick={(e) => op.current.toggle(e)}>
+                                <Badge value={badgeCount} style={{ backgroundColor: '#aada2a', cursor: 'pointer' }} ></Badge>
                                 <OverlayPanel ref={op}>
                                     <div> <br /> <h3> &nbsp;&nbsp; 공지사항 </h3> <br />
                                         {notices.length > 0 ? (
@@ -150,7 +150,7 @@ function Menubar() {
                     </main>
                 </div>
             </div>
-        </div>
+        </div >
     );
 }
 
