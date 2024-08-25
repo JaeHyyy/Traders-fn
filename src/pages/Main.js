@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import main from '../pages/Main.module.css';
 import Calendar from '../components/Calendar';
 import api from '../util/api';
+import axios from 'axios';
 import { format } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
 import { Stepper } from 'primereact/stepper';  // PrimeReact Steps 컴포넌트 임포트

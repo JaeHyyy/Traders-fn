@@ -70,14 +70,18 @@ const AdminMovement = () => {
         setDialogVisible(true);
         api.get('/traders/adminmov', {
             params: {
-                branchName: rowData.branchName,
-                movdate: rowData.movdate,
-                movstatus: rowData.movstatus
+                branchName: rowData.branchName || '',
+                movdate: rowData.movdate || '',
+                movstatus: rowData.movstatus || '출고 대기'
             },
         })
             .then(response => {
-                setSelectedMovement(response.data);
-                console(selectedMovement);
+                console.log('API Response:', response.data); // 응답 확인
+                if (response.data && response.data.length > 0) {
+                    setSelectedMovement(response.data);
+                } else {
+                    setSelectedMovement([]); // 빈 배열로 설정하여 `null` 방지
+                }
                 toast.current.show({ severity: 'success', summary: 'Success', detail: 'Message Content', life: 3000 });
             })
             .catch(error => {

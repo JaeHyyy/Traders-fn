@@ -6,6 +6,7 @@ import styles from './AdminMain.module.css';
 import { Bar, Doughnut } from 'react-chartjs-2';
 import { InputTextarea } from "primereact/inputtextarea";
 import { FloatLabel } from "primereact/floatlabel";
+import { Dropdown } from 'primereact/dropdown';
 import { Button } from 'primereact/button';
 import { Card } from 'primereact/card';
 import 'chart.js/auto';
@@ -16,18 +17,33 @@ const AdminMain = () => {
     const [value, setValue] = useState('');
     const [inputValue, setInputValue] = useState('');
     const [typingText, setTypingText] = useState('');
-    const savedBranchId = localStorage.getItem('branchId');
+    const [content, setContent] = useState('');
+    const [branches, setBranches] = useState([]); // 드롭다운 지점
+    const [selectedBranch, setSelectedBranch] = useState(null); //드롭다운 지점 선택상태
+    const savedBranchId = localStorage.getItem('branchId'); // admin 권한 검증용
     const navigate = useNavigate();
 
     useEffect(() => {
+        if (savedBranchId != 'admin') {
+            navigate('/');
+            alert("접근 권한이 없습니다.");
+        }
+
+        // 지점 데이터를 가져오는 API 호출
+        api.get('/traders/sendbranch')
+            .then(response => {
+                const branchData = response.data;
+                const allBranchOption = { branchId: null, branchName: '전체' }; // 기본 전체 옵션
+                setBranches([allBranchOption, ...branchData]);
+                setSelectedBranch(allBranchOption); // 기본으로 전체가 선택되도록 설정
+            })
+            .catch(error => {
+                console.error('Error fetching branch data:', error);
+            });
+
         api.get('/traders/barchart')
             .then(response => {
-                if (savedBranchId != 'admin') {
-                    navigate('/');
-                    alert("접근 권한이 없습니다.");
-                } else {
-                    setBranchStock(response.data);
-                }
+                setBranchStock(response.data);
             })
             .catch(error => {
                 console.error('Error fetching data:', error);
@@ -43,8 +59,9 @@ const AdminMain = () => {
             });
     }, []);
 
+    const noticeData = {
 
-
+    }
 
     const branchData = {
         labels: branchStock.map(item => item.branchName), // 지점 이름을 라벨로 사용
@@ -158,11 +175,23 @@ const AdminMain = () => {
     }, []);
 
 
-    //tetxbox 이벤트 설정할것! 아직 아무것도 없음.
+    //메세지 전송
     const handleSubmit = () => {
-        // 입력된 내용을 기반으로 이벤트를 수행하는 로직
-        console.log('Submitted:', inputValue);
-        // 예: 서버로 요청 보내기 또는 다른 작업 수행
+        const noticeData = {
+            content: content, // content가 없으면 null로 설정
+            isGlobal: selectedBranch?.branchId === null, // 전체 공지 여부
+            noticedate: null,// 현재 날짜를 YYYY-MM-DD 형식으로 설정
+            user: { branchId: selectedBranch?.branchId || savedBranchId },
+        };
+        api.post('/traders/sendnotice', noticeData)
+            .then(response => {
+                console.log('Message sent:', response.data);
+                setContent('');
+                setSelectedBranch(null);
+            })
+            .catch(error => {
+                console.error('Error sending message:', error);
+            });
     };
 
     return (
@@ -177,9 +206,17 @@ const AdminMain = () => {
                 </Card>
                 <div className={styles.floatLabelContainer}>
                     <FloatLabel>
-                        <InputTextarea id="description" value={value} onChange={(e) => setValue(e.target.value)} rows={5} cols={30} className={styles.inputTextarea} />
-                        <label htmlFor="description">Add Promotion</label>
+                        <InputTextarea id="description" value={content} onChange={(e) => setContent(e.target.value)} rows={5} cols={30} className={styles.inputTextarea} />
+                        <label htmlFor="description">notice</label>
                     </FloatLabel>
+                    <Dropdown
+                        value={selectedBranch}
+                        options={branches}
+                        onChange={(e) => setSelectedBranch(e.value)}
+                        optionLabel="branchName" // 표시할 라벨 필드
+                        placeholder="지점을 선택하세요"
+                        className={styles.dropdown}
+                    />
                     <Button label="Send" raised className={styles.customButton} onClick={handleSubmit} />
                 </div>
             </div>
