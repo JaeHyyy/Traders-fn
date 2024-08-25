@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../util/api';
 import AdminMenu from '../components/AdminMenu';
@@ -9,19 +9,20 @@ import { FloatLabel } from "primereact/floatlabel";
 import { Dropdown } from 'primereact/dropdown';
 import { Button } from 'primereact/button';
 import { Card } from 'primereact/card';
+import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
+import { Toast } from 'primereact/toast';
 import 'chart.js/auto';
 
 const AdminMain = () => {
     const [branchStock, setBranchStock] = useState([]);
     const [popularProducts, setPopularProducts] = useState([]);
-    const [value, setValue] = useState('');
-    const [inputValue, setInputValue] = useState('');
     const [typingText, setTypingText] = useState('');
     const [content, setContent] = useState('');
     const [branches, setBranches] = useState([]); // 드롭다운 지점
     const [selectedBranch, setSelectedBranch] = useState(null); //드롭다운 지점 선택상태
     const savedBranchId = localStorage.getItem('branchId'); // admin 권한 검증용
     const navigate = useNavigate();
+    const toast = useRef(null);
 
     useEffect(() => {
         if (savedBranchId != 'admin') {
@@ -58,10 +59,6 @@ const AdminMain = () => {
                 console.error('Error fetching popular products:', error);
             });
     }, []);
-
-    const noticeData = {
-
-    }
 
     const branchData = {
         labels: branchStock.map(item => item.branchName), // 지점 이름을 라벨로 사용
@@ -176,7 +173,7 @@ const AdminMain = () => {
 
 
     //메세지 전송
-    const handleSubmit = () => {
+    const sendNotice = () => {
         const noticeData = {
             content: content, // content가 없으면 null로 설정
             isGlobal: selectedBranch?.branchId === null, // 전체 공지 여부
@@ -185,23 +182,39 @@ const AdminMain = () => {
         };
         api.post('/traders/sendnotice', noticeData)
             .then(response => {
-                console.log('Message sent:', response.data);
+                toast.current.show({ severity: 'success', summary: 'Success', detail: 'Notice sent successfully', life: 3000 });
                 setContent('');
                 setSelectedBranch(null);
             })
             .catch(error => {
+                toast.current.show({ severity: 'error', summary: 'Error', detail: 'Failed to send notice', life: 3000 });
                 console.error('Error sending message:', error);
             });
+    };
+
+    // 공지 발송 재확인
+    const confirmSendNotice = () => {
+        confirmDialog({
+            message: '정말로 공지를 보내시겠습니까?',
+            header: '공지 전송 확인',
+            icon: 'pi pi-exclamation-triangle',
+            accept: sendNotice, // "예"를 선택하면 sendNotice 함수 실행
+            reject: () => {
+                toast.current.show({ severity: 'info', summary: 'Cancelled', detail: 'Notice sending cancelled', life: 3000 });
+            },
+        });
     };
 
     return (
         <>
             <AdminMenu />
+            <Toast ref={toast} />
+            <ConfirmDialog className={styles.confirmDialog} />
             <div className={styles.container}>
                 <Card className={styles.card} title={typingText}>
                     <p className="m-0">
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur error repudiandae
-                        numquam deserunt quisquam repellat libero asperiores earum nam nobis, culpa ratione quam perferendis esse, cupiditate neque quas!
+                        "Management is doing things right; leadership is doing the right things."
+                        -Peter Drucker-
                     </p>
                 </Card>
                 <div className={styles.floatLabelContainer}>
@@ -209,15 +222,17 @@ const AdminMain = () => {
                         <InputTextarea id="description" value={content} onChange={(e) => setContent(e.target.value)} rows={5} cols={30} className={styles.inputTextarea} />
                         <label htmlFor="description">notice</label>
                     </FloatLabel>
-                    <Dropdown
-                        value={selectedBranch}
-                        options={branches}
-                        onChange={(e) => setSelectedBranch(e.value)}
-                        optionLabel="branchName" // 표시할 라벨 필드
-                        placeholder="지점을 선택하세요"
-                        className={styles.dropdown}
-                    />
-                    <Button label="Send" raised className={styles.customButton} onClick={handleSubmit} />
+                    <div className={styles.actionContainer}>
+                        <Dropdown
+                            value={selectedBranch}
+                            options={branches}
+                            onChange={(e) => setSelectedBranch(e.value)}
+                            optionLabel="branchName"
+                            placeholder="지점을 선택하세요"
+                            className={styles.dropdown}
+                        />
+                        <Button label="Send" raised className={styles.customButton} onClick={confirmSendNotice} />
+                    </div>
                 </div>
             </div>
             <div className={styles.chartContainer}>

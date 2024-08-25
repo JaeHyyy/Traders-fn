@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../util/api';
 import styles from './Receipt.module.css';
-import { getAuthToken } from '../util/auth';
+import ReactToPrint from 'react-to-print'
 
 const Receipt = () => {
   const [receipt, setReceipt] = useState([]);
   const [originalReceipt, setOriginalReceipt] = useState([]);
   const navigate = useNavigate();
+
 
   const [sortOption, setSortOption] = useState('');
   const [sortStates, setSortStates] = useState({
@@ -16,18 +17,16 @@ const Receipt = () => {
   });
 
   const columns = [
-    { header: '순번', accessor: null },
-    { header: '입고코드', accessor: "A" },
-    { header: '입고날짜', accessor: 'movdate' },
-    { header: '입고건수', accessor: 'count' },
-    { header: '검수상태', accessor: "A" },
-    { header: '검수', accessor: null },
-    { header: 'QR', accessor: null }
+    { header: '순번', accessor: null, className: styles['column-seq'] },
+    { header: '입고코드', accessor: 'ordercode', className: styles['column-ordercode'] },
+    { header: '입고날짜', accessor: 'movdate', className: styles['column-movdate'] },
+    { header: '입고건수', accessor: 'count', className: styles['column-count'] },
+    { header: '입고 상세 내역', accessor: null, className: styles['column-detail'] },
+    { header: 'QR Code', accessor: null, className: styles['column-qr'] }
   ];
 
 
   useEffect(() => {
-    const token = getAuthToken();
     const branchId = localStorage.getItem("branchId");
 
     if (!branchId) {
@@ -36,13 +35,7 @@ const Receipt = () => {
       return;
     }
 
-    // axios.get(`http://10.10.10.31:8090/traders/${branchId}/receipt`, {
-    axios.get(`http://localhost:8090/traders/${branchId}/receipt`, {
-      headers: {
-        method: "GET",
-        Authorization: `Bearer ${token}`
-      }
-    })
+    api.get(`/traders/${branchId}/receipt`)
       .then(response => {
         setReceipt(response.data);
         setOriginalReceipt(response.data);
@@ -142,10 +135,10 @@ const Receipt = () => {
                 {columns.map((column, colIndex) => (
                   <td key={colIndex}>
                     {column.accessor ? row[column.accessor] : (
-                      column.header === 'QR' ?
+                      column.header === 'QR Code' ?
                         <button className={styles.button} onClick={() => handleButtonClick(row.movdate)}>큐알</button> :
-                        column.header === '검수' ?
-                          <button className={styles.button} onClick={() => handleInspectionButtonClick(row.movdate)}>검수</button> :
+                        column.header === '입고 상세 내역' ?
+                          <button className={styles.button} onClick={() => handleInspectionButtonClick(row.movdate)}>확인</button> :
                           rowIndex + 1)}
                   </td>
                 ))}

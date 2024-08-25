@@ -1,18 +1,15 @@
 .container {
     display: flex;
-        flex-direction: row;
-        /* 요소들을 가로로 나란히 배치 */
-        justify-content: space-between;
-        /* 두 요소 사이에 여유 공간을 확보 */
-        align-items: flex-start;
-        /* 요소들을 위쪽에 정렬 */
-        padding: 20px;
-        background-color: #EEEEEE;
-        border-radius: 8px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        width: 100%;
-        /* container가 전체 너비를 차지하도록 설정 */
-        box-sizing: border-box;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: #EEEEEE;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    box-sizing: border-box;
+    align-items: center;
 }
 
 .chartContainer {
@@ -45,32 +42,54 @@
 
 .inputTextarea {
     width: 100%;
-        height: 100px;
-        /* 텍스트박스의 높이를 줄여 컨테이너에 맞춤 */
-        padding: 10px;
-        font-size: 16px;
-        border: 1px solid #54A687;
-        border-radius: 5px;
-        box-sizing: border-box;
-        resize: none;
-        margin-bottom: 10px;
+    height: 100px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #54A687;
+    border-radius: 5px;
+    box-sizing: border-box;
+    resize: none;
+}
+
+.actionContainer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.dropdown {
+    width: 150px;
 }
 
 .customButton {
     background-color: #36A287 !important;
-        border-color: #36A287 !important;
-        color: #FFFFFF !important;
-        width: 100%;
-        /* 버튼이 부모의 너비를 가득 채우도록 설정 */
-        padding: 10px;
-        font-size: 16px;
-        border-radius: 5px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        box-sizing: border-box;
+    border-color: #36A287 !important;
+    color: #FFFFFF !important;
+    width: 20%;
+    padding: 10px 20px;
+    font-size: 14px;
+    border-radius: 5px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+    margin-left: auto;
+    cursor: pointer;
 }
 
 .customButton:hover {
-    background-color: #1E5A45 !important;
+    background-color: #38433f !important;
     /* hover 시 더 어두운 초록색으로 변경 */
     border-color: #1E5A45 !important;
+}
+
+.confirmDialog{
+    font-size : 18px;
+    background: var(--surface-card);
+    width:450px;
+    height:200px;
+    padding: 1rem;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    
 }
