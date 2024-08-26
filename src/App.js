@@ -8,8 +8,8 @@ import Main from './pages/Main';
 import MyPage from './pages/MyPage';
 import DisUse from './pages/DisUse';
 import Receipt from './pages/Receipt';
-import MobileLogin from './pages/ModileLogin';
-import MobileMain from './pages/MobileMain';
+import MobileLogin from './pages/MobileLogin';
+import MobileReceive from './pages/MobileReceive';
 import MobileProductDetail from './pages/MobileProductDetail';
 import Stock from './pages/StockList';
 import OrderCart from './pages/OrderCart';
@@ -26,6 +26,8 @@ import { PrimeReactProvider } from 'primereact/api';
 import 'primereact/resources/themes/saga-blue/theme.css';  // 테마
 import 'primereact/resources/primereact.min.css';           // 기본 스타일
 import 'primeicons/primeicons.css';                         // 아이콘
+import MobileMain from './pages/MobileMain';
+import MobileInventory from './pages/MobileInventory';
 
 
 const router = createBrowserRouter([
@@ -80,11 +82,19 @@ const router = createBrowserRouter([
   },
   {
     path: "/mobile/login",
-    element: <ProtectedRoute element={MobileLogin} />
+    element: <MobileLogin />
   },
   {
     path: "/mobile/main",
-    element: <ProtectedRoute element={MobileMain} />
+    element: <MobileMain />
+  },
+  {
+    path: "/mobile/inventory",
+    element: <ProtectedRoute element={MobileInventory} />
+  },
+  {
+    path: "/mobile/receive",
+    element: <ProtectedRoute element={MobileReceive} />
   },
   {
     path: "/mobile/productDetail/:gcode",

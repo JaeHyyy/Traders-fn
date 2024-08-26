@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useLocation } from 'react-router-dom';
+import { useLocation, useParams, useNavigate } from 'react-router-dom'; // Import useNavigate
 import axios from 'axios';
 import logo from '../assets/logo.png';
 import A_1 from '../assets/AA-A.png';
@@ -8,8 +8,9 @@ import A_3 from '../assets/AA-C.png';
 import B from '../assets/BB-A,B,C.png';
 import C from '../assets/CC-A,B,C.png';
 import plan from '../assets/baseProductLocation.png';
-import product from './MobileProductDetail4.module.css';
+import product from './MobileProductDetail.module.css';
 
+// 구역별 이미지 객체
 const ZONE_IMAGES = {
     A: {
         'AA-A': A_1,
@@ -20,59 +21,66 @@ const ZONE_IMAGES = {
     C: C
 };
 
+// 구역변경시 select box
 const loc1Options = ['AA', 'BB', 'CC'];
 const loc2Options = ['A', 'B', 'C'];
 const loc3Options = ['a', 'b', 'c', 'd', 'e', 'f'];
 
 const MobileProductDetail = () => {
-    const { gcode } = useParams();
-    const [productDetails, setProductDetails] = useState(null);
-    const [additionalInfo, setAdditionalInfo] = useState(null);
-    const [movementDetails, setMovementDetails] = useState(null);
-    const [error, setError] = useState(null);
-    const [zoneImage, setZoneImage] = useState(null);
-    const [newLoc1, setNewLoc1] = useState('');
-    const [newLoc2, setNewLoc2] = useState('');
-    const [newLoc3, setNewLoc3] = useState('');
-
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
-    const date = searchParams.get('date');
+    const branchId = searchParams.get('branchId');
+    const { gcode } = useParams();  // URL에서 gcode 파라미터를 가져옵니다.
+    const navigate = useNavigate();  // Add useNavigate hook
 
+    const [productDetails, setProductDetails] = useState(null);  // 제품 상세 정보 상태
+    const [additionalInfo, setAdditionalInfo] = useState(null);  // 추가 정보 상태
+    const [movementDetails, setMovementDetails] = useState(null);  // movement 데이터 상태
+    const [error, setError] = useState(null);  // 오류 상태
+    const [zoneImage, setZoneImage] = useState(null);  // 구역별 이미지 상태
+
+    const [newLoc1, setNewLoc1] = useState('');  // 새로운 loc1 상태
+    const [newLoc2, setNewLoc2] = useState('');  // 새로운 loc2 상태
+    const [newLoc3, setNewLoc3] = useState('');  // 새로운 loc3 상태
+
+    // gcode를 사용하여 제품 상세 정보와 추가 정보를 가져오는 함수
     useEffect(() => {
         const fetchProductDetails = async () => {
             try {
                 console.log(`gcode ${gcode}에 대한 제품 상세 정보 가져오기`);
 
                 const [response1, response2, response3] = await Promise.all([
-                    axios.get(`http://10.10.10.153:8090/traders/stock/gcode-data/${gcode}`),
-                    axios.get(`http://10.10.10.153:8090/traders/goods/${gcode}`),
-                    axios.get(`http://10.10.10.153:8090/traders/stock/gcode-data/${gcode}`)
+                    axios.get(`http://10.10.10.25:8090/traders/stock/gcode-data/${gcode}`),
+                    axios.get(`http://10.10.10.25:8090/traders/goods/${gcode}`),
+                    axios.get(`http://10.10.10.25:8090/traders/movement/${gcode}`)
                 ]);
 
-                const data1 = response1.data[0];
+                const data1 = response1.data[0];  // 배열의 첫 번째 요소를 사용
                 const data2 = response2.data;
-                const data3 = response3.data[0];
+                const data3 = response3.data[0]; // 배열의 첫 번째 요소를 사용
 
+                // response1 데이터 설정
                 if (data1) {
                     console.log('stock + goods:', data1);
-                    setProductDetails(data1);
+                    setProductDetails(data1);  // 제품 상세 정보 설정
                 } else {
                     console.log('stock 데이터가 없습니다');
-                    setProductDetails(null);
+                    setProductDetails(null);  // 데이터가 없으면 null 설정
                 }
 
+                // response2 데이터 설정
                 if (data2) {
                     console.log("goods:", data2);
-                    setAdditionalInfo(data2);
+                    setAdditionalInfo(data2);  // 추가 정보 설정
                 } else {
                     console.log('goods 데이터가 없습니다.');
                     setAdditionalInfo(null);
                 }
 
+                // response3 데이터 설정
                 if (data3) {
                     console.log("movement:", data3);
-                    setMovementDetails(data3);
+                    setMovementDetails(data3);  // movement 데이터 설정
                 } else {
                     console.log('movement 데이터가 없습니다.');
                 }
@@ -86,7 +94,7 @@ const MobileProductDetail = () => {
                 } else {
                     setError("요청을 설정하는 중 오류가 발생했습니다.");
                 }
-                setProductDetails(null);
+                setProductDetails(null);  // 오류 발생 시 null 설정
                 setAdditionalInfo(null);
                 setMovementDetails(null);
             }
@@ -95,12 +103,14 @@ const MobileProductDetail = () => {
         fetchProductDetails();
     }, [gcode]);
 
+    // 구역 이미지 결정 함수
     useEffect(() => {
         if (productDetails) {
             const { loc1, loc2 } = productDetails;
 
             let imageUrl = null;
 
+            // loc1과 loc2를 조합하여 구역별 이미지 결정
             if (loc1.startsWith('AA')) {
                 imageUrl = ZONE_IMAGES.A[`${loc1}-${loc2}`] || ZONE_IMAGES.A[loc1] || null;
             } else if (loc1.startsWith('BB')) {
@@ -113,26 +123,30 @@ const MobileProductDetail = () => {
         }
     }, [productDetails]);
 
+    console.log("gcode: ", gcode);
+    console.log("branchId: ", branchId);
+
     const updateLocation = async () => {
         try {
             const updatedLocation = {
                 loc1: newLoc1,
                 loc2: newLoc2,
-                loc3: newLoc3
+                loc3: newLoc3,
+                price: productDetails?.goodsData?.gcostprice || additionalInfo?.gcostprice || null
             };
 
-            // API 요청을 통해 위치 업데이트
-            const response = await axios.put('http://10.10.10.153:8090/traders/stock/mobile-update-location', null, {
-
+            const response = await axios.put('http://10.10.10.25:8090/traders/stock/mobile-update-location', null, {
                 params: {
                     gcode,
+                    branchId,
                     loc1: updatedLocation.loc1,
                     loc2: updatedLocation.loc2,
-                    loc3: updatedLocation.loc3
+                    loc3: updatedLocation.loc3,
+                    price: updatedLocation.price
                 }
             });
-            console.log('위치 정보 업데이트 완료:', response.data);
 
+            // 서버에 저장된 위치 정보를 다시 받아오거나 UI에서 사용할 수 있도록 상태 업데이트
             setProductDetails((prevDetails) => ({
                 ...prevDetails,
                 loc1: updatedLocation.loc1,
@@ -140,21 +154,18 @@ const MobileProductDetail = () => {
                 loc3: updatedLocation.loc3
             }));
 
-            // 위치 업데이트 성공 시 알림 메시지 표시
-            alert("위치 업데이트에 성공했습니다.");
+            console.log('위치 정보 업데이트 완료:', response.data);
+
+            // Navigate to MobileReceive with the updated parameters in the URL
+            navigate(`/mobile/receive?branchId=${branchId}&date=${searchParams.get('date')}&gcode=${gcode}&loc1=${updatedLocation.loc1}&loc2=${updatedLocation.loc2}&loc3=${updatedLocation.loc3}&price=${updatedLocation.price}`);
+
         } catch (error) {
             console.error("위치 정보 업데이트 오류:", error);
-            if (error.response) {
-                setError(`서버 오류: ${error.response.status} ${error.response.statusText}`);
-            } else if (error.request) {
-                setError("서버로부터 응답을 받지 못했습니다.");
-            } else {
-                setError("요청을 설정하는 중 오류가 발생했습니다.");
-            }
+            setError(error.message);
         }
     };
 
-
+    // 데이터가 없는 경우 기본값 설정
     const details = {
         gcode: gcode,
         goodsData: {
@@ -164,17 +175,11 @@ const MobileProductDetail = () => {
             gunit: productDetails?.goodsData?.gunit || additionalInfo?.gunit || 'N/A'
         },
         stockquantity: movementDetails?.movquantity || productDetails?.stockquantity || 'N/A',
-        loc1: productDetails?.loc1 || '',
-        loc2: productDetails?.loc2 || '',
-        loc3: productDetails?.loc3 || '',
-        movdate: date || movementDetails?.movdate || 'N/A',  // Use the date from URL
+        loc1: productDetails?.loc1 || 'N/A',
+        loc2: productDetails?.loc2 || 'N/A',
+        loc3: productDetails?.loc3 || 'N/A',
+        movdate: movementDetails?.movdate || 'N/A',
     };
-
-    // Create a location string or a default message
-    const locationString = details.loc1 && details.loc2 && details.loc3
-        ? `${details.loc1}-${details.loc2}-${details.loc3}`
-        : '위치 정보를 입력해 주세요';
-
 
     return (
         <div className={product.mobileProductDetail_page}>
@@ -226,7 +231,7 @@ const MobileProductDetail = () => {
                                 </tr>
                                 <tr>
                                     <th>위치</th>
-                                    <td>{locationString}</td>
+                                    <td>{details.loc1}-{details.loc2}-{details.loc3}</td>
                                 </tr>
                                 <tr>
                                     <th>입고날짜</th>
