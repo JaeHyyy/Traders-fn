@@ -63,6 +63,9 @@ html,body {
     color: red;
     cursor: pointer;
 }
+.mypage{
+    cursor: pointer;
+}
 /* 헤더 끝 */
 
 /* 메뉴바 */

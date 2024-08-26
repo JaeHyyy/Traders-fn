@@ -5,6 +5,7 @@ import RootLayout from "./pages/Root";
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Main from './pages/Main';
+import MyPage from './pages/MyPage';
 import DisUse from './pages/DisUse';
 import Receipt from './pages/Receipt';
 import MobileLogin from './pages/ModileLogin';
@@ -61,6 +62,10 @@ const router = createBrowserRouter([
       {
         path: "/disuse",
         element: <DisUse />
+      },
+      {
+        path: "/mypage",
+        element: <ProtectedRoute element={MyPage} />
       }
 
     ]

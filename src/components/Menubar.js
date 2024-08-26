@@ -61,6 +61,10 @@ function Menubar() {
         navigate('/login');
     };
 
+    const handleMypage = () => {
+        navigate('/mypage');
+    };
+
     return (
         <div className={menubar.Menubar}>
 
@@ -102,7 +106,7 @@ function Menubar() {
                                 </OverlayPanel>
                             </span>
                             <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;</span>
-                            <span>마이페이지&nbsp;</span>
+                            <span className={menubar.mypage} onClick={handleMypage}>마이페이지&nbsp;</span>
                             <span>&nbsp;|&nbsp;</span>
                             {token ? (
                                 <span className={menubar.logout} onClick={handleLogout}>&nbsp;로그아웃</span>

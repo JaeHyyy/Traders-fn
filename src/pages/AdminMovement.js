@@ -160,7 +160,7 @@ const AdminMovement = () => {
                             <Column field="goods.gcompany" header="Company" />
                             <Column field="movement.movquantity" header="Movquantity" />
                             <Column field="goods.gunit" header="Gunit" />
-                            <Column field="goods.price" header="Price" />
+                            <Column field="goods.gprice" header="Price" />
                             <Column field="movement.movstatus" header="Status" />
                         </DataTable>
                     </Dialog>
