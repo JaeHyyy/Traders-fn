@@ -7,7 +7,7 @@ import lockIcon from '../assets/lock.png';
 import phoneIcon from '../assets/phone.png';
 import ofName from '../assets/officename.png';
 import ofPhone from '../assets/officephone.png';
-import styles from './Signup2.module.css';
+import styles from './Signup.module.css';
 
 const Signup = () => {
     const [formData, setFormData] = useState({

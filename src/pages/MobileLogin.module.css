@@ -4,20 +4,22 @@
     box-sizing: border-box;
 }
 
+
 .mobileLogin_page {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     background-color: #FFFFFF;
+    padding: 20px;
 }
 
 .form {
     display: flex;
-    flex-direction: column;
     align-items: center;
     width: 430px;
     margin-top: 80px;
+    flex-direction: column;
 }
 
 .logo {
