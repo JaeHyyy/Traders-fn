@@ -7,7 +7,7 @@ import lockIcon from '../assets/lock.png';
 import phoneIcon from '../assets/phone.png';
 import ofName from '../assets/officename.png';
 import ofPhone from '../assets/officephone.png';
-import styles from './Signup2.module.css';
+import styles from './Signup.module.css';
 import { FileUpload } from 'primereact/fileupload';
 import styled from 'styled-components';
 
@@ -148,30 +148,30 @@ const Signup = () => {
                     branchNum: businessNumber.replace(/-/g, '')
                 }));
             }
-                // OCR 완료 후 파일 이름과 상태를 업데이트
-                setFileName(file.name);
-                setIsPending(false); // OCR 완료 후 'clear' 상태로 변경
-        
-                // 상태를 'clear'로 표시하기 위해 텍스트 업데이트
-                const badgeElement = document.querySelector('.p-fileupload-file-badge');
-                if (badgeElement) {
-                    badgeElement.textContent = 'clear'; // 텍스트를 'clear'로 변경
-                 }
+            // OCR 완료 후 파일 이름과 상태를 업데이트
+            setFileName(file.name);
+            setIsPending(false); // OCR 완료 후 'clear' 상태로 변경
+
+            // 상태를 'clear'로 표시하기 위해 텍스트 업데이트
+            const badgeElement = document.querySelector('.p-fileupload-file-badge');
+            if (badgeElement) {
+                badgeElement.textContent = 'clear'; // 텍스트를 'clear'로 변경
+            }
         } catch (error) {
             console.error('OCR 처리 중 오류가 발생했습니다.', error);
         }
     };
 
-        //ocr 등록 파일 삭제 시 지점명 & 사업자번호 함께 초기화
-        const handleRemove = () => {
-            setFormData((prevFormData) => ({
-                ...prevFormData,
-                branchName: '',
-                branchNum: '',
-                branchImage: null 
-            }));
-            setIsPending(true); // pending 상태로 되돌리기
-        };
+    //ocr 등록 파일 삭제 시 지점명 & 사업자번호 함께 초기화
+    const handleRemove = () => {
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            branchName: '',
+            branchNum: '',
+            branchImage: null
+        }));
+        setIsPending(true); // pending 상태로 되돌리기
+    };
 
 
 
@@ -384,19 +384,19 @@ const Signup = () => {
                     {errors.address && <p className={styles.errorMessage}>{errors.address}</p>}
                     <hr />
                     <StyledUploadContainer className={styles.upload} isPending={isPending}>
-                    <FileUpload
-                        name="branchImage"
-                        url=""
-                        accept="image/*"
-                        maxFileSize={1000000}
-                        auto
-                        customUpload
-                        chooseLabel="파일찾기"
-                        uploadHandler={handleFileUpload}
-                        emptyTemplate={<p className="m-0">사업자등록증 파일을 업로드 하세요.</p>}
-                        onRemove={handleRemove}   
-                    />
-                   </StyledUploadContainer>
+                        <FileUpload
+                            name="branchImage"
+                            url=""
+                            accept="image/*"
+                            maxFileSize={1000000}
+                            auto
+                            customUpload
+                            chooseLabel="파일찾기"
+                            uploadHandler={handleFileUpload}
+                            emptyTemplate={<p className="m-0">사업자등록증 파일을 업로드 하세요.</p>}
+                            onRemove={handleRemove}
+                        />
+                    </StyledUploadContainer>
                     <br />
                     <div className={styles.inputContainer}>
                         <img src={ofName} alt="office name icon" className={`${styles.icon} ${errors.branchDetails && 'error-icon'}`} />

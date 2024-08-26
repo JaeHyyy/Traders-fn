@@ -7,6 +7,7 @@ import { format } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
 import { Stepper } from 'primereact/stepper';  // PrimeReact Steps 컴포넌트 임포트
 import { StepperPanel } from 'primereact/stepperpanel';
+import { getAuthToken } from '../util/auth';
 
 function Main() {
   const [goods, setGoods] = useState([]);
@@ -17,7 +18,8 @@ function Main() {
   const prevSelectedDate = useRef(null);  // 이전에 선택한 날짜를 추적하는 ref
   const [expiringMessage, setExpiringMessage] = useState('');  // 메시지를 저장할 상태 추가
   const navigate = useNavigate();
-
+  const [incomingDates, setIncomingDates] = useState([]); //입고일
+  const token = getAuthToken();
   const branchId = localStorage.getItem('branchId'); // 저장된 branchId 가져오기
   console.log("branchId 확인: ", branchId);
 
@@ -54,6 +56,13 @@ function Main() {
         }
       });
 
+    //입고내역 리스트 조회
+    api.get(`/traders/${branchId}/receipt`)
+      .then(response => {
+        setIncomingDates(response.data);
+      })
+      .catch(error => console.error('Error fetching data:', error));
+
     // 재고부족 상품 리스트 조회
     // axios.get('http://10.10.10.31:8090/traders/stock', {
     // axios.get('http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/stock', {
@@ -61,7 +70,9 @@ function Main() {
     //     Authorization: `Bearer ${token}`
     //   }
     // })
-    api.get('/traders/stock')
+
+    // 재고부족 상품 리스트 조회
+    api.get(`/traders/stock/branch/${branchId}`)
       .then(response => {
         const currentDate = new Date();
         const shortage = response.data.filter(stock => {
@@ -84,7 +95,13 @@ function Main() {
           navigate('/login');
         }
       });
-  }, [navigate]);
+  }, [branchId, navigate]);
+
+  // incomingDates 상태가 변경될 때마다 로그를 출력
+  useEffect(() => {
+    console.log("Updated incomingDates:", incomingDates);
+  }, [incomingDates]);
+
 
   const handleSearch = (event) => {
     event.preventDefault();
@@ -126,6 +143,7 @@ function Main() {
     }
   };
 
+  //유통기한 임박 상품 리스트
   const handleDateSelect = (selectedDate) => {
     // 선택한 날짜가 이전에 선택한 날짜와 다른 경우에만 실행
     if (prevSelectedDate.current && prevSelectedDate.current.getTime() === selectedDate.getTime()) {
@@ -141,7 +159,7 @@ function Main() {
     //     Authorization: `Bearer ${token}`
     //   }
     // })
-    api.get(`/traders/stock?date=${formattedDate}`)
+    api.get(`/traders/stock/branch/${branchId}?date=${formattedDate}`)
       .then(response => {
         // 데이터가 들어오는지 검증
         // console.log("API:", response.data);
@@ -310,15 +328,15 @@ function Main() {
           </div>
           <button className={main.orBtn} onClick={handleOrder}>발주하기</button>
 
-          <div className={main.events}>
+          {/* <div className={main.events}>
             이벤트 슬라이드
-          </div>
+          </div> */}
         </div>
       </div>
 
       <div className={main.rightSection}>
         <div className={main.locCalender}>
-          <Calendar onDateSelect={handleDateSelect} />
+          <Calendar onDateSelect={handleDateSelect} incomingDates={incomingDates} />
         </div>
 
         {/* Stepper 부분 */}

@@ -27,9 +27,9 @@ function Menubar() {
 
     const menuItems = [
         { name: '홈', path: '/' },
-        { name: '입고관리', path: '/Receipt' },
         { name: '재고관리', path: '/stock' },
         { name: '발주하기', path: '/ordercart' },
+        { name: '입고관리', path: '/Receipt' },
         { name: '유통기한관리', path: '/disuse' }
     ];
 
@@ -61,6 +61,10 @@ function Menubar() {
         navigate('/login');
     };
 
+    const handleMypage = () => {
+        navigate('/mypage');
+    };
+
     return (
         <div className={menubar.Menubar}>
 
@@ -76,8 +80,8 @@ function Menubar() {
                         </div>
 
                         <div className={menubar.header_con2}>
-                            <span type="button" className="pi pi-bell p-overlay-badge" style={{ fontSize: '1.5rem' }} onClick={(e) => op.current.toggle(e)}>
-                                <Badge value={badgeCount}></Badge>
+                            <span type="button" className="pi pi-bell p-overlay-badge" style={{ fontSize: '1.4rem', cursor: 'pointer' }} onClick={(e) => op.current.toggle(e)}>
+                                <Badge value={badgeCount} style={{ backgroundColor: '#aada2a', cursor: 'pointer' }} ></Badge>
                                 <OverlayPanel ref={op}>
                                     <div> <br /> <h3> &nbsp;&nbsp; 공지사항 </h3> <br />
                                         {notices.length > 0 ? (
@@ -102,7 +106,7 @@ function Menubar() {
                                 </OverlayPanel>
                             </span>
                             <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;</span>
-                            <span>마이페이지&nbsp;</span>
+                            <span className={menubar.mypage} onClick={handleMypage}>마이페이지&nbsp;</span>
                             <span>&nbsp;|&nbsp;</span>
                             {token ? (
                                 <span className={menubar.logout} onClick={handleLogout}>&nbsp;로그아웃</span>
@@ -150,7 +154,7 @@ function Menubar() {
                     </main>
                 </div>
             </div>
-        </div>
+        </div >
     );
 }
 

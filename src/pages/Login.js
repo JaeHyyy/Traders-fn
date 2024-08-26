@@ -44,8 +44,10 @@ function Login() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+
         axios.post('http://10.10.10.24:8090/traders/login', credentials)
             // axios.post('http://10.10.10.153:8090/traders/login', credentials)
+
             .then(response => {
                 console.log(response.data);
 
@@ -55,6 +57,8 @@ function Login() {
                 // branchId를 이용해 서버에서 branchName을 가져옴   //aelin추가 여기 시작해서
                 // axios.get(`http://10.10.10.31:8090/traders/branchname/${credentials.branchId}`, {
                 axios.get(`http://10.10.10.24:8090/traders/branchname/${credentials.branchId}`, {
+
+
                     headers: {
                         Authorization: `Bearer ${response.data.token}`
                     }

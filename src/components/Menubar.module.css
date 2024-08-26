@@ -61,6 +61,10 @@ html,body {
 
 .logout {
     color: red;
+    cursor: pointer;
+}
+.mypage{
+    cursor: pointer;
 }
 /* 헤더 끝 */
 
