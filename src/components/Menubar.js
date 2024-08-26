@@ -11,9 +11,9 @@ function Menubar() {
 
     const menuItems = [
         { name: '홈', path: '/' },
-        { name: '입고관리', path: '/Receipt' },
         { name: '재고관리', path: '/stock' },
         { name: '발주하기', path: '/ordercart' },
+        { name: '입고관리', path: '/Receipt' },
         { name: '유통기한관리', path: '/disuse' }
     ];
 
