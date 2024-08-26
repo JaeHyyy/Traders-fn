@@ -8,6 +8,74 @@ import phoneIcon from '../assets/phone.png';
 import ofName from '../assets/officename.png';
 import ofPhone from '../assets/officephone.png';
 import styles from './Signup.module.css';
+import { FileUpload } from 'primereact/fileupload';
+import styled from 'styled-components';
+
+// OCR 라이브러리 css 수정
+const StyledUploadContainer = styled.div`
+  .p-fileupload {
+    width: 100%; // 부모 컨테이너에 맞게 너비 조정
+  }
+
+  .p-fileupload-row {
+    font-size: 13px;
+    background-color: #F8F8F8;
+  }
+
+  .p-fileupload-buttonbar {
+    display: flex;
+    justify-content: flex-start;
+    background-color: #F8F8F8;
+   
+  }
+
+    .p-button.p-fileupload-choose.p-component {
+    background-color: #AADA2A ;
+    border: none;
+    padding: 5px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px; 
+    color: #ffffff;
+    outline: none;
+    box-shadow: none;  
+  }
+
+  .p-button.p-fileupload-choose.p-component:hover {
+    background-color: #133A00 ; /* 호버 시 색상 */
+  }
+  
+  .p-fileupload-content {
+    width: 100%;
+  }
+
+ .p-badge {
+    &.p-badge-warning {
+      background-color: ${(props) => (props.isPending ? '#CCCCCC' : '#aada2a')}; /* 조건에 따라 배경색 변경 */
+    }
+    size: 10px;
+    margin-left: 10px;
+  }
+
+.p-fileupload-filename {
+    display: inline-block; /* 인라인 블록으로 설정하여 가로 정렬 */
+    font-size: 13.5px; 
+    margin-right: 10px; 
+}
+
+.p-fileupload-filesize {
+    font-size: 5px;
+    display: inline-block; 
+}
+
+.m-0{
+    font-size: 13px;
+    padding: 5px 15px;
+    color: #7F7D7D;
+    background-color: #F8F8F8;
+}
+
+`;
 
 const Signup = () => {
     const [formData, setFormData] = useState({
@@ -24,6 +92,8 @@ const Signup = () => {
 
     const [errors, setErrors] = useState({});
     const navigate = useNavigate();
+    const [fileName, setFileName] = useState('');
+    const [isPending, setIsPending] = useState(true);
 
     useEffect(() => {
         const script = document.createElement('script');
@@ -45,21 +115,20 @@ const Signup = () => {
         });
     };
 
-    const handleFileChange = async (e) => {
-        const file = e.target.files[0];
+
+    const handleFileUpload = async (e) => {
+        const file = e.files[0];
         setFormData({
             ...formData,
-            branchImage: e.target.files[0]
+            branchImage: file
         });
 
-        // OCR API 호출
         const ocrFormData = new FormData();
         ocrFormData.append('theFile', file);
 
         try {
             const response = await axios.post('http://localhost:8090/traders/uploadForm/uploadOcr', ocrFormData, {
                 headers: {
-                    method: "post",
                     'Content-Type': 'multipart/form-data'
                 }
             });
@@ -67,24 +136,44 @@ const Signup = () => {
             const ocrData = response.data.parseData;
             const branchName = response.data.branchName;
 
-            // 지점명 추출
             setFormData((prevFormData) => ({
                 ...prevFormData,
-                branchName: branchName || "" // 지점명 자동 설정
+                branchName: branchName || "",
             }));
 
-            // 사업자 등록번호를 추출하고 설정
             const businessNumber = ocrData.find(text => /\d{3}-\d{2}-\d{5}/.test(text));
             if (businessNumber) {
                 setFormData(prevState => ({
                     ...prevState,
-                    branchNum: businessNumber.replace(/-/g, '') // 하이픈 제거
+                    branchNum: businessNumber.replace(/-/g, '')
                 }));
+            }
+            // OCR 완료 후 파일 이름과 상태를 업데이트
+            setFileName(file.name);
+            setIsPending(false); // OCR 완료 후 'clear' 상태로 변경
+
+            // 상태를 'clear'로 표시하기 위해 텍스트 업데이트
+            const badgeElement = document.querySelector('.p-fileupload-file-badge');
+            if (badgeElement) {
+                badgeElement.textContent = 'clear'; // 텍스트를 'clear'로 변경
             }
         } catch (error) {
             console.error('OCR 처리 중 오류가 발생했습니다.', error);
         }
     };
+
+    //ocr 등록 파일 삭제 시 지점명 & 사업자번호 함께 초기화
+    const handleRemove = () => {
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            branchName: '',
+            branchNum: '',
+            branchImage: null
+        }));
+        setIsPending(true); // pending 상태로 되돌리기
+    };
+
+
 
     const validateFields = () => {
         const newErrors = {};
@@ -203,6 +292,8 @@ const Signup = () => {
         }).open();
     };
 
+
+
     return (
         <div id={styles.signup_page}>
             <div className={styles.signup_box}>
@@ -292,11 +383,20 @@ const Signup = () => {
                     </div>
                     {errors.address && <p className={styles.errorMessage}>{errors.address}</p>}
                     <hr />
-                    <div className={styles.upload}>
-                        <input type="text" className={styles.upload_name} value={formData.branchImage ? formData.branchImage.name : ''} placeholder="사업자등록증등록" readOnly />
-                        <label htmlFor="file" className={styles.upload_label}>파일찾기</label>
-                        <input type="file" id="file" onChange={handleFileChange} />
-                    </div>
+                    <StyledUploadContainer className={styles.upload} isPending={isPending}>
+                        <FileUpload
+                            name="branchImage"
+                            url=""
+                            accept="image/*"
+                            maxFileSize={1000000}
+                            auto
+                            customUpload
+                            chooseLabel="파일찾기"
+                            uploadHandler={handleFileUpload}
+                            emptyTemplate={<p className="m-0">사업자등록증 파일을 업로드 하세요.</p>}
+                            onRemove={handleRemove}
+                        />
+                    </StyledUploadContainer>
                     <br />
                     <div className={styles.inputContainer}>
                         <img src={ofName} alt="office name icon" className={`${styles.icon} ${errors.branchDetails && 'error-icon'}`} />

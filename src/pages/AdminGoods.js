@@ -6,7 +6,7 @@ import { Column } from 'primereact/column';
 import { Sidebar } from 'primereact/sidebar';
 import { InputText } from 'primereact/inputtext';
 import { InputNumber } from 'primereact/inputnumber';
-import { FileUpload } from 'primereact/fileupload';
+import { Card } from 'primereact/card';
 import { Dropdown } from 'primereact/dropdown';
 import { Button } from 'primereact/button';
 import { Toast } from 'primereact/toast';
@@ -69,13 +69,6 @@ const AdminGoods = () => {
     };
 
     useEffect(() => {
-        // const token = getAuthToken();
-        // // axios.get('http://10.10.10.31:8090/traders/home', {
-        // axios.get('http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/home', {
-        //     headers: {
-        //         Authorization: `Bearer ${token}`
-        //     }
-        // })
         api.get('/traders/home')
             .then(response => {
                 if (savedBranchId != 'admin') {
@@ -220,40 +213,34 @@ const AdminGoods = () => {
                         <Column field="gunit" header="Unit" />
                     </DataTable>
                 </div>
-                <Button icon="pi pi-plus" rounded text raised onClick={() => setVisible(true)} className="p-mt-3" />
+                <Button icon="pi pi-plus" rounded text raised onClick={() => setVisible(true)} className={styles.addb} />
                 <Sidebar visible={visible} onHide={() => setVisible(false)} position="right" className={styles.addgoods}>
                     <form onSubmit={handleSubmit} className={styles.addgoods}>
                         <h2 className={styles.addtitle}>New Product</h2>
                         <div>
-                            <label className={styles.label} />
                             <InputText className={styles.inputText} name="gcode" placeholder="상품번호" value={newGoods.gcode} onChange={handleInputChange} required />
                         </div>
                         <div>
-                            <label className={styles.label} />
                             <InputText className={styles.inputText} name="gname" placeholder="상품명" value={newGoods.gname} onChange={handleInputChange} required />
                         </div>
                         <div>
-                            <label className={styles.label} />
                             <Dropdown className={styles.dropdown} name="gcategory" placeholder="카테고리" value={newGoods.gcategory} options={categories} onChange={handleDropdownChange} required />
                         </div>
                         <div>
-                            <label className={styles.label} />
-                            <InputNumber className={styles.inputNumber} name="gcostprice" placeholder="가격" value={newGoods.gcostprice} onValueChange={handleInputChange} mode="currency" currency="KRW" locale="ko-KR" required />
+                            <InputNumber inputId="integeronly" className={styles.inputNumber} name="gcostprice" placeholder="가격" value={newGoods.gcostprice} onValueChange={handleInputChange} />
+                            {/* mode="currency" currency="KRW" required */}
                         </div>
                         <div>
-                            <label className={styles.label} />
                             <InputText className={styles.inputText} name="gcompany" placeholder="브랜드" value={newGoods.gcompany} onChange={handleInputChange} required />
                         </div>
                         <div>
-                            <label className={styles.label} />
                             <InputText className={styles.inputText} name="gunit" placeholder="개/box" value={newGoods.gunit} onChange={handleInputChange} required />
                         </div>
                         <div >
-                            <label className={styles.label} />
                             <Toast ref={toast}></Toast>
-                            <input type="file" className={styles.fileUpload} name="gimage" accept="image/*" onChange={handleFileChange} required />
+                            <InputText type="file" className={styles.fileUpload} name="gimage" accept="image/*" onChange={handleFileChange} required />
                         </div>
-                        <Button type="submit" label="Add Product" className={styles.button} />
+                        <Button type="submit" label="Add Product" className={styles.addbutton} />
                     </form>
                 </Sidebar>
             </div>
