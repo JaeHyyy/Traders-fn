@@ -1,17 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../util/api';
 import styles from './ReceiptModify.module.css';
 import get from 'lodash/get';
-import { getAuthToken } from '../util/auth';
+import ReactToPrint from 'react-to-print';
+import { InputText } from 'primereact/inputtext';
+
+
 
 const ReceiptModify = () => {
     const [movements, setMovements] = useState([]);
+    const [qrCode, setQrCode] = useState(null);
+    const [manager, setManager] = useState('');
     const [searchParams] = useSearchParams();
     const movdate = searchParams.get("movdate");
-    const [selectedGcode, setSelectedGcode] = useState(null);
-    const [locations, setLocations] = useState({ loc1: '', loc2: '', loc3: '' });
     const navigate = useNavigate();
+    const branchName = localStorage.getItem('branchName');
+    const ref = useRef();
 
     const columns = [
         { header: '순번', accessor: null, className: styles['column-seq'] },
@@ -22,29 +27,23 @@ const ReceiptModify = () => {
         { header: '단위', accessor: 'goods.gunit', className: styles['column-gunit'] },
         { header: '총액', accessor: 'goods.gcostprice', className: styles['column-gcostprice'] },
         { header: '검수상태', accessor: 'movement.movstatus', className: styles['column-movstatus'] },
-        { header: '위치', accessor: null, className: styles['column-location'] }
+        // { header: '위치', accessor: null, className: styles['column-location'] }
     ];
 
-    useEffect(() => { //날짜로 분류된 데이터 조회
-        const token = getAuthToken();
+    useEffect(() => {
         const branchId = localStorage.getItem("branchId");
-
         if (!branchId) {
             console.error('Branch ID가 없습니다. 로그인 정보를 확인해주세요.');
             navigate('/login');
             return;
         }
 
-        // axios.get(`http://10.10.10.31:8090/traders/${branchId}/join?movdate=${movdate}`, {
-        axios.get(`http://localhost:8090/traders/${branchId}/join?movdate=${movdate}`, {
-            headers: {
-                method: "GET",
-                Authorization: `Bearer ${token}`
-            }
-        })
+        //입고상세내역
+        api.get(`/traders/${branchId}/join?movdate=${movdate}`)
             .then(response => {
                 console.log('API Response:', response.data);
                 setMovements(response.data);
+                console.log("받아온 데이터 : ", branchName)
 
             })
             .catch(error => {
@@ -53,117 +52,94 @@ const ReceiptModify = () => {
                     navigate('/login');
                 }
             });
+
+        // QR 코드 가져오기
+        api.get(`/traders/api/${branchId}/qrcode?date=${movdate}`, {
+            responseType: 'arraybuffer',
+        })
+            .then(response => {
+                const base64Image = btoa(
+                    new Uint8Array(response.data).reduce((data, byte) => data + String.fromCharCode(byte), '')
+                );
+                setQrCode(`data:image/png;base64,${base64Image}`);
+            })
+            .catch(error => {
+                console.error('Error fetching QR code:', error);
+            });
+
     }, [movdate, navigate]);
-
-
-    const handleEditClick = async (gcode) => {
-        setSelectedGcode(gcode);
-        try {
-            // const response = await axios.get('http://10.10.10.31:8090/traders/getLocation', {
-            const response = await axios.get('http://localhost:8090/traders/getLocation', {
-                params: { gcode }
-            });
-            if (response.data.length > 0) {
-                const { loc1, loc2, loc3 } = response.data[0];
-                setLocations({
-                    loc1: loc1 || '',
-                    loc2: loc2 || '',
-                    loc3: loc3 || ''
-                });
-                console.log(`Editing gcode: ${gcode}, loc1: ${loc1}, loc2: ${loc2}, loc3: ${loc3}`);
-            } else {
-                alert('중복된 재고가 있습니다! 재고 관리 페이지를 통해 확인해주세요.');
-            }
-        } catch (error) {
-            console.error('Error fetching location:', error);
-        }
-    };
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setLocations(prev => ({ ...prev, [name]: value }));
-    };
-
-    const handleSubmit = async (e) => {//위치 update 기능
-        e.preventDefault();
-        try {
-            // await axios.put('http://10.10.10.31:8090/traders/updateLocation', null, {
-            await axios.put('http://localhost:8090/traders/updateLocation', null, {
-                params: {
-                    gcode: selectedGcode,
-                    loc1: locations.loc1,
-                    loc2: locations.loc2,
-                    loc3: locations.loc3
-                }
-            });
-            alert('Location updated successfully');
-        } catch (error) {
-            console.error('Error updating location:', error);
-        }
-    };
-
 
     return (
         <div className={styles.rable}>
             <div className={styles["table-container"]}>
-                <table className={styles.table}>
-                    <thead className={styles.thead}>
-                        <tr>
-                            {columns.map((column, index) => (
-                                <th key={index}>{column.header}</th>
-                            ))}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {movements.map((row, rowIndex) => (
-                            <tr key={rowIndex}>
-                                {columns.map((column, colIndex) => (
-                                    <td key={colIndex}>
-                                        {column.accessor ? (
-                                            column.accessor === 'goods.gcostprice' ? (
-                                                // 연산 예시: 총액 (gcostprice * movquantity)
-                                                get(row, 'goods.gcostprice') * get(row, 'movement.movquantity')
-                                            ) : (
-                                                get(row, column.accessor)
-                                            )
-                                        ) : (
-                                            column.header === '위치' ? (
-                                                <button className={styles.tbutton} onClick={() => handleEditClick(row.goods.gcode)}>수정 </button>
-                                            ) : (rowIndex + 1)
-                                        )}
-                                    </td>
+                <div className={styles.printButtonContainer}>
+                    <div className={styles.managerInputContainer}>
+                        <div className="p-inputgroup flex-1">
+                            <span className="p-inputgroup-addon">
+                                <i className="pi pi-user"></i>
+                            </span>
+                            <InputText
+                                value={manager}
+                                onChange={(e) => setManager(e.target.value)}
+                                placeholder="담당자"
+                            />
+                        </div>
+                    </div>
+                    <ReactToPrint
+                        trigger={() => (
+                            <button className={styles.printButton}>PDF 저장/인쇄</button>
+                        )}
+                        content={() => ref.current}
+                    />
+                </div>
+                <div ref={ref} className={styles.print}>
+                    <div className={styles.info}>
+                        <div className={styles.bracnh}>
+                            <br />
+                            <p style={{ fontSize: '1.1rem', fontWeight: 'bold', color: '#333' }}> {branchName} / {manager}</p><br />
+                            <p style={{ fontSize: '1.1rem', fontWeight: 'bold', color: '#333' }}> 입고날짜 : {movdate} </p><br />
+                            <p style={{ fontSize: '1.1rem', fontWeight: 'bold', color: '#333' }}> 입고 번호: {movements[0]?.movement?.ordercode || 'N/A'}</p>
+                        </div>
+                        <div className={styles.qr}>
+                            {qrCode ? (
+                                <img src={qrCode} alt="QR Code" className={styles.qrImage} />
+                            ) : (
+                                <span>Loading QR code...</span>
+                            )}
+                        </div>
+                    </div>
+                    <table className={styles.table}>
+                        <thead className={styles.thead}>
+                            <tr>
+                                {columns.map((column, index) => (
+                                    <th key={index}>{column.header}</th>
                                 ))}
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {movements.map((row, rowIndex) => (
+                                <tr key={rowIndex}>
+                                    {columns.map((column, colIndex) => (
+                                        <td key={colIndex}>
+                                            {column.accessor ? (
+                                                column.accessor === 'movement.movstatus' && get(row, column.accessor) === '출고 완료' ? (
+                                                    '입고 대기'
+                                                ) : column.accessor === 'goods.gcostprice' ? (
+                                                    (get(row, 'goods.gcostprice') * get(row, 'movement.movquantity')).toLocaleString('ko-KR')
+                                                ) : (
+                                                    get(row, column.accessor)
+                                                )
+                                            ) : (
+                                                rowIndex + 1
+                                            )}
+                                        </td>
+                                    ))}
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            <div className={styles.add}>
-                <form onSubmit={handleSubmit}>
-                    <h2>위치 정보</h2>
-                    <p className={styles.selectedcode}>{selectedGcode ? selectedGcode : '상품 위치를 추가해주세요'}</p>
-                    <div><label>위치1 : <input
-                        type="text"
-                        name="loc1"
-                        value={locations.loc1}
-                        onChange={handleChange}
-                    /></label></div>
-                    <div><label>위치2 : <input
-                        type="text"
-                        name="loc2"
-                        value={locations.loc2}
-                        onChange={handleChange}
-                    /></label></div>
-                    <div><label>위치3 : <input
-                        type="text"
-                        name="loc3"
-                        value={locations.loc3}
-                        onChange={handleChange}
-                    /></label></div>
-                    <button type="submit">제출</button>
-                </form>
-            </div>
-
         </div>
     );
 };

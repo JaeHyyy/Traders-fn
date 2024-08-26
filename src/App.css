@@ -95,7 +95,6 @@
   box-shadow: none ; 
 }
 
-/* 검색어 입력 박스의 호버 및 포커스 상태 커스텀 */
 .p-inputtext:hover, 
 .p-inputtext:focus {
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.2); 

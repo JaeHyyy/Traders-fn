@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams, useNavigate } from 'react-router-dom'; // Import useNavigate
 import axios from 'axios';
 import logo from '../assets/logo.png';
 import A_1 from '../assets/AA-A.png';
@@ -8,11 +8,7 @@ import A_3 from '../assets/AA-C.png';
 import B from '../assets/BB-A,B,C.png';
 import C from '../assets/CC-A,B,C.png';
 import plan from '../assets/baseProductLocation.png';
-import product from './MobileProductDetail3.module.css';
-
-////////////////////////////////////////
-// import { getAuthToken } from "../util/auth";
-////////////////////////////////////////
+import product from './MobileProductDetail.module.css';
 
 // 구역별 이미지 객체
 const ZONE_IMAGES = {
@@ -31,12 +27,18 @@ const loc2Options = ['A', 'B', 'C'];
 const loc3Options = ['a', 'b', 'c', 'd', 'e', 'f'];
 
 const MobileProductDetail = () => {
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
+    const branchId = searchParams.get('branchId');
     const { gcode } = useParams();  // URL에서 gcode 파라미터를 가져옵니다.
+    const navigate = useNavigate();  // Add useNavigate hook
+
     const [productDetails, setProductDetails] = useState(null);  // 제품 상세 정보 상태
     const [additionalInfo, setAdditionalInfo] = useState(null);  // 추가 정보 상태
     const [movementDetails, setMovementDetails] = useState(null);  // movement 데이터 상태
     const [error, setError] = useState(null);  // 오류 상태
     const [zoneImage, setZoneImage] = useState(null);  // 구역별 이미지 상태
+
     const [newLoc1, setNewLoc1] = useState('');  // 새로운 loc1 상태
     const [newLoc2, setNewLoc2] = useState('');  // 새로운 loc2 상태
     const [newLoc3, setNewLoc3] = useState('');  // 새로운 loc3 상태
@@ -47,37 +49,10 @@ const MobileProductDetail = () => {
             try {
                 console.log(`gcode ${gcode}에 대한 제품 상세 정보 가져오기`);
 
-                ////////////////////////////////////////////
-                // 08/14
-                // const token = getAuthToken();
-                // const branchId = localStorage.getItem("branchId");
-
-                // console.log("token 값 확인(디바이스-상세페이지): ", token);
-                // console.log("id 값 확인(디바이스-상세페이지): ", branchId);
-                ////////////////////////////////////////////
-
-                // 제품 상세 정보와 추가 정보를 동시에 가져오기
-                // ssg wifi : 10.10.10.197
                 const [response1, response2, response3] = await Promise.all([
-                    axios.get(`http://10.10.10.193:8090/traders/stock/gcode-data/${gcode}`),
-                    // axios.get(`http://172.30.1.8:8090/traders/stock/gcode-data/${gcode}`),
-
-
-                    axios.get(`http://10.10.10.193:8090/traders/goods/${gcode}`),
-                    // axios.get(`http://172.30.1.8:8090/traders/goods/${gcode}`),
-
-                    axios.get(`http://10.10.10.193:8090/traders/movement/${gcode}`)
-                    // axios.get(`http://172.30.1.8:8090/traders/movement/${gcode}`)
-                    // axios.get(`http://10.10.10.58:8090/traders/stock/gcode-data/${gcode}`),
-                    // axios.get(`http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/stock/gcode-data/${gcode}`),
-
-
-                    // // axios.get(`http://10.10.10.58:8090/traders/goods/${gcode}`),
-                    // axios.get(`http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/goods/${gcode}`),
-
-                    // // axios.get(`http://10.10.10.58:8090/traders/movement/${gcode}`)
-                    // axios.get(`http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/movement/${gcode}`)
-
+                    axios.get(`http://10.10.10.25:8090/traders/stock/gcode-data/${gcode}`),
+                    axios.get(`http://10.10.10.25:8090/traders/goods/${gcode}`),
+                    axios.get(`http://10.10.10.25:8090/traders/movement/${gcode}`)
                 ]);
 
                 const data1 = response1.data[0];  // 배열의 첫 번째 요소를 사용
@@ -148,47 +123,45 @@ const MobileProductDetail = () => {
         }
     }, [productDetails]);
 
-    // 위치 정보를 업데이트하는 함수
+    console.log("gcode: ", gcode);
+    console.log("branchId: ", branchId);
+
     const updateLocation = async () => {
         try {
             const updatedLocation = {
                 loc1: newLoc1,
                 loc2: newLoc2,
-                loc3: newLoc3
+                loc3: newLoc3,
+                price: productDetails?.goodsData?.gcostprice || additionalInfo?.gcostprice || null
             };
 
-            // API 요청을 통해 위치 업데이트
-            // const response = await axios.put('http://10.10.10.31:8090/traders/stock/mobile-update-location', null, {
-            // const response = await axios.put('http://172.30.1.8:8090/traders/stock/mobile-update-location', null, {
-
-            // const response = await axios.put('http://10.10.10.58:8090/traders/stock/mobile-update-location', null, {
-            const response = await axios.put('http://10.10.10.193:8090/traders/stock/mobile-update-location', null, {
-
+            const response = await axios.put('http://10.10.10.25:8090/traders/stock/mobile-update-location', null, {
                 params: {
                     gcode,
+                    branchId,
                     loc1: updatedLocation.loc1,
                     loc2: updatedLocation.loc2,
-                    loc3: updatedLocation.loc3
+                    loc3: updatedLocation.loc3,
+                    price: updatedLocation.price
                 }
             });
-            console.log('위치 정보 업데이트 완료:', response.data);
 
-            // 업데이트된 위치 정보를 상태에 반영
+            // 서버에 저장된 위치 정보를 다시 받아오거나 UI에서 사용할 수 있도록 상태 업데이트
             setProductDetails((prevDetails) => ({
                 ...prevDetails,
                 loc1: updatedLocation.loc1,
                 loc2: updatedLocation.loc2,
                 loc3: updatedLocation.loc3
             }));
+
+            console.log('위치 정보 업데이트 완료:', response.data);
+
+            // Navigate to MobileReceive with the updated parameters in the URL
+            navigate(`/mobile/receive?branchId=${branchId}&date=${searchParams.get('date')}&gcode=${gcode}&loc1=${updatedLocation.loc1}&loc2=${updatedLocation.loc2}&loc3=${updatedLocation.loc3}&price=${updatedLocation.price}`);
+
         } catch (error) {
             console.error("위치 정보 업데이트 오류:", error);
-            if (error.response) {
-                setError(`서버 오류: ${error.response.status} ${error.response.statusText}`);
-            } else if (error.request) {
-                setError("서버로부터 응답을 받지 못했습니다.");
-            } else {
-                setError("요청을 설정하는 중 오류가 발생했습니다.");
-            }
+            setError(error.message);
         }
     };
 

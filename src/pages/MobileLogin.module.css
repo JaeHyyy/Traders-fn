@@ -4,20 +4,22 @@
     box-sizing: border-box;
 }
 
+
 .mobileLogin_page {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     background-color: #FFFFFF;
+    padding: 20px;
 }
 
 .form {
     display: flex;
-    flex-direction: column;
     align-items: center;
     width: 430px;
     margin-top: 80px;
+    flex-direction: column;
 }
 
 .logo {
@@ -54,4 +56,13 @@
 
 .loginButton:hover {
     background-color: #133A00;
+}
+
+.inputField:read-only {
+    background-color: #f0f0f0;
+    /* Light gray background */
+    color: #888888;
+    /* Gray text color */
+    cursor: not-allowed;
+    /* Optional: change the cursor to indicate the field is not editable */
 }
