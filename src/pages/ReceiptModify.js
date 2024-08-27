@@ -27,7 +27,6 @@ const ReceiptModify = () => {
         { header: '단위', accessor: 'goods.gunit', className: styles['column-gunit'] },
         { header: '총액', accessor: 'goods.gcostprice', className: styles['column-gcostprice'] },
         { header: '검수상태', accessor: 'movement.movstatus', className: styles['column-movstatus'] },
-        // { header: '위치', accessor: null, className: styles['column-location'] }
     ];
 
     useEffect(() => {

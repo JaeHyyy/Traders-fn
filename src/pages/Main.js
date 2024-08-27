@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import main from '../pages/Main.module.css';
 import Calendar from '../components/Calendar';
 import api from '../util/api';
-import axios from 'axios';
 import { format } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
 import { Stepper } from 'primereact/stepper';  // PrimeReact Steps 컴포넌트 임포트
@@ -33,12 +32,6 @@ function Main() {
     }
 
     // 상품 리스트를 가져오는 API 요청
-    // axios.get('http://10.10.10.31:8090/traders/home', {
-    // axios.get('http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/home', {
-    //   headers: {
-    //     Authorization: `Bearer ${token}`
-    //   }
-    // })
     api.get('/traders/home')
       .then(response => {
         setGoods(response.data);
@@ -62,14 +55,6 @@ function Main() {
         setIncomingDates(response.data);
       })
       .catch(error => console.error('Error fetching data:', error));
-
-    // 재고부족 상품 리스트 조회
-    // axios.get('http://10.10.10.31:8090/traders/stock', {
-    // axios.get('http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/stock', {
-    //   headers: {
-    //     Authorization: `Bearer ${token}`
-    //   }
-    // })
 
     // 재고부족 상품 리스트 조회
     api.get(`/traders/stock/branch/${branchId}`)
@@ -108,12 +93,7 @@ function Main() {
 
     if (searchGoods.trim() === '') {
       // 검색어가 없으면 모든 상품을 조회
-      // axios.get('http://10.10.10.31:8090/traders/home', {
-      // axios.get('http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/home', {
-      //   headers: {
-      //     Authorization: `Bearer ${token}`
-      //   }
-      // })
+
       api.get('/traders/home')
         .then(response => {
           setGoods(response.data);
@@ -123,12 +103,6 @@ function Main() {
         });
     } else {
       // 검색어가 있으면 해당 검색어로 상품 조회
-      // axios.get(`http://10.10.10.31:8090/traders/home/${searchGoods}`, {
-      // axios.get(`http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/home/${searchGoods}`, {
-      //   headers: {
-      //     Authorization: `Bearer ${token}`
-      //   }
-      // })
       api.get(`/traders/home/${searchGoods}`)
         .then(response => {
           if (response.data.length === 0) {
@@ -153,12 +127,6 @@ function Main() {
 
     // 날짜가 어떤 형식으로 들어오는지 검증
     const formattedDate = format(selectedDate, 'yyyy-MM-dd');
-    // axios.get(`http://10.10.10.31:8090/traders/stock?date=${formattedDate}`, {
-    // axios.get(`http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/stock?date=${formattedDate}`, {
-    //   headers: {
-    //     Authorization: `Bearer ${token}`
-    //   }
-    // })
     api.get(`/traders/stock/branch/${branchId}?date=${formattedDate}`)
       .then(response => {
         // 데이터가 들어오는지 검증
@@ -210,34 +178,7 @@ function Main() {
     }
   };
 
-  //발주하기 버튼
-  // const handleOrder = () => {
-  //   // const token = localStorage.getItem('token');
-  //   const selectedItems = goods.filter(item => selectedGoods.includes(item.gcode));
-  //   const orderCartDTOs = selectedItems.map(item => ({
-  //     gcount: 1, // 필요에 따라 수정, 기본 1개만 담기게 설정되어져 있음
-  //     goods: {
-  //       gcode: item.gcode,
-  //       gcategory: item.gcategory,
-  //       gname: item.gname,
-  //       gcostprice: item.gcostprice,
-  //       gimage: item.gimage,
-  //       gcompany: item.gcompany,
-  //       gunit: item.gunit,
-  //     }
-  //   }));
 
-  //   api.post(`/traders/ordercart/saveAll/${branchId}`, orderCartDTOs)
-  //     .then(response => {
-  //       console.log('발주하기에 담기 성공:', response);
-  //       console.log('Response data:', response.data);
-  //       alert('발주하기에 담겼습니다.');
-  //       setSelectedGoods([]);
-  //     })
-  //     .catch(error => {
-  //       console.error('발주하기에 담기 불가', error);
-  //     });
-  // };
   const handleOrder = () => {
     // 기존 orderCart 데이터를 가져옴
     api.get(`/traders/ordercart/branch/${branchId}`)

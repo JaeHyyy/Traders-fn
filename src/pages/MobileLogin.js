@@ -41,11 +41,11 @@ const MobileLogin = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        axios.post('http://10.10.10.109:8090/traders/login', credentials)
+        axios.post('http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/login', credentials)
             .then(response => {
                 setAuthToken(response.data.token);
 
-                axios.get(`http://10.10.10.109:8090/traders/branchname/${credentials.branchId}`, {
+                axios.get(`http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/branchname/${credentials.branchId}`, {
                     headers: {
                         Authorization: `Bearer ${response.data.token}`
                     }

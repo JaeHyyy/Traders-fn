@@ -19,7 +19,7 @@ const MobileReject = () => {
         const fetchRejectedItems = async () => {
             try {
                 const branchId = localStorage.getItem('branchId'); // branchId를 localStorage에서 가져오기
-                const response = await axios.get(`http://10.10.10.109:8090/traders/movement/rejected/${branchId}`);
+                const response = await axios.get(`http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/movement/rejected/${branchId}`);
                 const data = response.data;
 
                 // 필요한 필드들만 추출하여 상태에 저장
