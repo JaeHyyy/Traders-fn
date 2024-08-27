@@ -70,11 +70,7 @@ const AdminGoods = () => {
     useEffect(() => {
         api.get('/traders/home')
             .then(response => {
-<<<<<<< HEAD
-                if (savedBranchId != 'admin') {
-=======
                 if (savedBranchId != 'admin@traders.com') {
->>>>>>> 0a13e519d3ca72d21624ab6e7e52c53ad53a8ec0
                     navigate('/');
                     alert("접근 권한이 없습니다.");
                 } else {
@@ -181,11 +177,7 @@ const AdminGoods = () => {
     const imageBodyTemplate = (rowData) => {
         return (
             <img
-<<<<<<< HEAD
-                src={`http://traders5bootapp.ap-northeast-1.elasticbeanstalk.com//traders/images/items/${rowData.gimage}.png`}
-=======
                 src={`http://traders5bootapp.ap-northeast-1.elasticbeanstalk.com/traders/images/items/${rowData.gimage}.png`}
->>>>>>> 0a13e519d3ca72d21624ab6e7e52c53ad53a8ec0
                 alt={rowData.gname}
                 style={{ width: '50px', height: '50px', textAlign: 'center' }}
             />
