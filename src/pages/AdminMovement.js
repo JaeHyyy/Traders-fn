@@ -28,7 +28,7 @@ const AdminMovement = () => {
     useEffect(() => {
         api.get('/traders/adminmovement')
             .then(response => {
-                if (savedBranchId != 'admin') {
+                if (savedBranchId != 'admin@traders.com') {
                     navigate('/');
                     alert("접근 권한이 없습니다.");
                 } else {

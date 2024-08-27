@@ -70,7 +70,7 @@ function Login() {
 
                         // 메인 페이지로 이동
                         navigate('/');
-                        if (credentials.branchId === 'admin') {
+                        if (credentials.branchId === 'admin@traders.com') {
                             navigate('/adminMain');
                         } else {
                             navigate('/');
