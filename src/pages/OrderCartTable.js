@@ -51,29 +51,29 @@ const OrderCartTable = ({ columns, orderCart, setOrderCart, handleGcount }) => {
   };
 
   //삭제하기 버튼 기능 구현
-const handleSelectedDelete = () => {
-  const selectedItems = selectedRows.map(rowIndex => orderCart[rowIndex]);
-  const deletePromises = selectedItems.map(item => {
-    const gcode = item.goods.gcode;
-    if (gcode !== undefined) {
-      return api.delete(`/traders/ordercart/delete/selected/${gcode}/${branchId}`)
-        .then(response => {
-          console.log(`삭제완료: ${gcode}`);
-          // 상태 업데이트 - 삭제된 항목만 제거
-          setOrderCart(prevOrderCart => prevOrderCart.filter(cartItem => cartItem.goods.gcode !== gcode));
-        })
-        .catch(error => {
-          console.error('삭제불가', error);
-          alert('삭제 중 오류가 발생했습니다. 다시 시도해주세요.');
-        });
-    }
-    return null;
-  });
-  Promise.all(deletePromises).then(() => {
-    setSelectedRows([]); // 삭제 후 체크박스 초기화
-    alert("삭제가 완료되었습니다.");
-  });
-};
+  const handleSelectedDelete = () => {
+    const selectedItems = selectedRows.map(rowIndex => orderCart[rowIndex]);
+    const deletePromises = selectedItems.map(item => {
+      const gcode = item.goods.gcode;
+      if (gcode !== undefined) {
+        return api.delete(`/traders/ordercart/delete/selected/${gcode}/${branchId}`)
+          .then(response => {
+            console.log(`삭제완료: ${gcode}`);
+            // 상태 업데이트 - 삭제된 항목만 제거
+            setOrderCart(prevOrderCart => prevOrderCart.filter(cartItem => cartItem.goods.gcode !== gcode));
+          })
+          .catch(error => {
+            console.error('삭제불가', error);
+            alert('삭제 중 오류가 발생했습니다. 다시 시도해주세요.');
+          });
+      }
+      return null;
+    });
+    Promise.all(deletePromises).then(() => {
+      setSelectedRows([]); // 삭제 후 체크박스 초기화
+      alert("삭제가 완료되었습니다.");
+    });
+  };
 
 
 
@@ -137,8 +137,8 @@ const handleSelectedDelete = () => {
       // 결제 요청
       tossPayments.requestPayment('카드', {
         ...paymentData,
-        successUrl: `http://localhost:3000/traders/payment/PaymentSuccess?${queryString}`,
-        failUrl: 'http://localhost:3000/traders/payment/fail'
+        successUrl: `http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/payment/PaymentSuccess?${queryString}`,
+        failUrl: 'http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/payment/fail'
       });
 
     } catch (error) {

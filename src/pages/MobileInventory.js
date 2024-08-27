@@ -18,7 +18,7 @@ const MobileInventory = () => {
     useEffect(() => {
         const urlBranchId = localStorage.getItem('branchId');
 
-        axios.get(`http://10.10.10.109:8090/traders/stock/all-data/${urlBranchId}`)
+        axios.get(`http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/stock/all-data/${urlBranchId}`)
             .then((response) => {
                 const data = response.data.map(item => {
                     return {

@@ -51,9 +51,9 @@ const MobileProductDetail = () => {
                 console.log(`gcode ${gcode}에 대한 제품 상세 정보 가져오기`);
 
                 const [response1, response2, response3] = await Promise.all([
-                    axios.get(`http://10.10.10.109:8090/traders/stock/gcode-data/${gcode}`),
-                    axios.get(`http://10.10.10.109:8090/traders/goods/${gcode}`),
-                    axios.get(`http://10.10.10.109:8090/traders/movement/${gcode}`)
+                    axios.get(`http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/stock/gcode-data/${gcode}`),
+                    axios.get(`http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/goods/${gcode}`),
+                    axios.get(`http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/movement/${gcode}`)
                 ]);
 
                 const data1 = response1.data[0];
@@ -132,7 +132,7 @@ const MobileProductDetail = () => {
                 price: productDetails?.goodsData?.gcostprice || additionalInfo?.gcostprice || null
             };
 
-            const response = await axios.put('http://10.10.10.109:8090/traders/stock/mobile-update-location', null, {
+            const response = await axios.put('http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/stock/mobile-update-location', null, {
                 params: {
                     gcode,
                     branchId,

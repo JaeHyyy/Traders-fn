@@ -80,7 +80,7 @@ const DisUseTable = ({ columns }) => {
         try {
             // DisUse 업데이트
             await Promise.all(selectedDisUseIds.map(disid =>
-                api.put(`traders/disuse/update/${disid}/${branchId}`, { disdate: new Date().toISOString().split('T')[0] })
+                api.put(`/traders/disuse/update/${disid}/${branchId}`, { disdate: new Date().toISOString().split('T')[0] })
                 // axios.put(`http://10.10.10.31:8090/traders/disuse/update/${disid}/${branchId}`,
                 //     { disdate: new Date().toISOString().split('T')[0] },
                 //     {
