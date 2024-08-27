@@ -103,7 +103,6 @@ function Login() {
                             <input type="checkbox" id="remember-check-id" checked={rememberMe} onChange={handleRememberMeChange} />
                             아이디 저장하기
                         </label><br />
-                        <a href="/reset-password" className={login.reset_password}>비밀번호 재설정</a>
                     </div><br />
                     <input type="submit" value="로그인" className={login.btn_login} /><br />
                     <input type="button" value="회원가입" className={login.btn_signup} onClick={() => navigate('/signup')} /><br />
