@@ -73,7 +73,7 @@ const Stock = ({ columns }) => {
     useEffect(() => {
 
         if (branchId) {
-            axios.get(`http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/stock/branch/${branchId}`, {
+            axios.get(`http://traders5bootapp.ap-northeast-1.elasticbeanstalk.com/traders/stock/branch/${branchId}`, {
                 headers: {
                     method: "GET",
                     Authorization: `Bearer ${token}`
@@ -171,7 +171,7 @@ const Stock = ({ columns }) => {
 
         try {
             await Promise.all(selectedStockIds.filter(stockid => stockid !== null).map(stockid =>
-                axios.delete(`http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/stock/delete/${stockid}/${branchId}`, {
+                axios.delete(`http://traders5bootapp.ap-northeast-1.elasticbeanstalk.com/traders/stock/delete/${stockid}/${branchId}`, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
@@ -200,7 +200,7 @@ const Stock = ({ columns }) => {
 
         try {
             // 기존 orderCart 데이터를 가져옴
-            const response = await axios.get(`http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/ordercart/branch/${branchId}`, {
+            const response = await axios.get(`http://traders5bootapp.ap-northeast-1.elasticbeanstalk.com/traders/ordercart/branch/${branchId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -233,7 +233,7 @@ const Stock = ({ columns }) => {
                 try {
                     // 서버에 발주 요청 전송
                     const response = await axios.post(
-                        `http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/ordercart/saveAll/${branchId}`,
+                        `http://traders5bootapp.ap-northeast-1.elasticbeanstalk.com/traders/ordercart/saveAll/${branchId}`,
                         orderCartDTOs,
                         {
                             headers: {
@@ -263,7 +263,7 @@ const Stock = ({ columns }) => {
     const fetchStockByKeyword = async () => {
         if (branchId) {
             try {
-                const response = await axios.get(`http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/stock/branch/${branchId}/search?keyword=${encodeURIComponent(searchTerm)}`, {
+                const response = await axios.get(`http://traders5bootapp.ap-northeast-1.elasticbeanstalk.com/traders/stock/branch/${branchId}/search?keyword=${encodeURIComponent(searchTerm)}`, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }

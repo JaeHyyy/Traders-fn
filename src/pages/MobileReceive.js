@@ -36,7 +36,7 @@ const MobileReceive = () => {
         const fetchData = async () => {
             try {
                 const response = await axios.get(
-                    `http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/movement/${branchId}/${date}`,
+                    `http://traders5bootapp.ap-northeast-1.elasticbeanstalk.com/traders/movement/${branchId}/${date}`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`
@@ -109,7 +109,7 @@ const MobileReceive = () => {
             console.log("업데이트할 항목들:", itemsToUpdate);
 
             const response = await axios.post(
-                'http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/movement/updateMovStatus',
+                'http://traders5bootapp.ap-northeast-1.elasticbeanstalk.com/traders/movement/updateMovStatus',
                 itemsToUpdate,
                 {
                     headers: {
@@ -164,7 +164,7 @@ const MobileReceive = () => {
             console.log("반려할 항목들:", itemsToReject);
 
             const response = await axios.post(
-                'http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/movement/updateMovStatus',
+                'http://traders5bootapp.ap-northeast-1.elasticbeanstalk.com/traders/movement/updateMovStatus',
                 itemsToReject,
                 {
                     headers: {
