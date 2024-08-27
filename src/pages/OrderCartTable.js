@@ -137,8 +137,8 @@ const OrderCartTable = ({ columns, orderCart, setOrderCart, handleGcount }) => {
       // 결제 요청
       tossPayments.requestPayment('카드', {
         ...paymentData,
-        successUrl: `http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/payment/PaymentSuccess?${queryString}`,
-        failUrl: 'http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/payment/fail'
+        successUrl: `http://traders5bootapp.ap-northeast-1.elasticbeanstalk.com/traders/payment/PaymentSuccess?${queryString}`,
+        failUrl: 'http://traders5bootapp.ap-northeast-1.elasticbeanstalk.com/traders/payment/fail'
       });
 
     } catch (error) {

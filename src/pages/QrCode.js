@@ -22,7 +22,7 @@ const QrCode = () => {
         const fetchQrCode = async () => {
 
             try {
-                const response = await axios.get(`http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/api/${branchId}/qrcode?date=${date}`, {
+                const response = await axios.get(`http://traders5bootapp.ap-northeast-1.elasticbeanstalk.com/traders/api/${branchId}/qrcode?date=${date}`, {
 
                     responseType: 'arraybuffer', // 응답을 바이너리 데이터로 받음
                 });

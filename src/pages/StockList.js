@@ -5,7 +5,7 @@ const StockList = () => {
   const columns = [
     { header: '재고코드', accessor: 'stockid' },
     { header: '상품코드', accessor: 'goods.gcode', render: (row) => row.goods.gcode },
-    { header: "이미지", accessor: 'goods.gimage', render: (row) => <img src={`http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/images/items/${row.goods.gimage}.png`} alt={row.goods.gname} style={{ width: '50px', height: '50px' }} /> },
+    { header: "이미지", accessor: 'goods.gimage', render: (row) => <img src={`http://traders5bootapp.ap-northeast-1.elasticbeanstalk.com/traders/images/items/${row.goods.gimage}.png`} alt={row.goods.gname} style={{ width: '50px', height: '50px' }} /> },
     { header: "상품명(단위)", accessor: 'goods.gname', render: (row) => row.goods.gname },
     { header: '카테고리', accessor: 'goods.gcategory', render: (row) => row.goods.gcategory },
     { header: "단위", accessor: 'goods.gunit', render: (row) => row.goods.gunit },

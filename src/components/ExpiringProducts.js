@@ -8,7 +8,7 @@ const ExpiringProducts = () => {
   const [expiringProducts, setExpiringProducts] = useState([]);
 
   const handleDateSelect = (selectedDate) => {
-    axios.get(`http://TradersApp5.us-east-2.elasticbeanstalk.com/expiring-products?date=${format(selectedDate, 'yyyy-MM-dd')}`)
+    axios.get(`http://traders5bootapp.ap-northeast-1.elasticbeanstalk.com/expiring-products?date=${format(selectedDate, 'yyyy-MM-dd')}`)
       .then(response => {
         setExpiringProducts(response.data);
         console.log(response.data);
