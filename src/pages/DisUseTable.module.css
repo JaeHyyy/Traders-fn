@@ -145,6 +145,10 @@
     margin: 20px 10px 0px 50px;
   }
 
+  .disuseBtn:hover {
+    background-color: #45a049;
+  }
+
 
   .deldisuseBtn{
     padding: 10px 20px;
@@ -154,4 +158,8 @@
     border-radius: 5px;
     cursor: pointer;
     margin: 20px 0px 0px 0px; 
+  }
+
+  .deldisuseBtn:hover {
+    background-color: #131942;
   }

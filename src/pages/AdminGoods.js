@@ -6,7 +6,6 @@ import { Column } from 'primereact/column';
 import { Sidebar } from 'primereact/sidebar';
 import { InputText } from 'primereact/inputtext';
 import { InputNumber } from 'primereact/inputnumber';
-import { Card } from 'primereact/card';
 import { Dropdown } from 'primereact/dropdown';
 import { Button } from 'primereact/button';
 import { Toast } from 'primereact/toast';
@@ -150,7 +149,6 @@ const AdminGoods = () => {
         }
 
         const token = getAuthToken();
-        // axios.post('http://10.10.10.31:8090/home/save', formData, {
         axios.post('http://localhost:8090/traders/goodsadd', formData, {
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -179,10 +177,9 @@ const AdminGoods = () => {
     const imageBodyTemplate = (rowData) => {
         return (
             <img
-                // src={`http://10.10.10.31:8090/traders/images/items/${rowData.gimage}.png`}
                 src={`http://localhost:8090/traders/images/items/${rowData.gimage}.png`}
                 alt={rowData.gname}
-                style={{ width: '50px', height: '50px' }}
+                style={{ width: '50px', height: '50px', textAlign: 'center' }}
             />
         );
     };
@@ -201,16 +198,16 @@ const AdminGoods = () => {
             <AdminMenu />
             <div className={styles.container}>
                 <div className={styles.card}>
-                    <DataTable value={goods} paginator showGridlines rows={9} loading={loading} dataKey="gcode"
+                    <DataTable value={goods} className={styles.table} paginator showGridlines rows={9} loading={loading} dataKey="gcode"
                         filters={filters} globalFilterFields={['gcode', 'gname', 'gcompany', 'gcategory']} header={header}
                         emptyMessage="No goods found." onFilter={(e) => setFilters(e.filters)}>
-                        <Column field="gcode" header="Code" />
-                        <Column header="Image" body={imageBodyTemplate} />
-                        <Column field="gname" header="Name" />
-                        <Column field="gcategory" header="Category" />
-                        <Column field="gcostprice" header="Cost Price" dataType="numeric" body={priceBodyTemplate} />
-                        <Column field="gcompany" header="Company" />
-                        <Column field="gunit" header="Unit" />
+                        <Column className={styles.dtable} field="gcode" header={<span style={{ display: 'block', textAlign: 'center', fontFamily: 'Noto Sans KR, sans-serif' }}>Code</span>} />
+                        <Column className={styles.table} header="Image" body={imageBodyTemplate} />
+                        <Column className={styles.dtable} field="gname" header="Name" headerStyle={{ textAlign: 'center', fontFamily: 'Noto Sans KR, sans-serif' }} />
+                        <Column className={styles.dtable} field="gcategory" header="Category" />
+                        <Column className={styles.dtable} field="gcostprice" header="Cost Price" dataType="numeric" body={priceBodyTemplate} />
+                        <Column className={styles.dtable} field="gcompany" header="Company" />
+                        <Column className={styles.dtable} field="gunit" header="Unit" />
                     </DataTable>
                 </div>
                 <Button icon="pi pi-plus" rounded text raised onClick={() => setVisible(true)} className={styles.addb} />

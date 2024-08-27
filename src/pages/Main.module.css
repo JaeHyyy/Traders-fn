@@ -36,7 +36,7 @@
 
 
 .inputGoodsSearch{
-    width: 89%; 
+    width: 87%; 
     height: 30px; 
     padding: 3px; 
     font-size: 16px; 
@@ -56,11 +56,17 @@
     border-radius: 5px;
 }
 
+.btnGoodsSearch:hover {
+    background-color: #133A00;
+}
+
 .goodsList {
+    width: 607px;
     height: 450px; 
     overflow-y: scroll; 
     border: 1px solid #AADA2A;
     margin-top: 5px; 
+    box-shadow: 2px 4px 7px rgba(0, 0, 0, 0.1);
 }
 
 .goodsTable {
@@ -95,6 +101,11 @@
     border: none;
     margin-top: 10px;
     border-radius: 5px;
+    cursor: pointer;
+}
+
+.orBtn:hover {
+    background-color: #133A00;
 }
 
 .events {
@@ -117,7 +128,7 @@
 }
 
 .stepper {
-    width: 100%;
+    width: 95%;
 }
 
 .p-stepper .p-stepper-header .p-highlight .p-stepper-number {

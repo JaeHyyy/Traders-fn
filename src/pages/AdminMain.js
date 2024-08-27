@@ -9,9 +9,13 @@ import { FloatLabel } from "primereact/floatlabel";
 import { Dropdown } from 'primereact/dropdown';
 import { Button } from 'primereact/button';
 import { Card } from 'primereact/card';
+import { Dialog } from 'primereact/dialog';
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { Toast } from 'primereact/toast';
 import 'chart.js/auto';
+import 'chartjs-plugin-datalabels';
 
 const AdminMain = () => {
     const [branchStock, setBranchStock] = useState([]);
@@ -23,6 +27,8 @@ const AdminMain = () => {
     const savedBranchId = localStorage.getItem('branchId'); // admin 권한 검증용
     const navigate = useNavigate();
     const toast = useRef(null);
+    const [notices, setNotices] = useState([]);
+    const [visible, setVisible] = useState(false);
 
     useEffect(() => {
         if (savedBranchId != 'admin') {
@@ -67,11 +73,25 @@ const AdminMain = () => {
                 label: '지점별 발주량',
                 data: branchStock.map(item => item.count), // 각 지점의 재고 수량을 데이터로 사용
                 backgroundColor: [
-                    'rgba(54, 162, 135, 0.6)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(75, 192, 192, 0.4)',
+                    'rgba(75, 192, 192, 0.6)',
+                    'rgba(75, 192, 192, 0.8)',
+                    'rgba(75, 192, 192, 1)',
                     'rgba(54, 162, 135, 0.2)',
                     'rgba(54, 162, 135, 0.4)',
+                    'rgba(54, 162, 135, 0.6)',
+                    'rgba(54, 162, 135, 0.8)',
+                    'rgba(54, 162, 135, 1)',
                 ],
                 borderColor: [
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(54, 162, 135, 1)',
+                    'rgba(54, 162, 135, 1)',
                     'rgba(54, 162, 135, 1)',
                     'rgba(54, 162, 135, 1)',
                     'rgba(54, 162, 135, 1)',
@@ -85,7 +105,7 @@ const AdminMain = () => {
         labels: popularProducts.map(item => item.gname),
         datasets: [
             {
-                label: '인기 상품 순위',
+                label: '총 재고량',
                 data: popularProducts.map(item => item.summ),
                 backgroundColor: [
                     'rgba(75, 192, 192, 0.2)',
@@ -115,20 +135,22 @@ const AdminMain = () => {
             },
         ],
     };
+
+
     const productOptions = {
         plugins: {
             legend: {
                 display: true,
-                position: 'right', // 범례를 오른쪽에 배치
-                align: 'center', // 범례를 중앙에 정렬
+                position: 'right',
+                align: 'center',
                 labels: {
-                    boxWidth: 10, // 범례 상자의 너비 조절
-                    padding: 10,  // 범례 간격 조절
+                    boxWidth: 10,
+                    padding: 10,
                 },
             },
             title: {
                 display: true,
-                text: 'TOP 10!', // 제목 설정
+                text: '인기 상품 BEST 10',
                 font: {
                     size: 20,
                 },
@@ -137,6 +159,22 @@ const AdminMain = () => {
                     bottom: 30,
                 },
             },
+            datalabels: {
+                display: true,
+                color: '#4C4C4C', // 텍스트 색상
+                font: {
+                    weight: 'bold',
+                    size: 14,
+                },
+                formatter: (value, context) => {
+                    const total = context.chart._metasets[context.datasetIndex].total;
+                    const percentage = ((value / total) * 100).toFixed(2);
+                    return `${context.chart.data.labels[context.dataIndex]}\n${percentage}%`; // 상품명과 비율을 함께 표시
+                },
+                anchor: 'end',    // 라벨 위치를 끝에 고정
+                align: 'start',   // 라벨 텍스트 정렬
+                offset: -10,      // 라벨을 도넛 안쪽으로 밀어 넣기
+            }
         },
         maintainAspectRatio: false, // 캔버스 크기 비율 유지 설정
     };
@@ -146,6 +184,11 @@ const AdminMain = () => {
         scales: {
             y: {
                 beginAtZero: true,
+                ticks: {
+                    callback: function (value) {
+                        return value + ' 개';
+                    }
+                }
             },
         },
         maintainAspectRatio: false,
@@ -192,17 +235,60 @@ const AdminMain = () => {
             });
     };
 
+
+
     // 공지 발송 재확인
     const confirmSendNotice = () => {
         confirmDialog({
             message: '정말로 공지를 보내시겠습니까?',
             header: '공지 전송 확인',
             icon: 'pi pi-exclamation-triangle',
-            accept: sendNotice, // "예"를 선택하면 sendNotice 함수 실행
+            acceptClassName: 'p-button-text p-button-plain custom-accept-button', // 커스텀 스타일 적용
+            rejectClassName: 'p-button-text p-button-plain custom-reject-button', // 커스텀 스타일 적용
+            acceptLabel: (
+                <span style={{ display: 'flex', alignItems: 'center' }}>
+                    <i className="pi pi-check" style={{ fontSize: '16px', marginRight: '5px' }}></i>예
+                </span>
+            ),
+            rejectLabel: (
+                <span style={{ display: 'flex', alignItems: 'center' }}>
+                    <i className="pi pi-times" style={{ fontSize: '16px', marginRight: '5px' }}></i>아니오
+                </span>
+            ),
+            accept: sendNotice,
             reject: () => {
-                toast.current.show({ severity: 'info', summary: 'Cancelled', detail: 'Notice sending cancelled', life: 3000 });
+                console.log('Notice sending cancelled');
             },
         });
+    };
+
+    const handleButtonClick = (url) => {
+        window.open(url, '_blank');
+    };
+
+    //공지 목록
+    useEffect(() => {
+        api.get('/traders/notices')
+            .then(response => setNotices(response.data))
+            .catch(error => console.error('Error fetching notices:', error));
+    }, []);
+
+    //공지 삭제
+    const handleDelete = (noticeId) => {
+        api.delete(`/traders/deletenotice/${noticeId}`)
+            .then(() => {
+                setNotices(notices.filter(notice => notice.noticeId !== noticeId));
+            })
+            .catch(error => {
+                console.error('Error deleting notice:', error);
+            });
+    };
+
+    //공지 각 행의 삭제 아이콘 ㅎㅎ
+    const actionBodyTemplate = (rowData) => {
+        return (
+            <Button icon="pi pi-times" className={styles.b} onClick={() => handleDelete(rowData.noticeId)} />
+        );
     };
 
     return (
@@ -212,15 +298,31 @@ const AdminMain = () => {
             <ConfirmDialog className={styles.confirmDialog} />
             <div className={styles.container}>
                 <Card className={styles.card} title={typingText}>
-                    <p className="m-0">
-                        "Management is doing things right; leadership is doing the right things."
-                        -Peter Drucker-
-                    </p>
+                    <div className={styles.buttons}>
+                        <button
+                            className={styles.linkbutton1}
+                            onClick={() => handleButtonClick('http://www.traders.co.kr/index.jsp')}
+                        >
+                            Traders
+                        </button>
+                        <button
+                            className={styles.linkbutton2}
+                            onClick={() => handleButtonClick('https://www.instagram.com/traders_wholesale_club/')}
+                        >
+                            <i className="pi pi-instagram"></i>
+                        </button>
+                        <button
+                            className={styles.linkbutton3}
+                            onClick={() => handleButtonClick('https://www.sikorea.co.kr/company/group')}
+                        >
+                            SSG
+                        </button>
+                    </div>
                 </Card>
                 <div className={styles.floatLabelContainer}>
-                    <FloatLabel>
+                    <FloatLabel className={styles.noticeInputContainer}>
                         <InputTextarea id="description" value={content} onChange={(e) => setContent(e.target.value)} rows={5} cols={30} className={styles.inputTextarea} />
-                        <label htmlFor="description">notice</label>
+                        <label htmlFor="description">공지</label>
                     </FloatLabel>
                     <div className={styles.actionContainer}>
                         <Dropdown
@@ -231,6 +333,14 @@ const AdminMain = () => {
                             placeholder="지점을 선택하세요"
                             className={styles.dropdown}
                         />
+                        <Button label="List" raised className={styles.listButton} onClick={() => setVisible(true)} />
+                        <Dialog header="Notice List" visible={visible} style={{ width: '50vw' }} onHide={() => setVisible(false)} className={styles.d}>
+                            <DataTable value={notices}>
+                                <Column field="content" header="Content" />
+                                <Column field="noticedate" header="Date" />
+                                <Column body={actionBodyTemplate} header="Delete" />
+                            </DataTable>
+                        </Dialog>
                         <Button label="Send" raised className={styles.customButton} onClick={confirmSendNotice} />
                     </div>
                 </div>

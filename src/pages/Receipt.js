@@ -116,8 +116,6 @@ const Receipt = () => {
           <span>입고일자 순</span>
           <input type='checkbox' checked={sortStates.count} onChange={() => handleSortChange('count')} />
           <span>입고건수 순</span>
-          <input type='checkbox' />
-          <span>배송중</span>
         </div>
       </div>
       <div className={styles['receipt-table']}>
