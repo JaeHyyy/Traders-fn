@@ -70,7 +70,7 @@ const AdminGoods = () => {
     useEffect(() => {
         api.get('/traders/home')
             .then(response => {
-                if (savedBranchId != 'admin') {
+                if (savedBranchId != 'admin@traders.com') {
                     navigate('/');
                     alert("접근 권한이 없습니다.");
                 } else {
@@ -177,7 +177,7 @@ const AdminGoods = () => {
     const imageBodyTemplate = (rowData) => {
         return (
             <img
-                src={`http://traders5bootapp.ap-northeast-1.elasticbeanstalk.com//traders/images/items/${rowData.gimage}.png`}
+                src={`http://traders5bootapp.ap-northeast-1.elasticbeanstalk.com/traders/images/items/${rowData.gimage}.png`}
                 alt={rowData.gname}
                 style={{ width: '50px', height: '50px', textAlign: 'center' }}
             />
