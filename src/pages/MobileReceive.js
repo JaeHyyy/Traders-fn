@@ -59,7 +59,7 @@ const MobileReceive = () => {
                 setQrCodesData(fetchedData);
                 console.log("data: ", fetchedData);
             } catch (error) {
-                console.error('Error fetching data from server', error);
+                console.error('서버에서 데이터를 가져오는 중 오류 발생', error);
                 setError('데이터를 가져오는 중 오류가 발생했습니다.');
             }
         };
@@ -74,9 +74,11 @@ const MobileReceive = () => {
     const handleCheckboxChange = (gcode) => {
         setSelectedItems(prevSelected => {
             if (prevSelected.includes(gcode)) {
-                return prevSelected.filter(item => item !== gcode);
+                // gcode가 이미 선택된 경우, 선택을 해제합니다
+                return [];
             } else {
-                return [...prevSelected, gcode];
+                // 그렇지 않으면, 현재 항목을 선택하고 다른 선택된 항목은 해제합니다
+                return [gcode];
             }
         });
     };
@@ -91,11 +93,6 @@ const MobileReceive = () => {
             const itemsToUpdate = qrCodesData
                 .filter(item => selectedItems.includes(item.gcode))
                 .map(item => {
-                    console.log("Sending item to server:", {
-                        gcode: item.gcode,
-                        // other fields...
-                    });
-
                     return {
                         branchid: item.branchid,
                         gcode: item.gcode,  // 개별 항목의 gcode를 사용
@@ -141,10 +138,69 @@ const MobileReceive = () => {
         }
     };
 
+    const handleReject = async () => {
+        if (selectedItems.length === 0) {
+            alert("반려할 항목을 선택하세요.");
+            return;
+        }
+
+        try {
+            const itemsToReject = qrCodesData
+                .filter(item => selectedItems.includes(item.gcode))
+                .map(item => {
+                    return {
+                        branchid: item.branchid,
+                        gcode: item.gcode,
+                        movdate: item.movdate,
+                        newStatus: "반려",  // 반려 상태로 업데이트
+                        movquantity: item.movquantity,
+                        loc1: loc1 || item.loc1,
+                        loc2: loc2 || item.loc2,
+                        loc3: loc3 || item.loc3,
+                        gprice: price || item.gprice
+                    };
+                });
+
+            console.log("반려할 항목들:", itemsToReject);
+
+            const response = await axios.post(
+                'http://10.10.10.25:8090/traders/movement/updateMovStatus',
+                itemsToReject,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+
+            console.log("반려 상태 업데이트 완료:", response.data);
+
+            // UI 갱신
+            setQrCodesData(prevData =>
+                prevData.map(item =>
+                    selectedItems.includes(item.gcode)
+                        ? { ...item, movstatus: "반려" }
+                        : item
+                )
+            );
+
+            setSelectedItems([]); // 선택된 항목 초기화
+            alert("반려가 완료되었습니다.");
+        } catch (error) {
+            console.error("반려 상태 업데이트 오류:", error);
+            setError('반려 처리 중 오류가 발생했습니다.');
+            alert("반려 처리 중 오류가 발생했습니다.");
+        }
+    };
 
     if (error) {
         return <div>에러: {error}</div>;
     }
+
+    // "입고 완료" 또는 "반려" 상태가 아닌 항목들만 필터링합니다
+    const filteredQrCodesData = qrCodesData.filter(
+        item => item.movstatus !== '입고 완료' && item.movstatus !== '반려'
+    );
 
     return (
         <div className={mobileReceive.mainMobile_page}>
@@ -154,32 +210,20 @@ const MobileReceive = () => {
                     <div className={mobileReceive.card_title}>
                         <div className={mobileReceive.flexContainer}>
                             <h6>입고내역서 - {branchName}</h6>
-                            <input
-                                type="checkbox"
-                                checked={selectedItems.length === qrCodesData.length && qrCodesData.length > 0} // 전체 선택 여부
-                                onChange={() => {
-                                    if (selectedItems.length === qrCodesData.length) {
-                                        setSelectedItems([]); // 전체 해제
-                                    } else {
-                                        setSelectedItems(qrCodesData.map(item => item.gcode)); // 전체 선택
-                                    }
-                                }}
-                                className={mobileReceive.checkbox}
-                            />
                         </div>
                     </div>
                     <div className={mobileReceive.card_content}>
-                        {qrCodesData.length > 0 ? qrCodesData
+                        {filteredQrCodesData.length > 0 ? filteredQrCodesData
                             .map((item, idx) => (
                                 item.gcode ? (
                                     <table
                                         key={idx}
-                                        className={`${mobileReceive.table_container} ${item.movstatus === '입고 완료' ? mobileReceive.completed : ''}`}>
+                                        className={`${mobileReceive.table_container}`}>
                                         <thead>
                                             <tr>
                                                 <th colSpan="2">
                                                     <div className={mobileReceive.flexContainer}>
-                                                        <span>QR 코드 정보</span>
+                                                        <span>입고 품목</span>
                                                         <input
                                                             type="checkbox"
                                                             checked={selectedItems.includes(item.gcode)}
@@ -219,14 +263,16 @@ const MobileReceive = () => {
                                     </table>
                                 ) : null
                             )) : <p className={mobileReceive.load}>금일 입고된 상품이 없습니다.</p>}
-
                     </div>
                     <button
                         className={mobileReceive.complete_button}
-                        onClick={handleCompleteInspection}
-                    >
-                        검수 완료
+                        onClick={handleCompleteInspection}>검수 완료
                     </button>
+                    <button
+                        className={mobileReceive.reject_button}
+                        onClick={handleReject}>반려하기
+                    </button>
+
                 </div>
             </div>
         </div>

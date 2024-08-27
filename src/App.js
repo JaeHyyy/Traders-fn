@@ -27,6 +27,7 @@ import 'primereact/resources/primereact.min.css';           // 기본 스타일
 import 'primeicons/primeicons.css';                         // 아이콘
 import MobileMain from './pages/MobileMain';
 import MobileInventory from './pages/MobileInventory';
+import MobileReject from './pages/MobileReject';
 
 
 const router = createBrowserRouter([
@@ -90,6 +91,10 @@ const router = createBrowserRouter([
   {
     path: "/mobile/receive",
     element: <ProtectedRoute element={MobileReceive} />
+  },
+  {
+    path: "/mobile/reject",
+    element: <ProtectedRoute element={MobileReject} />
   },
   {
     path: "/mobile/productDetail/:gcode",
