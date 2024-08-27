@@ -137,8 +137,13 @@ const OrderCartTable = ({ columns, orderCart, setOrderCart, handleGcount }) => {
       // 결제 요청
       tossPayments.requestPayment('카드', {
         ...paymentData,
+<<<<<<< HEAD
         successUrl: `http://traders5bootapp.ap-northeast-1.elasticbeanstalk.com/traders/payment/PaymentSuccess?${queryString}`,
         failUrl: 'http://traders5bootapp.ap-northeast-1.elasticbeanstalk.com/traders/payment/fail'
+=======
+        successUrl: `http://traders5reactbucket.s3-website-ap-northeast-1.amazonaws.com//traders/payment/PaymentSuccess?${queryString}`,
+        failUrl: 'http://traders5reactbucket.s3-website-ap-northeast-1.amazonaws.com//traders/payment/fail'
+>>>>>>> 0a13e519d3ca72d21624ab6e7e52c53ad53a8ec0
       });
 
     } catch (error) {

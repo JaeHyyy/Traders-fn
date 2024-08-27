@@ -32,7 +32,11 @@ const AdminMain = () => {
     const [visible, setVisible] = useState(false);
 
     useEffect(() => {
+<<<<<<< HEAD
         if (savedBranchId != 'admin') {
+=======
+        if (savedBranchId != 'admin@traders.com') {
+>>>>>>> 0a13e519d3ca72d21624ab6e7e52c53ad53a8ec0
             navigate('/');
             alert("접근 권한이 없습니다.");
         }
