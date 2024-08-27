@@ -1,3 +1,30 @@
+.dtable {
+    font-family: "Noto Sans KR", sans-serif !important;
+    font-optical-sizing: auto !important;
+    font-weight: 400 !important;
+    font-style: normal !important;
+    justify-content: center !important;
+    
+}
+
+/* 테이블 헤더만 중앙 정렬 */
+.dtable th {
+    justify-content: center !important;
+}
+
+.dtable filed {
+    justify-content: center!important;
+}
+
+.table{
+    font-family: "Noto Sans KR", sans-serif !important;
+    font-optical-sizing: auto !important;
+    font-weight: 400 !important;
+    font-style: normal !important;
+    justify-content: center !important;
+}
+
+
 .container {
     display: flex;
     flex-direction: row;
@@ -6,6 +33,7 @@
     max-width: 1200px;
     margin: 0 auto;
     gap: 1rem;
+
 }
 
 .card {

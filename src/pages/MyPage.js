@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import api from '../util/api';
 import { useNavigate } from 'react-router-dom';
+import { Button } from 'primereact/button';
+import { Dialog } from 'primereact/dialog';
+import { InputText } from 'primereact/inputtext';
 import userIcon from '../assets/user.png';
 //import lockIcon from '../assets/lock.png';
 import phoneIcon from '../assets/phone.png';
@@ -22,6 +25,10 @@ const MyPage = () => {
     });
 
     const navigate = useNavigate();
+    const [isDialogVisible, setIsDialogVisible] = useState(false);
+    const [currentPassword, setCurrentPassword] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
 
 
     useEffect(() => {
@@ -130,6 +137,58 @@ const MyPage = () => {
         }).open();
     };
 
+    const openDialog = () => {
+        setIsDialogVisible(true);
+    };
+
+    const closeDialog = () => {
+        setIsDialogVisible(false);
+    };
+
+    const handlePasswordChange = async () => {
+        if (newPassword !== confirmPassword) {
+            alert("새 비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+            return;
+        }
+
+        try {
+            const validateResponse = await api.get(`/traders/validatePassword`, {
+                params: {
+                    branchId: formData.branchId,
+                    passwd: currentPassword,
+                }
+            });
+
+            if (validateResponse.data.valid) {
+                const changeResponse = await api.post('/traders/changePassword', {
+                    branchId: formData.branchId,
+                    passwd: newPassword,
+                });
+
+                if (changeResponse.data === "Password changed successfully") {
+                    alert("비밀번호가 성공적으로 변경되었습니다.");
+                    closeDialog();
+                } else {
+                    alert("비밀번호 변경 실패: " + changeResponse.data);
+                }
+            } else {
+                alert("현재 비밀번호가 올바르지 않습니다.");
+            }
+        } catch (error) {
+            console.error('Error changing password:', error);
+            alert('비밀번호 변경 중 오류가 발생했습니다.');
+        }
+    };
+
+    const footerContent = (
+        <div>
+            <Button label="확인" icon="pi pi-check" onClick={handlePasswordChange} className={styles.o} />
+            <Button label="취소" icon="pi pi-times" onClick={closeDialog} className={styles.x} />
+        </div>
+    );
+
+
+
 
     return (
         <div id={styles.signup_page}>
@@ -230,9 +289,44 @@ const MyPage = () => {
                     </div>
                 </form>
                 <div className={styles.changepw}>
-                    <button type="basic" className={styles.btn_changepw}>비밀번호 변경</button>
+                    <button type="basic" className={styles.btn_changepw} onClick={openDialog}>비밀번호 변경</button>
                 </div>
             </div>
+            <Dialog visible={isDialogVisible} modal footer={footerContent} style={{ width: '30rem' }} onHide={closeDialog} className={styles.dialogPadding}>
+                <h2 className={styles.dtitle}> 비밀 번호 변경</h2>
+                <div className={styles.dialogContent}>
+                    <div className={styles.newpw}>
+                        <InputText
+                            id="currentPassword"
+                            type="password"
+                            placeholder="현재 비밀번호"
+                            value={currentPassword}
+                            onChange={(e) => setCurrentPassword(e.target.value)}
+                            className={styles.newpasswd}
+                        />
+                    </div>
+                    <div className={styles.newpw}>
+                        <InputText
+                            id="newPassword"
+                            type="password"
+                            placeholder="새로운 비밀번호"
+                            value={newPassword}
+                            onChange={(e) => setNewPassword(e.target.value)}
+                            className={styles.newpasswd}
+                        />
+                    </div>
+                    <div className={styles.newpw}>
+                        <InputText
+                            id="confirmPassword"
+                            type="password"
+                            placeholder="비밀번호 확인"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            className={styles.newpasswd}
+                        />
+                    </div>
+                </div>
+            </Dialog>
         </div>
     );
 };

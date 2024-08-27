@@ -136,17 +136,18 @@ const AdminMovement = () => {
     };
 
 
+
     return (
         <>
             <AdminMenu />
             <div className={styles.container}>
                 <div className={styles.card}>
-                    <DataTable value={movement} >
-                        <Column field="branchName" header="지점명" />
-                        <Column field="movdate" header="요청 날짜" />
-                        <Column field="count" header="건수" />
-                        <Column body={actionBodyTemplate} header="출고 상세 내역" />
-                        <Column body={statusAction} header="출고 상태" />
+                    <DataTable className={styles.table} value={movement} >
+                        <Column className={styles.table} field="branchName" header="지점명" />
+                        <Column className={styles.table} field="movdate" header="요청 날짜" />
+                        <Column className={styles.table} field="count" header="건수" />
+                        <Column className={styles.table} body={actionBodyTemplate} header="출고 상세 내역" />
+                        <Column className={styles.table} body={statusAction} header="출고 상태" />
                     </DataTable>
                 </div>
                 <div>
@@ -154,14 +155,18 @@ const AdminMovement = () => {
                         header="Details" style={{ width: '70vw' }}
                         maximizable modal contentStyle={{ height: '70vh', padding: '2rem' }}>
 
-                        <DataTable value={selectedMovement || []}>
-                            <Column field="movement.gcode" header="Gcode" />
-                            <Column field="goods.gname" header="Gname" />
-                            <Column field="goods.gcompany" header="Company" />
-                            <Column field="movement.movquantity" header="Movquantity" />
-                            <Column field="goods.gunit" header="Gunit" />
-                            <Column field="goods.gprice" header="Price" />
-                            <Column field="movement.movstatus" header="Status" />
+                        <DataTable className={styles.table} value={selectedMovement || []}>
+                            <Column className={styles.table} field="movement.gcode" header="Gcode" />
+                            <Column className={styles.table} field="goods.gname" header="Gname" />
+                            <Column className={styles.table} field="goods.gcompany" header="Company" />
+                            <Column className={styles.table} field="movement.movquantity" header="Movquantity" />
+                            <Column className={styles.table} field="goods.gunit" header="Gunit" />
+                            <Column
+                                className={styles.table}
+                                header="Price"
+                                body={(rowData) => (rowData.goods.gcostprice * rowData.movement.movquantity).toLocaleString(undefined, { style: 'currency', currency: 'KRW' })}
+                            />
+                            <Column className={styles.table} field="movement.movstatus" header="Status" />
                         </DataTable>
                     </Dialog>
                 </div>
