@@ -1,0 +1,165 @@
+.DisUse{
+  display: flex;
+  flex-direction: column;
+  height: 80%;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  background-color: #f9f9f9;
+}
+
+/* 폐기완료 상품 회색처리 */
+.deletedRow  {
+  background-color: #d3d3d3c9; /* 회색 */
+}
+
+/* 테이블 윗부분 구현*/
+.tableCon1 {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  height: 40px;
+}
+
+.tableCon1>span {
+  margin-right: 20px;
+}
+
+.cate_Form1 {
+  margin-right: 20px;
+}
+
+/*폐기리스트 테이블 구현  */
+.DisUseTable{
+  background-color: #f9f9f9;
+  /* flex: 1; */
+  overflow-y: auto; /* 테이블 내용이 길어지면 스크롤 */
+  max-height: 490px; /* 테이블 높이 고정 */
+}
+
+.custom1 {
+  width: 100%; /* 테이블이 컨테이너의 전체 너비를 차지하도록 설정 */
+  table-layout: fixed; /* 컬럼 너비 조정 */
+  border-collapse: collapse;
+  
+  }
+
+  thead {
+    background-color: #aada2a;
+  }
+  
+  .custom1 th, .custom1 td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+    overflow: hidden; /* 내용이 셀을 벗어나지 않도록 설정 */
+    text-overflow: ellipsis; /* 내용이 넘칠 경우 ... 으로 표시 */
+    white-space: nowrap; /* 텍스트가 줄바꿈되지 않도록 설정 */
+  }
+  
+  /* 필요한 경우 특정 컬럼의 너비를 조정 */
+  .custom1 th:nth-child(1),
+  .custom1 td:nth-child(1) {
+    width: 4%; /* 체크박스 컬럼 */
+  }
+  
+  .custom1 th:nth-child(2),
+  .custom1 td:nth-child(2) {
+    width: 4%; /* 순번 컬럼 */
+  }
+
+  .custom1 th:nth-child(3),
+  .custom1 td:nth-child(3) {
+    width: 10%; /* 상품코드 컬럼 */
+  }
+
+  .custom1 th:nth-child(4),
+  .custom1 td:nth-child(4) {
+    width: 7%; /* 이미지 컬럼 */
+  }
+
+  .custom1 th:nth-child(5),
+  .custom1 td:nth-child(5) {
+    width: 7%; /* 카테고리 컬럼 */
+  }
+
+  .custom1 th:nth-child(6),
+  .custom1 td:nth-child(6) {
+    width: 15%; /* 상품명(단위) 컬럼 */
+  }
+
+  .custom1 th:nth-child(7),
+  .custom1 td:nth-child(7) {
+    width: 10%; /* 제조사 컬럼 */
+  }
+
+  .custom1 th:nth-child(8),
+  .custom1 td:nth-child(8) {
+    width: 8%; /* 유통기한 컬럼 */
+  }
+
+  .custom1 th:nth-child(9),
+  .custom1 td:nth-child(9) {
+    width: 6%; /* 재고량 컬럼 */
+  }
+
+  .custom1 th:nth-child(10),
+  .custom1 td:nth-child(10) {
+    width: 8%; /* 단위 컬럼 */
+  }
+
+  .custom1 th:nth-child(11),
+  .custom1 td:nth-child(11) {
+    width: 7%; /* 상품위치 컬럼 */
+  }
+
+  .custom1 th:nth-child(12),
+  .custom1 td:nth-child(12) {
+    width: 8%; /* 폐기처리일 컬럼 */
+  }
+
+
+  /* 유통기한 테이블 밑부분 구성 */
+  .tableBottom1{
+    display: flex;
+    flex-direction: row;
+    position: absolute;
+    top: 620px; 
+    right: 10px; /* 부모 요소의 오른쪽에서 10px 왼쪽  */ 
+    justify-content: flex-end; 
+    padding: 15px;
+    /* margin-right: 5px; */
+    background: white; 
+  }
+
+  .disuseTotal{
+    font-weight: 700;
+    margin-top: 30px;  
+  }
+
+  .disuseBtn{
+    padding: 10px 20px ; 
+    background-color: #4CAF50; 
+    color: white; /* 버튼 글자색 */
+    border: none; 
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 20px 10px 0px 50px;
+  }
+
+  .disuseBtn:hover {
+    background-color: #45a049;
+  }
+
+
+  .deldisuseBtn{
+    padding: 10px 20px;
+    background-color: #252F81;
+    color: white; /* 버튼 글자색 */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 20px 0px 0px 0px; 
+  }
+
+  .deldisuseBtn:hover {
+    background-color: #131942;
+  }

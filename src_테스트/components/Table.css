@@ -1,0 +1,54 @@
+.custom-table {
+    width: 100%; /* 테이블이 컨테이너의 전체 너비를 차지하도록 설정 */
+    table-layout: fixed; /* 컬럼 너비를 고정하여 내용에 따라 변하지 않도록 설정 */
+    border-collapse: collapse;
+  }
+
+  thead {
+    background-color: #aada2a;
+  }
+  
+  .custom-table th, .custom-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+    overflow: hidden; /* 내용이 셀을 벗어나지 않도록 설정 */
+    text-overflow: ellipsis; /* 내용이 넘칠 경우 ... 으로 표시 */
+    white-space: nowrap; /* 텍스트가 줄바꿈되지 않도록 설정 */
+  }
+  
+  /* 필요한 경우 특정 컬럼의 너비를 조정 */
+  .custom-table th:nth-child(1),
+  .custom-table td:nth-child(1) {
+    width: 4%; /* 순번 컬럼 */
+  }
+  
+  .custom-table th:nth-child(2),
+  .custom-table td:nth-child(2) {
+    width: 4%; /* 순번 컬럼 */
+  }
+
+  .custom-table th:nth-child(3),
+  .custom-table td:nth-child(3) {
+    width: 13%; /* 상품코드 컬럼 */
+  }
+
+  .custom-table th:nth-child(4),
+  .custom-table td:nth-child(4) {
+    width: 6%; /* 이미지 컬럼 */
+  }
+
+  .custom-table th:nth-child(5),
+  .custom-table td:nth-child(5) {
+    width: 8%; /* 카테고리 컬럼 */
+  }
+
+  .custom-table th:nth-child(6),
+  .custom-table td:nth-child(6) {
+    width: 15%; /* 상품명(단위) 컬럼 */
+  }
+
+  .custom-table th:nth-child(7),
+  .custom-table td:nth-child(7) {
+    width: 13%; /* 제조사 컬럼 */
+  }

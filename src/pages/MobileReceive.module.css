@@ -1,0 +1,173 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.mainMobile_page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    height: 100vh;
+    background-color: #AADA2A;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.mainMobile_box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 400px;
+    max-height: 100%;
+}
+
+.card_box {
+    width: 380px;
+}
+
+.logo {
+    width: 200px;
+    height: 100px;
+    object-fit: cover;
+    margin-bottom: 20px;
+}
+
+.card_title {
+    background-color: #EEEEEE;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    height: 40px;
+    align-items: center;
+    padding: 10px;
+    border-radius: 10px 10px 0px 0px;
+}
+
+.card_content {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    border-radius: 0px 0px 10px 10px;
+    background-color: #333333;
+    justify-content: flex-start;
+    align-items: center;
+    max-height: 450px;
+    /* 테이블 한 개의 높이로 설정 */
+}
+
+.card_content::-webkit-scrollbar {
+    display: none;
+}
+
+.table_with_checkbox {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: #333333;
+}
+
+.table_container {
+    width: 340px;
+    border-collapse: collapse;
+    margin: 20px;
+    padding: 10px;
+    overflow-y: auto;
+    /* 테이블에 스크롤 추가 */
+    max-height: 250px;
+    /* 테이블 높이 고정 */
+}
+
+.table_container th,
+.table_container td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.table_container th {
+    background-color: #f2f2f2;
+}
+
+.table_container td {
+    background-color: #fff;
+}
+
+.table_container tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.table_container .checkbox_cell {
+    height: 100%;
+    vertical-align: middle;
+    text-align: center;
+    width: 50px;
+}
+
+.completed {
+    opacity: 1;
+}
+
+.load {
+    height: 400px;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    color: white;
+}
+
+.complete_button {
+    background-color: #333333;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+    text-align: center;
+    width: 380px;
+    margin-bottom: 20px;
+}
+
+.complete_button:hover {
+    background-color: #555555;
+}
+
+.flexContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.checkbox {
+    margin-left: 8px;
+    vertical-align: middle;
+}
+
+.reject_button {
+    background-color: #FF0000;
+    /* Red background */
+    color: #fff;
+    /* White text */
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    /* margin-top: 20px; */
+    text-align: center;
+    width: 380px;
+    margin-bottom: 20px;
+}
+
+.reject_button:hover {
+    background-color: #CC0000;
+    /* Darker red on hover */
+}

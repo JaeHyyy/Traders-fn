@@ -1,0 +1,64 @@
+/* AdminMovement.module.css */
+.container {
+    display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        /* 화면 위쪽에 가깝게 위치 */
+        padding: 20px;
+        /* padding을 줄여서 위쪽 여백 감소 */
+}
+.table {
+    font-family: "Noto Sans KR", sans-serif !important;
+    font-optical-sizing: auto !important;
+    font-weight: 400 !important;
+    font-style: normal !important;
+    /* text-align: center !important; */
+}
+
+.card {
+    width: 100%;
+        max-width: 1200px;
+        /* 테이블 크기 조정 */
+        margin-top: 0;
+        /* 여백 없애기 */
+        padding: 10px;
+        /* 내부 여백 조정 */
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+}
+
+.custom-button {
+    background-color: #f39c12 !important;
+    color: white !important;
+    border-radius: 5px !important;
+    border: none !important;
+}
+
+.custom-button:hover {
+    background-color: #e67e22 !important;
+    color: white !important;
+}
+
+.custom-selectbutton .p-button {
+    background-color: #ecf0f1 !important;
+    border: 1px solid #bdc3c7 !important;
+    color: #2c3e50 !important;
+    border-radius: 5px !important;
+}
+
+.custom-selectbutton .p-button.p-highlight {
+    background-color: #f39c12 !important;
+    color: white !important;
+    border-color: #e67e22 !important;
+}
+
+.custom-selectbutton .p-button:hover {
+    background-color: #e67e22 !important;
+    color: white !important;
+}
+
+.p-toast {
+    background-color: #2c3e50;
+    color: white;
+    border-radius: 5px;
+}

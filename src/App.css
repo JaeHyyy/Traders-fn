@@ -1,0 +1,114 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* stock.js 재고관리페이지에 있는 Paginator부분 css 커스텀 */
+.my-custom-paginator {
+  background-color: #f9f9f9 ;
+  margin-top: 3px;
+}
+
+.my-custom-paginator .p-dropdown {
+  background-color: #f9f9f9 ;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  line-height: 1.5;
+  outline: none;
+  box-shadow: none; 
+}
+
+.my-custom-paginator .p-dropdown:hover, 
+.my-custom-paginator .p-dropdown:focus,
+.my-custom-paginator .p-dropdown.p-focus {
+  border-color: #cccccc ; 
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2); 
+}
+
+.my-custom-paginator .p-paginator-page.p-highlight {
+  background-color: #E3E1E1 ; 
+  border-color: #E3E1E1 ; 
+}
+
+.my-custom-paginator .p-dropdown-item.p-highlight {
+  background-color: #E3E1E1; 
+}
+
+.p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight {
+  background-color: #E3E1E1 ; /* 선택된 항목의 배경색 변경 */
+}
+
+
+
+/* stock.js 재고관리페이지에 있는 검색창 부분 css 커스텀 */
+.p-inputgroup .p-button-warning {
+  background-color: #E3E1E1 ;
+  border: none; 
+  color: #333; 
+}
+
+.p-inputgroup {
+  margin-left: 10px;
+  max-width: 740px;
+  display: flex; 
+}
+
+.p-inputtext {
+  border-color: #CCCCCC ; 
+  box-shadow: none ; 
+}
+
+.p-inputtext:hover, 
+.p-inputtext:focus {
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2); 
+}
+
+.p-button-warning {
+  outline: none;
+  box-shadow: none; 
+}
+
+/* stepper */
+.p-stepper-number {
+  background-color: #E3E1E1;
+}
+
+
+

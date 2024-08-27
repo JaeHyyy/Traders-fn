@@ -1,0 +1,203 @@
+
+  .calendar {
+    font-family: 'Noto Sans KR', Arial, sans-serif;
+    width: 590px;
+    /* height: 300px; */
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px;
+  }
+  
+  .calendar-header {
+    color: white;
+    background-color: #f0f0f0;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #AADA2A;
+  }
+  
+  .calendar-header button {
+    color: white;
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+  }
+
+  .cal_btnP {
+    margin-right: 10px;
+  }
+  .cal_btnN {
+    margin-left: 10px;
+  }
+  
+  .calendar-header h2 {
+    margin: 0;
+    font-size: 18px;
+  }
+  
+  .calendar-body {
+    padding: 10px;
+  }
+  
+  .calendar-week-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    margin-bottom: 10px;
+  }
+  
+  .week-day {
+    text-align: center;
+    font-weight: bold;
+    color: #777;
+  }
+  
+  .calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    gap: 5px;
+    height: 230px; /* 달력 높이 고정 */
+  }
+  
+  .calendar-day {
+    text-align: center;
+    padding: 5px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative; 
+  }
+
+  .calendar-day.red-dot::after {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background-color: red;
+    border-radius: 50%;
+    position: absolute;
+    bottom: 1px; /* 날짜 숫자 아래에 위치하도록 설정 */
+  }
+
+  .calendar-day[title]:hover::after {
+    content: attr(title);
+    position: absolute;
+    top: -20px; /* 툴팁을 날짜와 겹치지 않도록 더 위로 이동 */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.85); /* 툴팁 배경을 검정색으로 설정 */
+    color: #fff; /* 텍스트 색상을 흰색으로 설정 */
+    padding: 11px 48px;
+    border-radius: 4px;
+    font-size: 14px;
+    white-space: nowrap;
+    z-index: 999; /* 툴팁이 더 앞쪽에 나타나도록 설정 */
+    opacity: 0;
+    transition: opacity 2s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* 텍스트를 중앙에 배치 */
+}
+
+.calendar-day[title]:hover::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent rgba(0, 0, 0, 0.85) transparent;
+    z-index: 20; /* 툴팁이 더 앞쪽에 나타나도록 설정 */
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+
+  
+  .calendar-day:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .calendar-day.other-month {
+    color: #ccc;
+  }
+  
+  .calendar-week-days div:nth-child(7),
+  .calendar-days div:nth-child(7n) {
+    color: #ff5555;
+  }
+  
+  .calendar-day.holiday {
+    color: #ff0000;
+    font-weight: bold;
+    background-color: #ffeeee;
+  }
+
+
+  .calendar-day.selected {
+    background-color: #aada2a;
+    color: white;
+  }
+  
+  .expiring-products {
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+  }
+  
+  .expiring-products h3 {
+    margin-top: 0;
+    color: #333;
+  }
+  
+  .expiring-products ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .expiring-products li {
+    margin-bottom: 10px;
+    padding: 5px;
+    background-color: #fff;
+    border: 1px solid #eee;
+    border-radius: 4px;
+  }
+
+
+
+  /* 툴팁 기본 스타일 */
+.tooltip {
+  position: absolute; /* 툴팁 위치를 기준 요소에 상대적으로 설정 */
+  background-color: #333; /* 어두운 배경색 */
+  color: #fff; /* 밝은 텍스트 색상 */
+  padding: 6px; /* 내부 여백 */
+  border-radius: 5px; /* 모서리 둥글게 */
+  font-size: 14px; /* 폰트 크기 */
+  z-index: 10; /* 다른 요소들 위에 표시 */
+  display: none; /* 기본적으로 숨김 처리 */
+}
+
+/* 툴팁을 포함한 요소에 마우스 오버할 때 툴팁 보이게 설정 */
+.calendar-day:hover .tooltip {
+  display: block; /* 마우스 오버 시 툴팁 보임 */
+}
+
+/* 링크 스타일 */
+.tooltip a {
+  color: #ffcc00; /* 링크 색상 */
+  text-decoration: none; /* 밑줄 제거 */
+}
+
+.tooltip a:hover {
+  text-decoration: none; /* 마우스 오버 시 밑줄 표시 */
+}

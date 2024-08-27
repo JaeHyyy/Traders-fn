@@ -1,0 +1,39 @@
+.menubar {
+    background-color: #36A287;
+    padding: 10px 20px;
+    border-bottom: 2px solid #424242;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.menuitems {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.item1,
+.item2,
+.item3 {
+    padding: 10px 20px;
+    margin-right: 15px;
+    color: #ffffff;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.item4 {
+    padding: 10px 20px;
+    color: #ffffff;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+}
+
+.item1:hover, .item2:hover, .item3:hover, .item4:hover {
+    color: #1E5A45;
+}

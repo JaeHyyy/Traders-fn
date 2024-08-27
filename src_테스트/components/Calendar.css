@@ -1,0 +1,124 @@
+
+  .calendar {
+    font-family: 'Noto Sans KR', Arial, sans-serif;
+    width: 450px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px;
+  }
+  
+  .calendar-header {
+    background-color: #f0f0f0;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #aada2a;
+  }
+  
+  .calendar-header button {
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+  }
+
+  .cal_btnP {
+    margin-right: 10px;
+  }
+  .cal_btnN {
+    margin-left: 10px;
+  }
+  
+  .calendar-header h2 {
+    margin: 0;
+    font-size: 18px;
+  }
+  
+  .calendar-body {
+    padding: 10px;
+  }
+  
+  .calendar-week-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    margin-bottom: 10px;
+  }
+  
+  .week-day {
+    text-align: center;
+    font-weight: bold;
+    color: #777;
+  }
+  
+  .calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    gap: 5px;
+    height: 200px; /* 달력 높이 고정 */
+  }
+  
+  .calendar-day {
+    text-align: center;
+    padding: 5px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .calendar-day:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .calendar-day.other-month {
+    color: #ccc;
+  }
+  
+  .calendar-week-days div:nth-child(7),
+  .calendar-days div:nth-child(7n) {
+    color: #ff5555;
+  }
+  
+  .calendar-day.holiday {
+    color: #ff0000;
+    font-weight: bold;
+    background-color: #ffeeee;
+  }
+
+
+  .calendar-day.selected {
+    background-color: #aada2a;
+    color: white;
+  }
+  
+  .expiring-products {
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+  }
+  
+  .expiring-products h3 {
+    margin-top: 0;
+    color: #333;
+  }
+  
+  .expiring-products ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .expiring-products li {
+    margin-bottom: 10px;
+    padding: 5px;
+    background-color: #fff;
+    border: 1px solid #eee;
+    border-radius: 4px;
+  }
