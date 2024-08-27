@@ -27,9 +27,9 @@ function Menubar() {
 
     const menuItems = [
         { name: '홈', path: '/' },
-        { name: '입고관리', path: '/Receipt' },
         { name: '재고관리', path: '/stock' },
         { name: '발주하기', path: '/ordercart' },
+        { name: '입고관리', path: '/Receipt' },
         { name: '유통기한관리', path: '/disuse' }
     ];
 
@@ -59,6 +59,10 @@ function Menubar() {
         localStorage.removeItem('branchId');
         localStorage.removeItem('branchName');
         navigate('/login');
+    };
+
+    const handleMypage = () => {
+        navigate('/mypage');
     };
 
     return (
@@ -102,7 +106,7 @@ function Menubar() {
                                 </OverlayPanel>
                             </span>
                             <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;</span>
-                            <span>마이페이지&nbsp;</span>
+                            <span className={menubar.mypage} onClick={handleMypage}>마이페이지&nbsp;</span>
                             <span>&nbsp;|&nbsp;</span>
                             {token ? (
                                 <span className={menubar.logout} onClick={handleLogout}>&nbsp;로그아웃</span>
