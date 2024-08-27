@@ -279,7 +279,7 @@ const DisUseTable = ({ columns }) => {
                                 </td>
                                 {columns.map((column, colIndex) => (
                                     <td key={colIndex}>
-                                        {column.render ? column.render(row) : row[column.accessor]}
+                                        {column.render ? column.render(row, rowIndex) : row[column.accessor]}
                                         {/* {row.goods && column.render ? column.render(row, rowIndex) : row[column.accessor]} */}
                                     </td>
                                 ))}

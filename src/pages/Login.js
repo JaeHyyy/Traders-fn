@@ -44,8 +44,10 @@ function Login() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // axios.post('http://10.10.10.31:8090/traders/login', credentials)
-        axios.post('http://Traders5BootApp.ap-northeast-1.elasticbeanstalk.com/traders/login', credentials)
+
+        axios.post('http://10.10.10.109:8090/traders/login', credentials)
+            // axios.post('http://10.10.10.153:8090/traders/login', credentials)
+
             .then(response => {
                 console.log(response.data);
 
@@ -54,7 +56,7 @@ function Login() {
 
                 // branchId를 이용해 서버에서 branchName을 가져옴   //aelin추가 여기 시작해서
                 // axios.get(`http://10.10.10.31:8090/traders/branchname/${credentials.branchId}`, {
-                axios.get(`http://Traders5BootApp.ap-northeast-1.elasticbeanstalk.com/traders/branchname/${credentials.branchId}`, {
+                axios.get(`http://10.10.10.109:8090/traders/branchname/${credentials.branchId}`, {
                     headers: {
                         Authorization: `Bearer ${response.data.token}`
                     }
@@ -101,7 +103,6 @@ function Login() {
                             <input type="checkbox" id="remember-check-id" checked={rememberMe} onChange={handleRememberMeChange} />
                             아이디 저장하기
                         </label><br />
-                        <a href="/reset-password" className={login.reset_password}>비밀번호 재설정</a>
                     </div><br />
                     <input type="submit" value="로그인" className={login.btn_login} /><br />
                     <input type="button" value="회원가입" className={login.btn_signup} onClick={() => navigate('/signup')} /><br />

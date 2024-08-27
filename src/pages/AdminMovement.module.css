@@ -7,6 +7,13 @@
         padding: 20px;
         /* padding을 줄여서 위쪽 여백 감소 */
 }
+.table {
+    font-family: "Noto Sans KR", sans-serif !important;
+    font-optical-sizing: auto !important;
+    font-weight: 400 !important;
+    font-style: normal !important;
+    /* text-align: center !important; */
+}
 
 .card {
     width: 100%;
