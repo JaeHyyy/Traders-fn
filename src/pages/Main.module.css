@@ -6,7 +6,7 @@
 
 .Main {
     width: 1300px;
-    height: 400px;
+    height: 600px;
     display: flex; /* Flexbox 사용 */
     margin: 0 auto; /* 중앙 정렬 */
     padding: 5px; /* 여백 추가 */
@@ -18,6 +18,7 @@
 
 .goods_page {
     width: 50%;
+    height: 100%;
 }
 
 
@@ -25,17 +26,17 @@
 /* 왼쪽 섹션 - 본사 상품 리스트 및 검색 기능/ 추천 발주 상품 이벤트 */
 .leftSection{
       width: 100%;
+      height: 100%;
       box-sizing: border-box;
       padding: 10px;
       display: flex; 
       flex-direction: column; 
       align-items: stretch; 
-      border-right: 1px solid #333333;       
 }
 
 
 .inputGoodsSearch{
-    width: 89%; 
+    width: 87%; 
     height: 30px; 
     padding: 3px; 
     font-size: 16px; 
@@ -55,11 +56,17 @@
     border-radius: 5px;
 }
 
+.btnGoodsSearch:hover {
+    background-color: #133A00;
+}
+
 .goodsList {
-    height: 250px; 
+    width: 607px;
+    height: 450px; 
     overflow-y: scroll; 
     border: 1px solid #AADA2A;
     margin-top: 5px; 
+    box-shadow: 2px 4px 7px rgba(0, 0, 0, 0.1);
 }
 
 .goodsTable {
@@ -94,6 +101,11 @@
     border: none;
     margin-top: 10px;
     border-radius: 5px;
+    cursor: pointer;
+}
+
+.orBtn:hover {
+    background-color: #133A00;
 }
 
 .events {
@@ -116,7 +128,11 @@
 }
 
 .stepper {
-    width: 100%;
+    width: 95%;
+}
+
+.p-stepper .p-stepper-header .p-highlight .p-stepper-number {
+    background-color: grey !important;
 }
 
 .tableWrapper {

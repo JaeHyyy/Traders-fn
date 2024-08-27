@@ -28,7 +28,7 @@ const OrderCartTable = ({ columns, orderCart, setOrderCart, handleGcount }) => {
     }
   };
 
-  // 체크한 상품 삭제하기
+  // 동일 ordercode 상품 삭제하기
   const handleDelete = () => {
     // 중복된 ordercode를 제거하고 고유한 값만 남기기
     const selectedItems = Array.from(new Set(selectedRows.map(rowIndex => orderCart[rowIndex].ordercode)));
@@ -50,6 +50,30 @@ const OrderCartTable = ({ columns, orderCart, setOrderCart, handleGcount }) => {
     });
   };
 
+  //삭제하기 버튼 기능 구현
+const handleSelectedDelete = () => {
+  const selectedItems = selectedRows.map(rowIndex => orderCart[rowIndex]);
+  const deletePromises = selectedItems.map(item => {
+    const gcode = item.goods.gcode;
+    if (gcode !== undefined) {
+      return api.delete(`/traders/ordercart/delete/selected/${gcode}/${branchId}`)
+        .then(response => {
+          console.log(`삭제완료: ${gcode}`);
+          // 상태 업데이트 - 삭제된 항목만 제거
+          setOrderCart(prevOrderCart => prevOrderCart.filter(cartItem => cartItem.goods.gcode !== gcode));
+        })
+        .catch(error => {
+          console.error('삭제불가', error);
+          alert('삭제 중 오류가 발생했습니다. 다시 시도해주세요.');
+        });
+    }
+    return null;
+  });
+  Promise.all(deletePromises).then(() => {
+    setSelectedRows([]); // 삭제 후 체크박스 초기화
+    alert("삭제가 완료되었습니다.");
+  });
+};
 
 
 
@@ -168,7 +192,7 @@ const OrderCartTable = ({ columns, orderCart, setOrderCart, handleGcount }) => {
         <div className={order.tableBottomBtn}>
           <button className={order.saveBtn} onClick={handleSave}>변경저장</button>
           <button className={order.orderBtn} onClick={handlePayment}>결제하기</button>
-          <button className={order.delBtn} onClick={handleDelete}>삭제하기</button>
+          <button className={order.delBtn} onClick={handleSelectedDelete}>삭제하기</button>
         </div>
       </div>
     </div>

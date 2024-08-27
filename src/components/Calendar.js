@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { format, addMonths, subMonths, startOfMonth, endOfMonth, startOfWeek, addDays, getDay, getWeek, isSameMonth } from 'date-fns';
+import { format, addMonths, subMonths, startOfMonth, endOfMonth, startOfWeek, addDays, getDay, getWeek, isSameMonth, isSameDay } from 'date-fns';
 import '../components/Calendar.css';
+import { Link } from 'react-router-dom';
 
-const Calendar = ({ onDateSelect }) => {
+const Calendar = ({ onDateSelect, incomingDates }) => {
   const [currentDate, setCurrentDate] = useState(new Date()); // 현재 날짜를 저장하는 상태
   const [selectedDate, setSelectedDate] = useState(new Date()); // 선택된 날짜를 저장하는 상태
 
@@ -43,9 +44,21 @@ const Calendar = ({ onDateSelect }) => {
   };
 
   // 컴포넌트가 처음 로드될 때 초기 선택된 날짜를 부모 컴포넌트에 전달
-  useEffect(()=> {
+  useEffect(() => {
     onDateSelect(selectedDate);
   }, [onDateSelect, selectedDate]);
+
+  // 입고 내역이 있는지 확인하는 함수
+  const hasIncoming = (date) => {
+    return incomingDates.some(incomingDate => {
+      return isSameDay(new Date(incomingDate.movdate), date);
+    });
+  };
+
+  // 입고 내역이 있는지 확인하고 건수를 반환하는 함수
+  const getIncomingCount = (date) => {
+    return incomingDates.filter(incomingDate => isSameDay(new Date(incomingDate.movdate), date)).length;
+  };
 
   return (
     <div className="calendar">
@@ -67,11 +80,21 @@ const Calendar = ({ onDateSelect }) => {
               className={`calendar-day 
                 ${!isSameMonth(day, currentDate) ? 'other-month' : ''} // 다른 달의 날짜 표시
                 ${isHoliday(day) ? 'holiday' : ''} // 공휴일 표시
-                ${selectedDate && day.toDateString() === selectedDate.toDateString() ? 'selected' : ''}` // 선택된 날짜 표시
+                ${selectedDate && day.toDateString() === selectedDate.toDateString() ? 'selected' : ''} // 선택된 날짜 표시
+                ${hasIncoming(day) ? 'red-dot' : ''}` // 입고 내역 있는 날 빨간 점 표시
               }
               onClick={() => handleDateClick(day)}
+              // title={getIncomingCount(day) > 0 ? `${getIncomingCount(day)} 건의 입고 내역` : ''} // 툴팁 설정
             >
               {format(day, 'd')} {/* 날짜 숫자 표시 */}
+              {/* 입고 내역이 있는 경우, 툴팁을 링크로 설정 */}
+              {hasIncoming(day) && (
+                <div className="tooltip">
+                  <Link to={`/receiptmodify?movdate=${format(day, 'yyyy-MM-dd')}`}>
+                    {getIncomingCount(day)} 건의 입고 내역
+                  </Link>
+                </div>
+              )}
             </div>
           ))}
         </div>

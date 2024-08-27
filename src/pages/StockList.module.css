@@ -46,7 +46,7 @@
   }
 
   thead {
-    background-color: #aada2a;
+    background-color: #30312d;
     position: sticky; /* 헤더를 고정하여 스크롤 시에도 항상 보이도록 설정 */
     top: 0;
   }
