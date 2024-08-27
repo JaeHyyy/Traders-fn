@@ -191,142 +191,144 @@ const MyPage = () => {
 
 
     return (
-        <div id={styles.signup_page}>
-            <div className={styles.signup_box}>
-                <form onSubmit={handleSubmit} id={styles.signup_form}>
-                    <h2 className={styles.changetitle}>회원 정보 수정</h2>
-                    <div className={styles.inputContainer}>
-                        <img src={userIcon} alt="user icon" className={`${styles.icon}`} />
-                        <input
-                            type="text"
-                            name="branchId"
-                            placeholder="@sample.com"
-                            className={`${styles.input}`}
-                            value={formData.branchId}
-                            onChange={handleChange}
-                            readOnly
-                        />
-                    </div>
-                    <div className={styles.inputContainer}>
-                        <img src={phoneIcon} alt="phone icon" className={`${styles.icon}`} />
-                        <input
-                            type="tel"
-                            name="phoneNum"
-                            placeholder="'-' 없이 입력해주세요."
-                            className={`${styles.input} `}
-                            value={formData.phoneNum}
-                            onChange={handleChange}
-                        />
-                    </div>
+        <div className={styles.mypage}>
+            <div className={styles.signup_page}>
+                <div className={styles.signup_box}>
+                    <form onSubmit={handleSubmit} id={styles.signup_form}>
+                        <h2 className={styles.changetitle}>회원 정보 수정</h2>
+                        <div className={styles.inputContainer}>
+                            <img src={userIcon} alt="user icon" className={`${styles.icon}`} />
+                            <input
+                                type="text"
+                                name="branchId"
+                                placeholder="@sample.com"
+                                className={`${styles.input}`}
+                                value={formData.branchId}
+                                onChange={handleChange}
+                                readOnly
+                            />
+                        </div>
+                        <div className={styles.inputContainer}>
+                            <img src={phoneIcon} alt="phone icon" className={`${styles.icon}`} />
+                            <input
+                                type="tel"
+                                name="phoneNum"
+                                placeholder="'-' 없이 입력해주세요."
+                                className={`${styles.input} `}
+                                value={formData.phoneNum}
+                                onChange={handleChange}
+                            />
+                        </div>
 
-                    <hr />
-                    <div className={styles.addressSection}>
-                        <div className={styles.inputContainer}>
-                            <input
-                                type="text"
-                                name="post"
-                                className={`${styles.input} ${styles.addressInput}`}
-                                placeholder="우편번호"
-                                value={formData.post}
-                                onChange={handleChange}
-                            />
+                        <hr />
+                        <div className={styles.addressSection}>
+                            <div className={styles.inputContainer}>
+                                <input
+                                    type="text"
+                                    name="post"
+                                    className={`${styles.input} ${styles.addressInput}`}
+                                    placeholder="우편번호"
+                                    value={formData.post}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                            <div>
+                                <button type="button" className={styles.button} onClick={handlePostcode}>우편번호 찾기</button>
+                            </div>
                         </div>
-                        <div>
-                            <button type="button" className={styles.button} onClick={handlePostcode}>우편번호 찾기</button>
+                        <div className={styles.addressSection}>
+                            <div className={styles.inputContainer}>
+                                <input
+                                    type="text"
+                                    name="addr1"
+                                    className={`${styles.input} ${styles.addressInput}`}
+                                    placeholder="도로명주소"
+                                    value={formData.addr1}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                            <div className={styles.inputContainer}>
+                                <input
+                                    type="text"
+                                    name="addr2"
+                                    className={`${styles.input} ${styles.addressInput}`}
+                                    placeholder="지번주소"
+                                    value={formData.addr2}
+                                    onChange={handleChange}
+                                />
+                                <span id="guide" className={styles.guide}></span>
+                            </div>
                         </div>
-                    </div>
-                    <div className={styles.addressSection}>
-                        <div className={styles.inputContainer}>
-                            <input
-                                type="text"
-                                name="addr1"
-                                className={`${styles.input} ${styles.addressInput}`}
-                                placeholder="도로명주소"
-                                value={formData.addr1}
-                                onChange={handleChange}
-                            />
-                        </div>
-                        <div className={styles.inputContainer}>
-                            <input
-                                type="text"
-                                name="addr2"
-                                className={`${styles.input} ${styles.addressInput}`}
-                                placeholder="지번주소"
-                                value={formData.addr2}
-                                onChange={handleChange}
-                            />
-                            <span id="guide" className={styles.guide}></span>
-                        </div>
-                    </div>
 
-                    <hr />
-                    <div className={styles.inputContainer}>
-                        <img src={ofName} alt="office name icon" className={`${styles.icon} `} />
-                        <input
-                            type="text"
-                            name="branchName"
-                            className={`${styles.input} `}
-                            placeholder="지점명"
-                            value={formData.branchName}
-                            onChange={handleChange}
-                            readOnly
-                        />
+                        <hr />
+                        <div className={styles.inputContainer}>
+                            <img src={ofName} alt="office name icon" className={`${styles.icon} `} />
+                            <input
+                                type="text"
+                                name="branchName"
+                                className={`${styles.input} `}
+                                placeholder="지점명"
+                                value={formData.branchName}
+                                onChange={handleChange}
+                                readOnly
+                            />
+                        </div>
+                        <div className={styles.inputContainer}>
+                            <img src={ofPhone} alt="office phone number icon" className={`${styles.icon}`} />
+                            <input
+                                type="text"
+                                name="branchNum"
+                                className={`${styles.input}`}
+                                placeholder="사업자번호"
+                                value={formData.branchNum}
+                                onChange={handleChange}
+                                readOnly
+                            />
+                        </div>
+                        <div className={styles.signup}>
+                            <input type="submit" value="변경 저장" className={styles.btn_signup} />
+                        </div>
+                    </form>
+                    <div className={styles.changepw}>
+                        <button type="basic" className={styles.btn_changepw} onClick={openDialog}>비밀번호 변경</button>
                     </div>
-                    <div className={styles.inputContainer}>
-                        <img src={ofPhone} alt="office phone number icon" className={`${styles.icon}`} />
-                        <input
-                            type="text"
-                            name="branchNum"
-                            className={`${styles.input}`}
-                            placeholder="사업자번호"
-                            value={formData.branchNum}
-                            onChange={handleChange}
-                            readOnly
-                        />
-                    </div>
-                    <div className={styles.signup}>
-                        <input type="submit" value="변경 저장" className={styles.btn_signup} />
-                    </div>
-                </form>
-                <div className={styles.changepw}>
-                    <button type="basic" className={styles.btn_changepw} onClick={openDialog}>비밀번호 변경</button>
                 </div>
+                <Dialog visible={isDialogVisible} modal footer={footerContent} style={{ width: '30rem' }} onHide={closeDialog} className={styles.dialogPadding}>
+                    <h2 className={styles.dtitle}> 비밀 번호 변경</h2>
+                    <div className={styles.dialogContent}>
+                        <div className={styles.newpw}>
+                            <InputText
+                                id="currentPassword"
+                                type="password"
+                                placeholder="현재 비밀번호"
+                                value={currentPassword}
+                                onChange={(e) => setCurrentPassword(e.target.value)}
+                                className={styles.newpasswd}
+                            />
+                        </div>
+                        <div className={styles.newpw}>
+                            <InputText
+                                id="newPassword"
+                                type="password"
+                                placeholder="새로운 비밀번호"
+                                value={newPassword}
+                                onChange={(e) => setNewPassword(e.target.value)}
+                                className={styles.newpasswd}
+                            />
+                        </div>
+                        <div className={styles.newpw}>
+                            <InputText
+                                id="confirmPassword"
+                                type="password"
+                                placeholder="비밀번호 확인"
+                                value={confirmPassword}
+                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                className={styles.newpasswd}
+                            />
+                        </div>
+                    </div>
+                </Dialog>
             </div>
-            <Dialog visible={isDialogVisible} modal footer={footerContent} style={{ width: '30rem' }} onHide={closeDialog} className={styles.dialogPadding}>
-                <h2 className={styles.dtitle}> 비밀 번호 변경</h2>
-                <div className={styles.dialogContent}>
-                    <div className={styles.newpw}>
-                        <InputText
-                            id="currentPassword"
-                            type="password"
-                            placeholder="현재 비밀번호"
-                            value={currentPassword}
-                            onChange={(e) => setCurrentPassword(e.target.value)}
-                            className={styles.newpasswd}
-                        />
-                    </div>
-                    <div className={styles.newpw}>
-                        <InputText
-                            id="newPassword"
-                            type="password"
-                            placeholder="새로운 비밀번호"
-                            value={newPassword}
-                            onChange={(e) => setNewPassword(e.target.value)}
-                            className={styles.newpasswd}
-                        />
-                    </div>
-                    <div className={styles.newpw}>
-                        <InputText
-                            id="confirmPassword"
-                            type="password"
-                            placeholder="비밀번호 확인"
-                            value={confirmPassword}
-                            onChange={(e) => setConfirmPassword(e.target.value)}
-                            className={styles.newpasswd}
-                        />
-                    </div>
-                </div>
-            </Dialog>
         </div>
     );
 };
