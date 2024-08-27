@@ -3,12 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import mobileMain from './MobileMain.module.css';
 import logo from '../assets/logo.png';
 import statement from '../assets/statement.png';
-import warehouse from '../assets/warehouse.png'; // Import warehouse image
+import warehouse from '../assets/warehouse.png';
+import reject from '../assets/rejected-file.png';
 
 const MobileMain = () => {
     const navigate = useNavigate();
     const searchParams = new URLSearchParams(window.location.search);
-    const urlBranchId = localStorage.getItem('branchId'); // Retrieve branchId from URL
+    const urlBranchId = localStorage.getItem('branchId');
     const urlDate = searchParams.get('date');
 
     console.log("urlBranchId: ", urlBranchId);
@@ -23,15 +24,18 @@ const MobileMain = () => {
     };
 
     const handleStockButtonClick = () => {
-        navigate(`/mobile/inventory?branchId=${urlBranchId}&date=${urlDate}`);
+        navigate(`/mobile/inventory?branchId=${urlBranchId}`);
     };
 
+    const handleRejectButtonClick = () => {
+        navigate(`/mobile/reject?branchId=${urlBranchId}`);
+    };
 
     return (
         <div className={mobileMain.mobileMain_page}>
             <div className={mobileMain.mobileMain_content}>
                 <img src={logo} alt='로고' className={mobileMain.logo} />
-                <div className={mobileMain.mobileMain_content}>
+                <div className={mobileMain.button_container}>
                     <button className={mobileMain.btn_select_stock} onClick={handleStockButtonClick}>
                         <img src={warehouse} alt="재고확인 아이콘" className={mobileMain.btn_icon} />
                         <span>재고확인</span>
@@ -40,8 +44,11 @@ const MobileMain = () => {
                         <img src={statement} alt="입고내역 아이콘" className={mobileMain.btn_icon} />
                         <span>입고내역</span>
                     </button>
+                    <button className={mobileMain.btn_select_reject} onClick={handleRejectButtonClick}>
+                        <img src={reject} alt="반려 아이콘" className={mobileMain.btn_icon} />
+                        <span>반려하기</span>
+                    </button>
                 </div>
-
             </div>
         </div>
     );

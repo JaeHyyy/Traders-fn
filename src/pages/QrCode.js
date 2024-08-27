@@ -13,6 +13,10 @@ const QrCode = () => {
     const date = searchParams.get("date"); // URL에서 날짜를 가져옴
     const branchId = localStorage.getItem("branchId");
 
+
+    console.log(date);
+
+
     useEffect(() => {
 
         const fetchQrCode = async () => {

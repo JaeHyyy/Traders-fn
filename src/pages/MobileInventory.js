@@ -22,6 +22,7 @@ const MobileInventory = () => {
                         gcompany: item.goodsData?.gcompany,
                         gcostprice: item.goodsData?.gcostprice,
                         gname: item.goodsData?.gname,
+                        quantity: item.stockquantity
                     };
                 });
                 setStockData(data);
@@ -39,7 +40,7 @@ const MobileInventory = () => {
             <img src={logo} className={mobileInventory.logo} alt="Logo" />
             <div className={mobileInventory.mobileInventory_content}>
                 <div className={mobileInventory.title}>
-                    <span>재고 목록</span>
+                    <span>금일 입고 목록</span>
                     <span className={mobileInventory.branchName}> - {branchName}</span>
                 </div>
                 <div className={mobileInventory.card_section}>
@@ -50,11 +51,12 @@ const MobileInventory = () => {
                     ) : (
                         stockData.map((item, index) => (
                             <div key={index} className={mobileInventory.card}>
-                                <h3>{item.gname}</h3>
                                 <p>상품코드: {item.gcode}</p>
+                                <p>상품명: {item.gname}</p>
                                 <p>카테고리: {item.gcategory}</p>
                                 <p>회사: {item.gcompany}</p>
                                 <p>유통기한: {item.expDate}</p>
+                                <p>수량: {item.quantity}</p>
                             </div>
                         ))
                     )}

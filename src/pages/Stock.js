@@ -193,59 +193,67 @@ const Stock = ({ columns }) => {
 
     // 발주하기 버튼
     const handleOrder = async () => {
-        if (!branchId || !token) {
-            console.error('branchId 또는 token을 찾을 수 없습니다.');
-            return;
-        }
+    if (!branchId || !token) {
+        console.error('branchId 또는 token을 찾을 수 없습니다.');
+        return;
+    }
 
-        // 이미 orderCart에 있는 gcode들을 추출
-        const existingGcodes = orderCart.map(item => item.goods.gcode);
-
-        // 선택된 재고 항목 중 이미 orderCart에 있는 gcode가 있는지 확인
-        const duplicateItems = selectedRows.filter(rowIndex =>
-            existingGcodes.includes(stock[rowIndex].goods.gcode)
-        );
-
-        if (duplicateItems.length > 0) {
-            alert("해당 상품은 이미 존재합니다.");
-            return;
-        }
-
-        if (!stock || !orderCart || selectedRows.length === 0) {
-            console.error('주문 데이터가 유효하지 않습니다.');
-            return;
-        }
-
-        // 선택된 재고 항목을 OrderCartDTO 형태로 변환
-        const orderCartDTOs = selectedRows.map(rowIndex => ({
-            ordercode: '1234-1234-0001', // 서버에서 자동 생성되므로 null 또는 생략 가능
-            gcount: 1, // gcount에 재고 수량을 할당
-            goods: { // GoodsDTO 형태에 맞춰 데이터 변환
-                gcode: stock[rowIndex].goods.gcode,
-                goodsname: stock[rowIndex].goods.goodsname,
-                price: stock[rowIndex].goods.price
+    try {
+        // 기존 orderCart 데이터를 가져옴
+        const response = await axios.get(`http://localhost:8090/traders/ordercart/branch/${branchId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
             }
-        }));
-        try {
-            // 서버에 발주 요청 전송
-            const response = await axios.post(
-                `http://localhost:8090/traders/ordercart/saveAll/${branchId}`,
-                orderCartDTOs,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                }
-            );
-            // 요청 성공 시의 처리
-            console.log("Order saved successfully:", response.data);
-            alert("발주가 완료되었습니다.");
+        });
+        const existingOrderCart = response.data;
 
-        } catch (error) {
-            console.error("발주 요청 실패:", error);
-            alert("발주 중 오류가 발생했습니다.");
+        // 선택된 상품 중 이미 orderCart에 있는 gcode가 있는지 확인
+        const duplicates = selectedRows.filter(rowIndex =>
+            existingOrderCart.some(cartItem => cartItem.goods.gcode === stock[rowIndex].goods.gcode)
+        );
+          console.log("duplicates:"+duplicates);
+        if (duplicates.length > 0) {
+            alert('선택한 상품 중 이미 발주된 상품이 있습니다. 중복된 상품을 제거하고 다시 시도하세요.');
+        } else {
+            // 중복이 없으면 발주를 진행
+            const selectedItems = selectedRows.map(rowIndex => stock[rowIndex]);
+            const orderCartDTOs = selectedItems.map(item => ({
+                gcount: 1, // 필요에 따라 수정 가능
+                goods: {
+                    gcode: item.goods.gcode,
+                    gcategory: item.goods.gcategory,
+                    gname: item.goods.gname,
+                    gcostprice: item.goods.gcostprice,
+                    gimage: item.goods.gimage,
+                    gcompany: item.goods.gcompany,
+                    gunit: item.goods.gunit,
+                }
+            }));
+
+            try {
+                // 서버에 발주 요청 전송
+                const response = await axios.post(
+                    `http://localhost:8090/traders/ordercart/saveAll/${branchId}`,
+                    orderCartDTOs,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    }
+                );
+                // 요청 성공 시의 처리
+                console.log("Order saved successfully:", response.data);
+                alert("발주가 완료되었습니다.");
+            } catch (error) {
+                console.error("발주 요청 실패:", error);
+                alert("발주 중 오류가 발생했습니다.");
+            }
         }
-    };
+    } catch (error) {
+        console.error('Failed to fetch order cart:', error);
+    }
+    setSelectedRows([]);
+};
 
     // // 현재 페이지에 표시할 항목을 반환하는 함수
     const displayStock = sortedAndFilteredStock.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
