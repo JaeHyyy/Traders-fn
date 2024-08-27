@@ -202,7 +202,7 @@ const AdminGoods = () => {
                         filters={filters} globalFilterFields={['gcode', 'gname', 'gcompany', 'gcategory']} header={header}
                         emptyMessage="No goods found." onFilter={(e) => setFilters(e.filters)}>
                         <Column className={styles.dtable} field="gcode" header={<span style={{ display: 'block', textAlign: 'center', fontFamily: 'Noto Sans KR, sans-serif' }}>Code</span>} />
-                        <Column className={styles.table} header="Image" body={imageBodyTemplate} />
+                        <Column className={styles.itable} header="Image" body={imageBodyTemplate} />
                         <Column className={styles.dtable} field="gname" header="Name" headerStyle={{ textAlign: 'center', fontFamily: 'Noto Sans KR, sans-serif' }} />
                         <Column className={styles.dtable} field="gcategory" header="Category" />
                         <Column className={styles.dtable} field="gcostprice" header="Cost Price" dataType="numeric" body={priceBodyTemplate} />
@@ -213,6 +213,7 @@ const AdminGoods = () => {
                 <Button icon="pi pi-plus" rounded text raised onClick={() => setVisible(true)} className={styles.addb} />
                 <Sidebar visible={visible} onHide={() => setVisible(false)} position="right" className={styles.addgoods}>
                     <form onSubmit={handleSubmit} className={styles.addgoods}>
+                        <br />
                         <h2 className={styles.addtitle}>New Product</h2>
                         <div>
                             <InputText className={styles.inputText} name="gcode" placeholder="상품번호" value={newGoods.gcode} onChange={handleInputChange} required />
@@ -237,7 +238,7 @@ const AdminGoods = () => {
                             <Toast ref={toast}></Toast>
                             <InputText type="file" className={styles.fileUpload} name="gimage" accept="image/*" onChange={handleFileChange} required />
                         </div>
-                        <Button type="submit" label="Add Product" className={styles.addbutton} />
+                        <Button type="submit" label="추가" className={styles.addbutton} />
                     </form>
                 </Sidebar>
             </div>
