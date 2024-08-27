@@ -2,10 +2,12 @@ import { useState, useEffect } from 'react';
 import order from './OrderCartTable.module.css';
 import { loadTossPayments } from '@tosspayments/payment-sdk';
 import api from '../util/api';
+import { getAuthToken } from '../util/auth';
 
 const OrderCartTable = ({ columns, orderCart, setOrderCart, handleGcount }) => {
   const [selectedRows, setSelectedRows] = useState([]);
   const [totalCostPrice, setTotalCostPrice] = useState(0);
+  const token = getAuthToken();
   const branchId = localStorage.getItem('branchId'); // 저장된 branchId 가져오기
 
   //체크박스 전체 선택
@@ -26,23 +28,54 @@ const OrderCartTable = ({ columns, orderCart, setOrderCart, handleGcount }) => {
     }
   };
 
-  //체크한 상품 삭제하기
+  // 동일 ordercode 상품 삭제하기
   const handleDelete = () => {
-    const selectedItems = selectedRows.map(rowIndex => orderCart[rowIndex].ordercode);
+    // 중복된 ordercode를 제거하고 고유한 값만 남기기
+    const selectedItems = Array.from(new Set(selectedRows.map(rowIndex => orderCart[rowIndex].ordercode)));
+
     selectedItems.forEach(ordercode => {
       if (ordercode !== undefined) {
         api.delete(`/traders/ordercart/delete/${branchId}/${ordercode}`)
           .then(response => {
             console.log(`삭제완료`);
+            // 삭제된 ordercode에 해당하는 항목들을 모두 필터링하여 상태 업데이트
             setOrderCart(prevOrderCart => prevOrderCart.filter(item => item.ordercode !== ordercode));
             alert("삭제가 완료되었습니다.");
           })
           .catch(error => {
             console.error('삭제불가', error);
+            alert('삭제 중 오류가 발생했습니다. 다시 시도해주세요.');
           });
       }
     });
   };
+
+  //삭제하기 버튼 기능 구현
+const handleSelectedDelete = () => {
+  const selectedItems = selectedRows.map(rowIndex => orderCart[rowIndex]);
+  const deletePromises = selectedItems.map(item => {
+    const gcode = item.goods.gcode;
+    if (gcode !== undefined) {
+      return api.delete(`/traders/ordercart/delete/selected/${gcode}/${branchId}`)
+        .then(response => {
+          console.log(`삭제완료: ${gcode}`);
+          // 상태 업데이트 - 삭제된 항목만 제거
+          setOrderCart(prevOrderCart => prevOrderCart.filter(cartItem => cartItem.goods.gcode !== gcode));
+        })
+        .catch(error => {
+          console.error('삭제불가', error);
+          alert('삭제 중 오류가 발생했습니다. 다시 시도해주세요.');
+        });
+    }
+    return null;
+  });
+  Promise.all(deletePromises).then(() => {
+    setSelectedRows([]); // 삭제 후 체크박스 초기화
+    alert("삭제가 완료되었습니다.");
+  });
+};
+
+
 
   //발주하기 페이지에 있는 상품들의 총합계
   useEffect(() => {
@@ -59,9 +92,10 @@ const OrderCartTable = ({ columns, orderCart, setOrderCart, handleGcount }) => {
   // 변경사항 저장하기
   const handleSave = () => {
     orderCart.forEach(item => {
-      api.put(`/traders/ordercart/update/${branchId}/${item.ordercode}`, item)
+      const gcode = item.goods.gcode;
+      api.put(`/traders/ordercart/updateByGcode/${branchId}/${gcode}`, item)
         .then(response => {
-          console.log(`저장완료: ${item.ordercode}`);
+          console.log(`저장완료: ${gcode}`);
           console.log(response.data);
         })
         .catch(error => {
@@ -71,14 +105,14 @@ const OrderCartTable = ({ columns, orderCart, setOrderCart, handleGcount }) => {
     alert("변경사항 저장 완료되었습니다.");
   };
 
-  //결제하기 
   const handlePayment = async () => {
     const clientKey = 'test_ck_KNbdOvk5rkOogZa2Qvm4rn07xlzm'; // 하드코딩된 클라이언트 키
     const tossPayments = await loadTossPayments(clientKey);
 
     const paymentData = {
       amount: totalCostPrice, // 결제 금액
-      orderId: '1234-4321-0001', // 주문 ID
+      orderId: '1234-4321-0001', // 주문 ID (중복되지 않도록 확인)
+
       orderName: `${branchId} 발주`, // 주문명
       customerName: `${branchId}` // 고객명
     };
@@ -98,12 +132,15 @@ const OrderCartTable = ({ columns, orderCart, setOrderCart, handleGcount }) => {
         items: itemsString, // 전체 상품 정보 추가
       }).toString();
 
+      console.log("paymentData: ", paymentData);
+
       // 결제 요청
       tossPayments.requestPayment('카드', {
         ...paymentData,
-        successUrl: `http://traders5reactbucket.s3-website-ap-northeast-1.amazonaws.com/traders/payment/PaymentSuccess?${queryString}`,
-        failUrl: 'http://traders5reactbucket.s3-website-ap-northeast-1.amazonaws.com/traders/payment/fail'
+        successUrl: `http://localhost:3000/traders/payment/PaymentSuccess?${queryString}`,
+        failUrl: 'http://localhost:3000/traders/payment/fail'
       });
+
     } catch (error) {
       console.error('결제 요청 중 오류 발생:', error);
     }
@@ -155,7 +192,7 @@ const OrderCartTable = ({ columns, orderCart, setOrderCart, handleGcount }) => {
         <div className={order.tableBottomBtn}>
           <button className={order.saveBtn} onClick={handleSave}>변경저장</button>
           <button className={order.orderBtn} onClick={handlePayment}>결제하기</button>
-          <button className={order.delBtn} onClick={handleDelete}>삭제하기</button>
+          <button className={order.delBtn} onClick={handleSelectedDelete}>삭제하기</button>
         </div>
       </div>
     </div>

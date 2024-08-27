@@ -1,0 +1,219 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+hr {
+    opacity: 0.5;
+}
+
+.mypage {
+    width: 1300px;
+    height: 600px;
+    overflow: hidden;
+    /* 스크롤이 생기지 않도록 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.signup_page {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.signup_box {
+    width: 100%;
+    max-width: 500px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    background-color: #fff;
+    overflow: hidden;
+    /* 박스 내부 스크롤 숨기기 */
+}
+
+.signup_form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.inputContainer {
+    position: relative;
+    width: 100%;
+    margin: 4px 0;
+}
+
+.inputContainer .icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 24px;
+    opacity: 0.5;
+}
+
+.input:not(.addressInput):not([type="file"]) {
+    width: 100%;
+    height: 40px;
+    /* 크기 조정 */
+    padding: 0 10px 0 50px;
+    margin: 4px 0;
+    border-radius: 6px;
+    background-color: white;
+    border: 1px solid #ddd;
+}
+
+.input.addressInput {
+    width: 100%;
+    height: 40px;
+    /* 크기 조정 */
+    padding: 0 10px;
+    margin: 4px 0;
+    border-radius: 6px;
+    background-color: white;
+    border: 1px solid #ddd;
+}
+
+.input:read-only {
+    color: #888888;
+}
+
+.addressSection {
+    display: flex;
+    align-items: center;
+    margin: 6px 0;
+}
+
+.addressSection>div {
+    margin-right: 8px;
+}
+
+.addressSection button {
+    height: 40px;
+    /* 크기 조정 */
+    border: none;
+    border-radius: 6px;
+    background-color: #AADA2A;
+    color: white;
+    padding: 0 20px;
+    cursor: pointer;
+}
+
+.addressSection button:hover {
+    background-color: #133A00;
+}
+
+.btn_signup {
+    color: #fff;
+    font-size: 16px;
+    text-align: center;
+    margin-top: 10px;
+    background-color: #133A00;
+    /* 간격 조정 */
+    margin-bottom: 5px;
+    width: 100%;
+    height: 40px;
+    /* 크기 조정 */
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.btn_signup:hover {
+    background-color: #61791f;
+}
+
+.btn_changepw {
+    color: #fff;
+    font-size: 16px;
+    text-align: center;
+    background-color: #AADA2A;
+    margin-top: 5px;
+    margin-bottom: 20px;
+    width: 100%;
+    height: 40px;
+    /* 크기 조정 */
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.btn_changepw:hover {
+    background-color: #277401;
+}
+
+/* 다이얼로그 내부의 전체적인 콘텐츠 스타일링 */
+.dialogContent {
+    padding: 20px;
+    margin: 20px;
+}
+
+/* 각 입력 필드 컨테이너 */
+.newpw {
+    margin-bottom: 1rem;
+    /* 간격 조정 */
+}
+
+/* 입력 필드의 스타일 */
+.newpasswd {
+    width: 100%;
+    height: 36px;
+    /* 크기 조정 */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    /* 폰트 크기 조정 */
+    transition: border-color 0.3s ease;
+}
+
+/* 확인 버튼 스타일 */
+.o {
+    background-color: #AADA2A;
+    border-color: #AADA2A;
+    color: white;
+    width: 90px;
+    /* 크기 조정 */
+    height: 36px;
+    /* 크기 조정 */
+    font-size: 14px;
+    /* 폰트 크기 조정 */
+    border-radius: 4px;
+    padding: 10px;
+    margin-right: 8px;
+    margin-bottom: 8px;
+}
+
+/* 취소 버튼 스타일 */
+.x {
+    background-color: #f5f5f5;
+    border-color: #ccc;
+    color: #333;
+    width: 90px;
+    /* 크기 조정 */
+    height: 36px;
+    /* 크기 조정 */
+    font-size: 14px;
+    /* 폰트 크기 조정 */
+    border-radius: 4px;
+    padding: 10px;
+    margin-right: 8px;
+    margin-bottom: 8px;
+}
+
+.dtitle {
+    text-align: center;
+    font-size: 18px;
+    /* 제목 크기 조정 */
+}

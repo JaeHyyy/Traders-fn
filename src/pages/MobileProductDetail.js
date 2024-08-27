@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import logo from '../assets/logo.png';
 import A_1 from '../assets/AA-A.png';
@@ -8,11 +8,7 @@ import A_3 from '../assets/AA-C.png';
 import B from '../assets/BB-A,B,C.png';
 import C from '../assets/CC-A,B,C.png';
 import plan from '../assets/baseProductLocation.png';
-import product from './MobileProductDetail3.module.css';
-
-////////////////////////////////////////
-// import { getAuthToken } from "../util/auth";
-////////////////////////////////////////
+import product from './MobileProductDetail.module.css';
 
 // 구역별 이미지 객체
 const ZONE_IMAGES = {
@@ -31,15 +27,22 @@ const loc2Options = ['A', 'B', 'C'];
 const loc3Options = ['a', 'b', 'c', 'd', 'e', 'f'];
 
 const MobileProductDetail = () => {
-    const { gcode } = useParams();  // URL에서 gcode 파라미터를 가져옵니다.
-    const [productDetails, setProductDetails] = useState(null);  // 제품 상세 정보 상태
-    const [additionalInfo, setAdditionalInfo] = useState(null);  // 추가 정보 상태
-    const [movementDetails, setMovementDetails] = useState(null);  // movement 데이터 상태
-    const [error, setError] = useState(null);  // 오류 상태
-    const [zoneImage, setZoneImage] = useState(null);  // 구역별 이미지 상태
-    const [newLoc1, setNewLoc1] = useState('');  // 새로운 loc1 상태
-    const [newLoc2, setNewLoc2] = useState('');  // 새로운 loc2 상태
-    const [newLoc3, setNewLoc3] = useState('');  // 새로운 loc3 상태
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
+    const branchId = searchParams.get('branchId');
+    const { gcode } = useParams();
+    const navigate = useNavigate();
+
+    const [productDetails, setProductDetails] = useState(null);
+    const [additionalInfo, setAdditionalInfo] = useState(null);
+    const [movementDetails, setMovementDetails] = useState(null);
+    const [error, setError] = useState(null);
+    const [zoneImage, setZoneImage] = useState(null);
+
+    const [newLoc1, setNewLoc1] = useState('');
+    const [newLoc2, setNewLoc2] = useState('');
+    const [newLoc3, setNewLoc3] = useState('');
+    const [updatedLocation, setUpdatedLocation] = useState(null);  // 위치 업데이트 상태
 
     // gcode를 사용하여 제품 상세 정보와 추가 정보를 가져오는 함수
     useEffect(() => {
@@ -47,65 +50,35 @@ const MobileProductDetail = () => {
             try {
                 console.log(`gcode ${gcode}에 대한 제품 상세 정보 가져오기`);
 
-                ////////////////////////////////////////////
-                // 08/14
-                // const token = getAuthToken();
-                // const branchId = localStorage.getItem("branchId");
-
-                // console.log("token 값 확인(디바이스-상세페이지): ", token);
-                // console.log("id 값 확인(디바이스-상세페이지): ", branchId);
-                ////////////////////////////////////////////
-
-                // 제품 상세 정보와 추가 정보를 동시에 가져오기
-                // ssg wifi : 10.10.10.197
                 const [response1, response2, response3] = await Promise.all([
-                    axios.get(`http://Traders5BootApp.ap-northeast-1.elasticbeanstalk.com/traders/stock/gcode-data/${gcode}`),
-                    // axios.get(`http://172.30.1.8:8090/traders/stock/gcode-data/${gcode}`),
-
-
-                    axios.get(`http://Traders5BootApp.ap-northeast-1.elasticbeanstalk.com/traders/goods/${gcode}`),
-                    // axios.get(`http://172.30.1.8:8090/traders/goods/${gcode}`),
-
-                    axios.get(`http://Traders5BootApp.ap-northeast-1.elasticbeanstalk.com/traders/movement/${gcode}`)
-                    // axios.get(`http://172.30.1.8:8090/traders/movement/${gcode}`)
-                    // axios.get(`http://10.10.10.58:8090/traders/stock/gcode-data/${gcode}`),
-                    // axios.get(`http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/stock/gcode-data/${gcode}`),
-
-
-                    // // axios.get(`http://10.10.10.58:8090/traders/goods/${gcode}`),
-                    // axios.get(`http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/goods/${gcode}`),
-
-                    // // axios.get(`http://10.10.10.58:8090/traders/movement/${gcode}`)
-                    // axios.get(`http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/movement/${gcode}`)
-
+                    axios.get(`http://10.10.10.109:8090/traders/stock/gcode-data/${gcode}`),
+                    axios.get(`http://10.10.10.109:8090/traders/goods/${gcode}`),
+                    axios.get(`http://10.10.10.109:8090/traders/movement/${gcode}`)
                 ]);
 
-                const data1 = response1.data[0];  // 배열의 첫 번째 요소를 사용
+                const data1 = response1.data[0];
                 const data2 = response2.data;
-                const data3 = response3.data[0]; // 배열의 첫 번째 요소를 사용
+                const data3 = response3.data[0];
 
-                // response1 데이터 설정
                 if (data1) {
                     console.log('stock + goods:', data1);
-                    setProductDetails(data1);  // 제품 상세 정보 설정
+                    setProductDetails(data1);
                 } else {
                     console.log('stock 데이터가 없습니다');
-                    setProductDetails(null);  // 데이터가 없으면 null 설정
+                    setProductDetails(null);
                 }
 
-                // response2 데이터 설정
                 if (data2) {
                     console.log("goods:", data2);
-                    setAdditionalInfo(data2);  // 추가 정보 설정
+                    setAdditionalInfo(data2);
                 } else {
                     console.log('goods 데이터가 없습니다.');
                     setAdditionalInfo(null);
                 }
 
-                // response3 데이터 설정
                 if (data3) {
                     console.log("movement:", data3);
-                    setMovementDetails(data3);  // movement 데이터 설정
+                    setMovementDetails(data3);
                 } else {
                     console.log('movement 데이터가 없습니다.');
                 }
@@ -119,7 +92,7 @@ const MobileProductDetail = () => {
                 } else {
                     setError("요청을 설정하는 중 오류가 발생했습니다.");
                 }
-                setProductDetails(null);  // 오류 발생 시 null 설정
+                setProductDetails(null);
                 setAdditionalInfo(null);
                 setMovementDetails(null);
             }
@@ -135,7 +108,6 @@ const MobileProductDetail = () => {
 
             let imageUrl = null;
 
-            // loc1과 loc2를 조합하여 구역별 이미지 결정
             if (loc1.startsWith('AA')) {
                 imageUrl = ZONE_IMAGES.A[`${loc1}-${loc2}`] || ZONE_IMAGES.A[loc1] || null;
             } else if (loc1.startsWith('BB')) {
@@ -148,51 +120,55 @@ const MobileProductDetail = () => {
         }
     }, [productDetails]);
 
-    // 위치 정보를 업데이트하는 함수
+    console.log("gcode: ", gcode);
+    console.log("branchId: ", branchId);
+
     const updateLocation = async () => {
         try {
-            const updatedLocation = {
+            const locationToUpdate = {
                 loc1: newLoc1,
                 loc2: newLoc2,
-                loc3: newLoc3
+                loc3: newLoc3,
+                price: productDetails?.goodsData?.gcostprice || additionalInfo?.gcostprice || null
             };
 
-            // API 요청을 통해 위치 업데이트
-            // const response = await axios.put('http://10.10.10.31:8090/traders/stock/mobile-update-location', null, {
-            // const response = await axios.put('http://172.30.1.8:8090/traders/stock/mobile-update-location', null, {
-
-            // const response = await axios.put('http://10.10.10.58:8090/traders/stock/mobile-update-location', null, {
-            const response = await axios.put('http://Traders5BootApp.ap-northeast-1.elasticbeanstalk.com/traders/stock/mobile-update-location', null, {
-
+            const response = await axios.put('http://10.10.10.109:8090/traders/stock/mobile-update-location', null, {
                 params: {
                     gcode,
-                    loc1: updatedLocation.loc1,
-                    loc2: updatedLocation.loc2,
-                    loc3: updatedLocation.loc3
+                    branchId,
+                    loc1: locationToUpdate.loc1,
+                    loc2: locationToUpdate.loc2,
+                    loc3: locationToUpdate.loc3,
+                    price: locationToUpdate.price
                 }
             });
+
+            // 위치 업데이트 상태 업데이트
+            setUpdatedLocation(locationToUpdate);
+
             console.log('위치 정보 업데이트 완료:', response.data);
 
-            // 업데이트된 위치 정보를 상태에 반영
+            // 상태 업데이트
             setProductDetails((prevDetails) => ({
                 ...prevDetails,
-                loc1: updatedLocation.loc1,
-                loc2: updatedLocation.loc2,
-                loc3: updatedLocation.loc3
+                loc1: locationToUpdate.loc1,
+                loc2: locationToUpdate.loc2,
+                loc3: locationToUpdate.loc3
             }));
         } catch (error) {
             console.error("위치 정보 업데이트 오류:", error);
-            if (error.response) {
-                setError(`서버 오류: ${error.response.status} ${error.response.statusText}`);
-            } else if (error.request) {
-                setError("서버로부터 응답을 받지 못했습니다.");
-            } else {
-                setError("요청을 설정하는 중 오류가 발생했습니다.");
-            }
+            setError(error.message);
         }
     };
 
-    // 데이터가 없는 경우 기본값 설정
+    const ok = () => {
+        if (updatedLocation) {
+            navigate(`/mobile/receive?branchId=${branchId}&date=${searchParams.get('date')}&gcode=${gcode}&loc1=${updatedLocation.loc1}&loc2=${updatedLocation.loc2}&loc3=${updatedLocation.loc3}&price=${updatedLocation.price}`);
+        } else {
+            console.error("위치 업데이트 정보가 없습니다.");
+        }
+    };
+
     const details = {
         gcode: gcode,
         goodsData: {
@@ -299,6 +275,7 @@ const MobileProductDetail = () => {
                         ))}
                     </select>
                     <button onClick={updateLocation}>위치 업데이트</button>
+                    <button onClick={ok} className={product.ok_btn}>확인</button>
                 </div>
             </div>
         </div>

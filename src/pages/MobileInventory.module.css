@@ -1,0 +1,102 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.mobileInventory_page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    height: 100vh;
+    background-color: #AADA2A;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.logo {
+    width: 200px;
+    height: 100px;
+    object-fit: cover;
+    margin-bottom: 20px;
+}
+
+.mobileInventory_content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 400px;
+    overflow-y: auto;
+}
+
+.title {
+    width: 100%;
+    height: 30px;
+    background-color: #333333;
+    color: white;
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+    font-size: 1.0em;
+    border-radius: 10px 10px 0 0;
+}
+
+.branchName {
+    margin-left: 5px;
+    font-size: 1em;
+    color: #cccccc;
+}
+
+.card_section {
+    width: 100%;
+    height: 500px;
+    overflow-y: auto;
+    background-color: #f0f0f0;
+    border-radius: 0 0 10px 10px;
+    padding: 10px;
+}
+
+.error {
+    color: red;
+    font-size: 1em;
+    margin-bottom: 10px;
+}
+
+.card {
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    margin-bottom: 15px;
+    width: 100%;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.card h3 {
+    margin-bottom: 10px;
+    font-size: 1.1em;
+    color: #333333;
+}
+
+.card p {
+    margin-bottom: 5px;
+    font-size: 0.95em;
+    color: #666666;
+}
+
+/* 상품코드 강조 */
+.card p:first-child {
+    font-size: 1.1em;
+    /* 폰트 크기 키우기 */
+    font-weight: bold;
+    /* 굵게 표시 */
+    color: #1E88E5;
+    /* 강조 색상으로 붉은색 계열 사용 */
+}

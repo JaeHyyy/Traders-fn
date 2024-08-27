@@ -14,7 +14,7 @@ const OrderCart = () => {
 
 
     if (branchId) {
-      axios.get(`http://Traders5BootApp.ap-northeast-1.elasticbeanstalk.com/traders/ordercart/branch/${branchId}`, {
+      axios.get(`http://localhost:8090/traders/ordercart/branch/${branchId}`, {
         headers: {
           method: "GET",
           Authorization: `Bearer ${token}`
@@ -46,12 +46,12 @@ const OrderCart = () => {
   };
 
   const columns = [
-    { header: '순번' },
+    { header: '순번', render: (_, rowIndex) => rowIndex + 1 },
     { header: '상품코드', accessor: 'gcode', render: (row) => row.goods.gcode },
     {
       header: '이미지',
       accessor: 'gimage',
-      render: (row) => <img src={`http://Traders5BootApp.ap-northeast-1.elasticbeanstalk.com/traders/images/items/${row.goods.gimage}.png`} alt={row.goods.gname} style={{ width: '50px', height: '50px' }} />
+      render: (row) => <img src={`http://localhost:8090/traders/images/items/${row.goods.gimage}.png`} alt={row.goods.gname} style={{ width: '50px', height: '50px' }} />
     },
     { header: '카테고리', accessor: 'gcategory', render: (row) => row.goods.gcategory },
     { header: '상품명(단위)', accessor: 'gname', render: (row) => row.goods.gname },

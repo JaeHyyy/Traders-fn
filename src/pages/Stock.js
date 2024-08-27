@@ -4,6 +4,12 @@ import stockk from './StockList.module.css';
 import ReactPaginate from 'react-paginate';
 import { getAuthToken } from '../util/auth';
 import { useNavigate, useParams } from 'react-router-dom';
+import { Paginator } from 'primereact/paginator';
+import { Button } from 'primereact/button';
+import { InputText } from 'primereact/inputtext';
+import api from '../util/api';
+import '../App.css'
+
 
 const Stock = ({ columns }) => {
     const [orderCart, setOrderCart] = useState([]);
@@ -25,7 +31,7 @@ const Stock = ({ columns }) => {
 
     // 각 정렬 체크박스의 상태를 저장하는 상태
     const [sortStates, setSortStates] = useState({
-        quantity: false,
+        gprice: false,
         expiry: false,
         stock: false
     });
@@ -34,17 +40,40 @@ const Stock = ({ columns }) => {
     const [currentPage, setCurrentPage] = useState(0);
 
     // 페이지당 항목 수
-    const itemsPerPage = 7;
+    const [itemsPerPage, setItemsPerPage] = useState(5); // 초기값은 5로 설정
 
     const navigate = useNavigate();
 
     const token = getAuthToken();
     const branchId = localStorage.getItem('branchId'); // 저장된 branchId 가져오기
+
+   // 현재 페이지의 첫 번째 항목 인덱스를 계산하는 함수
+    const first = currentPage * itemsPerPage;
+
+   // 페이지당 항목 수를 rows로 할당
+    const rows = itemsPerPage;
+
+   // 페이지 변경 핸들러 함수
+    const onPageChange = (event) => {
+    setCurrentPage(event.page);
+    setItemsPerPage(event.rows); // 페이지당 항목 수 변경 처리
+    };
+
+    // 검색어를 저장하는 상태
+    const [searchTerm, setSearchTerm] = useState('');
+
+    // 검색어 변경 함수
+    const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+    };
+
+    
+
     // 서버에서 재고 데이터 가져오기
     useEffect(() => {
 
         if (branchId) {
-            axios.get(`http://Traders5BootApp.ap-northeast-1.elasticbeanstalk.com/traders/stock/branch/${branchId}`, {
+            axios.get(`http://localhost:8090/traders/stock/branch/${branchId}`, {
                 headers: {
                     method: "GET",
                     Authorization: `Bearer ${token}`
@@ -110,8 +139,8 @@ const Stock = ({ columns }) => {
         })
         .sort((a, b) => {
             switch (sortOption) {
-                case 'quantity':
-                    return b.stockquantity - a.stockquantity;
+                case 'gprice':
+                    return b.gprice - a.gprice;
                 case 'expiry':
                     return new Date(a.expdate) - new Date(b.expdate);
                 case 'stock':
@@ -137,12 +166,13 @@ const Stock = ({ columns }) => {
             console.error('branchId 또는 token을 찾을 수 없습니다.');
             return;
         }
+
         const selectedStockIds = selectedRows.map(rowIndex => stock[rowIndex].stockid);
+
         try {
             await Promise.all(selectedStockIds.filter(stockid => stockid !== null).map(stockid =>
-                axios.delete(`http://Traders5BootApp.ap-northeast-1.elasticbeanstalk.com/traders/stock/delete/${stockid}/${branchId}`, {
+                axios.delete(`http://localhost:8090/traders/stock/delete/${stockid}/${branchId}`, {
                     headers: {
-                        method: "DELETE",
                         Authorization: `Bearer ${token}`
                     }
                 })
@@ -151,9 +181,10 @@ const Stock = ({ columns }) => {
             setStock(stock.filter((_, index) => !selectedRows.includes(index)));
             setSelectedRows([]);
         } catch (error) {
-            console.error("삭제불가", error);
+            console.error("삭제 불가", error);
         }
     };
+
 
     // 추가한 useEffect: orderCart의 상태를 로깅
     useEffect(() => {
@@ -162,139 +193,123 @@ const Stock = ({ columns }) => {
 
     // 발주하기 버튼
     const handleOrder = async () => {
-        if (!branchId || !token) {
-            console.error('branchId 또는 token을 찾을 수 없습니다.');
-            return;
-        }
+    if (!branchId || !token) {
+        console.error('branchId 또는 token을 찾을 수 없습니다.');
+        return;
+    }
 
-        // 이미 orderCart에 있는 gcode들을 추출
-        const existingGcodes = orderCart.map(item => item.goods.gcode);
-
-        // 선택된 재고 항목 중 이미 orderCart에 있는 gcode가 있는지 확인
-        const duplicateItems = selectedRows.filter(rowIndex =>
-            existingGcodes.includes(stock[rowIndex].goods.gcode)
-        );
-
-        if (duplicateItems.length > 0) {
-            alert("해당 상품은 이미 존재합니다.");
-            return;
-        }
-
-        if (!stock || !orderCart || selectedRows.length === 0) {
-            console.error('주문 데이터가 유효하지 않습니다.');
-            return;
-        }
-
-        // 선택된 재고 항목을 OrderCartDTO 형태로 변환
-        const orderCartDTOs = selectedRows.map(rowIndex => ({
-            ordercode: '1234-1234-0001', // 서버에서 자동 생성되므로 null 또는 생략 가능
-            gcount: 1, // gcount에 재고 수량을 할당
-            goods: { // GoodsDTO 형태에 맞춰 데이터 변환
-                gcode: stock[rowIndex].goods.gcode,
-                goodsname: stock[rowIndex].goods.goodsname,
-                price: stock[rowIndex].goods.price
+    try {
+        // 기존 orderCart 데이터를 가져옴
+        const response = await axios.get(`http://localhost:8090/traders/ordercart/branch/${branchId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
             }
-        }));
-        try {
-            // 서버에 발주 요청 전송
-            const response = await axios.post(
-                `http://Traders5BootApp.ap-northeast-1.elasticbeanstalk.com/traders/ordercart/saveAll/${branchId}`,
-                orderCartDTOs,
-                {
+        });
+        const existingOrderCart = response.data;
+
+        // 선택된 상품 중 이미 orderCart에 있는 gcode가 있는지 확인
+        const duplicates = selectedRows.filter(rowIndex =>
+            existingOrderCart.some(cartItem => cartItem.goods.gcode === stock[rowIndex].goods.gcode)
+        );
+          console.log("duplicates:"+duplicates);
+        if (duplicates.length > 0) {
+            alert('선택한 상품 중 이미 발주된 상품이 있습니다. 중복된 상품을 제거하고 다시 시도하세요.');
+        } else {
+            // 중복이 없으면 발주를 진행
+            const selectedItems = selectedRows.map(rowIndex => stock[rowIndex]);
+            const orderCartDTOs = selectedItems.map(item => ({
+                gcount: 1, // 필요에 따라 수정 가능
+                goods: {
+                    gcode: item.goods.gcode,
+                    gcategory: item.goods.gcategory,
+                    gname: item.goods.gname,
+                    gcostprice: item.goods.gcostprice,
+                    gimage: item.goods.gimage,
+                    gcompany: item.goods.gcompany,
+                    gunit: item.goods.gunit,
+                }
+            }));
+
+            try {
+                // 서버에 발주 요청 전송
+                const response = await axios.post(
+                    `http://localhost:8090/traders/ordercart/saveAll/${branchId}`,
+                    orderCartDTOs,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    }
+                );
+                // 요청 성공 시의 처리
+                console.log("Order saved successfully:", response.data);
+                alert("발주가 완료되었습니다.");
+            } catch (error) {
+                console.error("발주 요청 실패:", error);
+                alert("발주 중 오류가 발생했습니다.");
+            }
+        }
+    } catch (error) {
+        console.error('Failed to fetch order cart:', error);
+    }
+    setSelectedRows([]);
+};
+
+    // // 현재 페이지에 표시할 항목을 반환하는 함수
+    const displayStock = sortedAndFilteredStock.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
+
+
+    //검색 시 해당 키워드로 stock 조회
+    const fetchStockByKeyword = async () => {
+        if (branchId) {
+            try {
+                const response = await axios.get(`http://localhost:8090/traders/stock/branch/${branchId}/search?keyword=${encodeURIComponent(searchTerm)}`, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
-                }
-            );
-            // 요청 성공 시의 처리
-            console.log("Order saved successfully:", response.data);
-            alert("발주가 완료되었습니다.");
-
-        } catch (error) {
-            console.error("발주 요청 실패:", error);
-            alert("발주 중 오류가 발생했습니다.");
+                });
+                setStock(response.data);
+            } catch (error) {
+                console.error('Failed to fetch stock data:', error);
+            }
+        } else {
+            console.error('No branchId found in localStorage!');
         }
     };
 
-    // const handleOrder = async () => {
-    //     if (!branchId || !token) {
-    //         console.error('branchId 또는 token을 찾을 수 없습니다.');
-    //         return;
-    //     }
-
-    //     const selectedGcodes = selectedRows.map(rowIndex => stock[rowIndex].goods.gcode);
-
-    //     try {
-    //         // disuse 테이블에서 중복된 gcode가 있는지 확인
-    //         const response = await axios.post(
-    //             `http://localhost:8090/traders/disuse/checkDuplicates/${branchId}`,
-    //             selectedGcodes,
-    //             {
-    //                 headers: {
-    //                     Authorization: `Bearer ${token}`
-    //                 }
-    //             }
-    //         );
-    //         console.log("selectedGcodes", selectedGcodes);
-    //         console.log("Server response for duplicates check: ", response);
-
-    //         // 중복된 항목이 있는 경우 처리
-    //         if (response.data && response.data.duplicates && response.data.duplicates.length > 0) {
-    //             alert("해당 상품은 이미 존재합니다.");
-    //             return;
-    //         }
-
-    //         // 중복이 없을 경우 발주 데이터 저장
-    //         const orderCartDTOs = selectedRows.map(rowIndex => ({
-    //             ordercode: null,
-    //             gcount: 1,
-    //             goods: {
-    //                 gcode: stock[rowIndex].goods.gcode,
-    //                 goodsname: stock[rowIndex].goods.goodsname,
-    //                 price: stock[rowIndex].goods.price
-    //             }
-    //         }));
-    //      if()
-    //         const saveResponse = await axios.post(
-    //             `http://localhost:8090/traders/ordercart/saveAll/${branchId}`, 
-    //             orderCartDTOs, 
-    //             {
-    //                 headers: {
-    //                     Authorization: `Bearer ${token}`
-    //                 }
-    //             }
-    //         );
-
-    //         console.log("Order saved successfully:", saveResponse.data);
-    //         alert("발주가 완료되었습니다.");
-    //         setSelectedRows([]);
-
-    //     } catch (error) {
-    //         console.error("발주 요청 실패:", error);
-    //         alert("발주 중 오류가 발생했습니다.");
-    //     }
-    // };
-
-
-
-
-    //페이지네이션
-    // 현재 페이지에 표시할 항목을 반환하는 함수
-    const displayStock = sortedAndFilteredStock.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
-
-    // 총 페이지 수를 계산하는 함수
-    const pageCount = Math.ceil(sortedAndFilteredStock.length / itemsPerPage);
-
-    // 페이지를 변경하는 함수
-    const handlePageChange = ({ selected }) => {
-        setCurrentPage(selected);
+    // 검색 버튼 클릭 핸들러
+    const handleSearchClick = () => {
+    fetchStockByKeyword(searchTerm); // 검색어에 맞는 데이터를 가져옴
+     };
+     //엔터키 눌렀을때 검색 기능 작동 핸들러
+     const handleKeyPress = (event) => {
+        if (event.key === 'Enter') {
+            handleSearchClick();
+        }
     };
+  
+
+
 
     return (
         <div className={stockk.tableTop}>
+        <div className={stockk.totalTableTop}>
+            <div className="p-inputgroup flex-1">
+                <InputText 
+                    placeholder="검색"
+                    value={searchTerm} 
+                    onChange={(e) => setSearchTerm(e.target.value)} // 검색어 변경 시 상태 업데이트 
+                    onKeyPress={handleKeyPress}
+                />
+                <Button 
+                    icon="pi pi-search" 
+                    className="p-button-warning"
+                    onClick={handleSearchClick} // 검색 버튼 클릭 시 API 호출 
+                />
+            </div>
             <div className={stockk.tableCon}>
-                <input type='checkbox' checked={sortStates.quantity} onChange={() => handleSortChange('quantity')} />
-                <span>판매량</span>
+                <input type='checkbox' checked={sortStates.gprice} onChange={() => handleSortChange('gprice')} />
+                <span>상품판매가 순</span>
                 <input type='checkbox' checked={sortStates.expiry} onChange={() => handleSortChange('expiry')} />
                 <span>유통기한 순</span>
                 <input type='checkbox' checked={sortStates.stock} onChange={() => handleSortChange('stock')} />
@@ -317,7 +332,9 @@ const Stock = ({ columns }) => {
                         <option>C</option>
                     </select>
                 </form>
-            </div>
+            </div >
+        </div> 
+            <div className={stockk.tableScroll}>
             <table className={stockk.stockT}>
                 <thead>
                     <tr>
@@ -335,7 +352,15 @@ const Stock = ({ columns }) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {displayStock.map((row, rowIndex) => (
+                   {displayStock.length === 0 ? (
+                    <tr>
+                      <td colSpan={columns.length + 1} style={{ textAlign: 'center', padding: '20px' }}>
+                        해당되는 상품이 없습니다.
+                      </td>
+                    </tr>
+                   ) : (
+
+                    displayStock.map((row, rowIndex) => (
                         <tr key={rowIndex}>
                             <td>
                                 <input
@@ -347,33 +372,24 @@ const Stock = ({ columns }) => {
                             {columns.map((column, colIndex) => (
                                 <td key={colIndex}>
                                     {column.render ? column.render(row) : row[column.accessor]}
-                                    {/* render는 이미지나 입력필드 같은 특수한 데이터
-                 accessor는 데이터 키값 */}
                                 </td>
                             ))}
                         </tr>
-                    ))}
-                    {displayStock.length < itemsPerPage &&
-                        Array.from({ length: itemsPerPage - displayStock.length }).map((_, index) => (
-                            <tr key={`empty-${index}`}>
-                                <td colSpan={columns.length + 1}>&nbsp;</td>
-                            </tr>
-                        ))}
+                    ))
+                )}
                 </tbody>
             </table>
-            <hr className={stockk.pageLine} />
-            <ReactPaginate
-                previousLabel={"Previous"}
-                nextLabel={"Next"}
-                pageCount={pageCount}
-                onPageChange={handlePageChange}
-                containerClassName={"paginationBttns"}
-                previousLinkClassName={"previousBttn"}
-                nextLinkClassName={"nextBttn"}
-                disabledClassName={"paginationDisabled"}
-                activeClassName={"paginationActive"}
-                className={stockk.page}
-            />
+            </div>
+            <div className={stockk.pageLine} />
+            <Paginator 
+            first={first} 
+            rows={rows} 
+            totalRecords={sortedAndFilteredStock.length} 
+            rowsPerPageOptions={[5, 10, 20]} 
+            onPageChange={onPageChange}
+            className="my-custom-paginator" 
+             />
+     
             <div className={stockk.stockBtn}>
                 <button className={stockk.orderStockBtn} onClick={handleOrder}>발주하기</button>
                 <button className={stockk.delStockBtn} onClick={handleDeleteSelected}>삭제하기</button>

@@ -2,19 +2,37 @@ import { render } from '@testing-library/react';
 import DisUseTable from './DisUseTable';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
+import api from '../util/api';
 
 const DisUse = () => {
 
+  const [disUseList, setDisUseList] = useState([]);
+  const branchId = localStorage.getItem('branchId');
+
+  useEffect(() => {
+    if (branchId) {
+        api.get(`/traders/disuse/branch/${branchId}`)
+            .then(response => {
+                setDisUseList(response.data);
+                console.log(response.data)
+            })
+            .catch(error => {
+                console.error('There was an error fetching the goods!', error);
+            });
+    } else {
+        console.error('No branchId found in localStorage!');
+    }
+}, [branchId]);
 
 
   const columns = [
-    { header: '순번', accessor: 'index + 1' },
+    { header: '순번', render: (_, rowIndex) => rowIndex + 1 },
     { header: '상품코드', accessor: 'gcode', render: (row) => row.stock.goods.gcode },
     {
       header: '이미지',
       accessor: 'gimage',
       // render: (row) => <img src={`http://10.10.10.31:8090/traders/images/items/${row.stock.goods.gimage}.png`} alt={row.stock.goods.gname} style={{ width: '50px', height: '50px' }} />
-      render: (row) => <img src={`http://Traders5BootApp.ap-northeast-1.elasticbeanstalk.com/traders/images/items/${row.stock.goods.gimage}.png`} alt={row.stock.goods.gname} style={{ width: '50px', height: '50px' }} />
+      render: (row) => <img src={`http://localhost:8090/traders/images/items/${row.stock.goods.gimage}.png`} alt={row.stock.goods.gname} style={{ width: '50px', height: '50px' }} />
     },
     { header: '카테고리', accessor: 'gcategory', render: (row) => row.stock.goods.gcategory },
     { header: '상품명(단위)', accessor: 'gname', render: (row) => row.stock.goods.gname },

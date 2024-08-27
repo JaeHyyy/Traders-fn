@@ -6,7 +6,7 @@ import { Column } from 'primereact/column';
 import { Sidebar } from 'primereact/sidebar';
 import { InputText } from 'primereact/inputtext';
 import { InputNumber } from 'primereact/inputnumber';
-import { FileUpload } from 'primereact/fileupload';
+import { Dropdown } from 'primereact/dropdown';
 import { Button } from 'primereact/button';
 import { Toast } from 'primereact/toast';
 import axios from 'axios';
@@ -34,17 +34,40 @@ const AdminGoods = () => {
         gcostprice: '',
         gcompany: '',
         gunit: '',
-        gimage: '',
+        gimage: null,
     });
 
+    const categories = [
+        { label: '곡류', value: '곡류' },
+        { label: '과일', value: '과일' },
+        { label: '채소', value: '채소' },
+        { label: '유제품', value: '유제품' },
+        { label: '소스류', value: '소스류' },
+        { label: '수산물', value: '수산물' },
+        { label: '건해산', value: '건해산' },
+        { label: '정육', value: '정육' },
+        { label: '계란류', value: '계란류' },
+        { label: '즉석식품', value: '즉석식품' },
+        { label: '음료', value: '음료' },
+        { label: '커피/원두/차', value: '커피/원두/차' },
+        { label: '생활용품', value: '생활용품' },
+        { label: '가구', value: '가구' },
+        { label: '주방용품', value: '주방용품' },
+        { label: '반려동물', value: '반려동물' },
+        { label: '유아용품', value: '유아용품' },
+        { label: '패션용품', value: '패션용품' },
+        { label: '가전용품', value: '가전용품' },
+    ];
+
+    const handleDropdownChange = (e) => {
+        const { name, value } = e.target;
+        setNewGoods(prevState => ({
+            ...prevState,
+            [name]: value
+        }));
+    };
+
     useEffect(() => {
-        // const token = getAuthToken();
-        // // axios.get('http://10.10.10.31:8090/traders/home', {
-        // axios.get('http://TradersApp5.us-east-2.elasticbeanstalk.com/traders/home', {
-        //     headers: {
-        //         Authorization: `Bearer ${token}`
-        //     }
-        // })
         api.get('/traders/home')
             .then(response => {
                 if (savedBranchId != 'admin') {
@@ -112,21 +135,21 @@ const AdminGoods = () => {
         e.preventDefault();
 
         const formData = new FormData();
-        formData.append('gcode', newGoods.gcode);
-        formData.append('gname', newGoods.gname);
-        formData.append('gcategory', newGoods.gcategory);
-        formData.append('gcostprice', newGoods.gcostprice);
-        formData.append('gcompany', newGoods.gcompany);
-        formData.append('gunit', newGoods.gunit);
-
+        formData.append('goods', new Blob([JSON.stringify({
+            gcode: newGoods.gcode,
+            gname: newGoods.gname,
+            gcategory: newGoods.gcategory,
+            gcostprice: newGoods.gcostprice,
+            gcompany: newGoods.gcompany,
+            gunit: newGoods.gunit,
+        })], { type: 'application/json' }));
         // 파일 추가
         if (newGoods.gimage) {
             formData.append('file', newGoods.gimage);
         }
 
         const token = getAuthToken();
-        // axios.post('http://10.10.10.31:8090/home/save', formData, {
-        axios.post('http://Traders5BootApp.ap-northeast-1.elasticbeanstalk.com/home/save', formData, {
+        axios.post('http://localhost:8090/traders/goodsadd', formData, {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'multipart/form-data',
@@ -141,23 +164,32 @@ const AdminGoods = () => {
                     gcostprice: '',
                     gcompany: '',
                     gunit: '',
-                    gimage: '',
+                    gimage: null,
                 });
+                toast.current.show({ severity: 'success', summary: 'Success', detail: 'Goods Added Successfully' });
             })
             .catch(error => {
                 console.error('Error adding goods:', error);
+                toast.current.show({ severity: 'error', summary: 'Error', detail: 'Failed to Add Goods' });
             });
     }
 
     const imageBodyTemplate = (rowData) => {
         return (
             <img
-                // src={`http://10.10.10.31:8090/traders/images/items/${rowData.gimage}.png`}
-                src={`http://Traders5BootApp.ap-northeast-1.elasticbeanstalk.com/traders/images/items/${rowData.gimage}.png`}
+                src={`http://localhost:8090/traders/images/items/${rowData.gimage}.png`}
                 alt={rowData.gname}
-                style={{ width: '50px', height: '50px' }}
+                style={{ width: '50px', height: '50px', textAlign: 'center' }}
             />
         );
+    };
+
+
+    const handleFileChange = (e) => {
+        setNewGoods(prevState => ({
+            ...prevState,
+            gimage: e.target.files[0]
+        }));
     };
 
 
@@ -166,52 +198,47 @@ const AdminGoods = () => {
             <AdminMenu />
             <div className={styles.container}>
                 <div className={styles.card}>
-                    <DataTable value={goods} paginator showGridlines rows={9} loading={loading} dataKey="gcode"
+                    <DataTable value={goods} className={styles.table} paginator showGridlines rows={9} loading={loading} dataKey="gcode"
                         filters={filters} globalFilterFields={['gcode', 'gname', 'gcompany', 'gcategory']} header={header}
                         emptyMessage="No goods found." onFilter={(e) => setFilters(e.filters)}>
-                        <Column field="gcode" header="Code" />
-                        <Column header="Image" body={imageBodyTemplate} />
-                        <Column field="gname" header="Name" />
-                        <Column field="gcategory" header="Category" />
-                        <Column field="gcostprice" header="Cost Price" dataType="numeric" body={priceBodyTemplate} />
-                        <Column field="gcompany" header="Company" />
-                        <Column field="gunit" header="Unit" />
+                        <Column className={styles.dtable} field="gcode" header={<span style={{ display: 'block', textAlign: 'center', fontFamily: 'Noto Sans KR, sans-serif' }}>Code</span>} />
+                        <Column className={styles.itable} header="Image" body={imageBodyTemplate} />
+                        <Column className={styles.dtable} field="gname" header="Name" headerStyle={{ textAlign: 'center', fontFamily: 'Noto Sans KR, sans-serif' }} />
+                        <Column className={styles.dtable} field="gcategory" header="Category" />
+                        <Column className={styles.dtable} field="gcostprice" header="Cost Price" dataType="numeric" body={priceBodyTemplate} />
+                        <Column className={styles.dtable} field="gcompany" header="Company" />
+                        <Column className={styles.dtable} field="gunit" header="Unit" />
                     </DataTable>
                 </div>
-                <Button icon="pi pi-plus" rounded text raised onClick={() => setVisible(true)} className="p-mt-3" />
-                <Sidebar visible={visible} onHide={() => setVisible(false)} position="right" style={{ width: '30vw' }}>
-                    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem', height: '80%', justifyContent: 'center' }}>
-                        <h2 className={styles.addtitle}>New Products</h2>
+                <Button icon="pi pi-plus" rounded text raised onClick={() => setVisible(true)} className={styles.addb} />
+                <Sidebar visible={visible} onHide={() => setVisible(false)} position="right" className={styles.addgoods}>
+                    <form onSubmit={handleSubmit} className={styles.addgoods}>
+                        <br />
+                        <h2 className={styles.addtitle}>New Product</h2>
                         <div>
-                            <label htmlFor="gcode" />
-                            <InputText id="gcode" name="gcode" placeholder="상품 번호" value={newGoods.gcode} onChange={handleInputChange} required />
+                            <InputText className={styles.inputText} name="gcode" placeholder="상품번호" value={newGoods.gcode} onChange={handleInputChange} required />
                         </div>
                         <div>
-                            <label htmlFor="gname" />
-                            <InputText id="gname" name="gname" placeholder="상품명" value={newGoods.gname} onChange={handleInputChange} required />
+                            <InputText className={styles.inputText} name="gname" placeholder="상품명" value={newGoods.gname} onChange={handleInputChange} required />
                         </div>
                         <div>
-                            <label htmlFor="gcategory" />
-                            <InputText id="gcategory" name="gcategory" placeholder="카테고리" value={newGoods.gcategory} onChange={handleInputChange} required />
+                            <Dropdown className={styles.dropdown} name="gcategory" placeholder="카테고리" value={newGoods.gcategory} options={categories} onChange={handleDropdownChange} required />
                         </div>
                         <div>
-                            <label htmlFor="gcostprice" />
-                            <InputNumber id="gcostprice" name="gcostprice" placeholder="가격" value={newGoods.gcostprice} onValueChange={handleInputChange} mode="currency" currency="KRW" locale="ko-KR" required />
+                            <InputNumber inputId="integeronly" className={styles.inputNumber} name="gcostprice" placeholder="가격" value={newGoods.gcostprice} onValueChange={handleInputChange} />
+                            {/* mode="currency" currency="KRW" required */}
                         </div>
                         <div>
-                            <label htmlFor="gcompany" />
-                            <InputText id="gcompany" name="gcompany" placeholder="제조 회사" value={newGoods.gcompany} onChange={handleInputChange} required />
+                            <InputText className={styles.inputText} name="gcompany" placeholder="브랜드" value={newGoods.gcompany} onChange={handleInputChange} required />
                         </div>
                         <div>
-                            <label htmlFor="gunit" />
-                            <InputText id="gunit" name="gunit" placeholder="단위" value={newGoods.gunit} onChange={handleInputChange} required />
+                            <InputText className={styles.inputText} name="gunit" placeholder="개/box" value={newGoods.gunit} onChange={handleInputChange} required />
                         </div>
-                        <div>
-                            <label htmlFor="gimage" />
+                        <div >
                             <Toast ref={toast}></Toast>
-                            <FileUpload mode="basic" name="file" placeholder="상품 이미지 업로드" url="http://Traders5BootApp.ap-northeast-1.elasticbeanstalk.com/home/save" multiple accept="image/*" maxFileSize={1000000} onUpload={onUpload} />
+                            <InputText type="file" className={styles.fileUpload} name="gimage" accept="image/*" onChange={handleFileChange} required />
                         </div>
-                        <Button type="submit" label="Add Goods" className="p-mt-3" />
+                        <Button type="submit" label="추가" className={styles.addbutton} />
                     </form>
                 </Sidebar>
             </div>
