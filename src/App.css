@@ -105,5 +105,10 @@
   box-shadow: none; 
 }
 
+/* stepper */
+.p-stepper-number {
+  background-color: #E3E1E1;
+}
+
 
 
