@@ -2,16 +2,23 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import mobileInventory from './MobileInventory.module.css';
 import logo from '../assets/logo.png';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const MobileInventory = () => {
     const [stockData, setStockData] = useState([]);
     const [error, setError] = useState(null);
     const branchName = localStorage.getItem('branchName'); // branchName 가져오기
 
+    const navigate = useNavigate();
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
+    const branchId = searchParams.get('branchId');
+    const date = searchParams.get('date');
+
     useEffect(() => {
         const urlBranchId = localStorage.getItem('branchId');
 
-        axios.get(`http://10.10.10.25:8090/traders/stock/all-data/${urlBranchId}`)
+        axios.get(`http://10.10.10.109:8090/traders/stock/all-data/${urlBranchId}`)
             .then((response) => {
                 const data = response.data.map(item => {
                     return {
@@ -37,7 +44,12 @@ const MobileInventory = () => {
 
     return (
         <div className={mobileInventory.mobileInventory_page}>
-            <img src={logo} className={mobileInventory.logo} alt="Logo" />
+            <img
+                src={logo}
+                alt="로고"
+                className={mobileInventory.logo}
+                onClick={() => navigate(`/mobile/main?branchId=${branchId}&date=${date}`)}
+            />
             <div className={mobileInventory.mobileInventory_content}>
                 <div className={mobileInventory.title}>
                     <span>금일 입고 목록</span>

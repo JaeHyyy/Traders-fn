@@ -41,11 +41,11 @@ const MobileLogin = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        axios.post('http://10.10.10.25:8090/traders/login', credentials)
+        axios.post('http://10.10.10.109:8090/traders/login', credentials)
             .then(response => {
                 setAuthToken(response.data.token);
 
-                axios.get(`http://10.10.10.25:8090/traders/branchname/${credentials.branchId}`, {
+                axios.get(`http://10.10.10.109:8090/traders/branchname/${credentials.branchId}`, {
                     headers: {
                         Authorization: `Bearer ${response.data.token}`
                     }

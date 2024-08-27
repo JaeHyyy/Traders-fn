@@ -24,11 +24,11 @@ const MobileMain = () => {
     };
 
     const handleStockButtonClick = () => {
-        navigate(`/mobile/inventory?branchId=${urlBranchId}`);
+        navigate(`/mobile/inventory?branchId=${urlBranchId}&date=${urlDate}`);
     };
 
     const handleRejectButtonClick = () => {
-        navigate(`/mobile/reject?branchId=${urlBranchId}`);
+        navigate(`/mobile/reject?branchId=${urlBranchId}&date=${urlDate}`);
     };
 
     return (

@@ -23,7 +23,7 @@ const QrCode = () => {
 
             try {
                 // const response = await axios.get(`http://10.10.10.153:8090/traders/api/${branchId}/qrcode?date=${date}`, {
-                const response = await axios.get(`http://10.10.10.25:8090/traders/api/${branchId}/qrcode?date=${date}`, {
+                const response = await axios.get(`http://10.10.10.109:8090/traders/api/${branchId}/qrcode?date=${date}`, {
 
                     responseType: 'arraybuffer', // 응답을 바이너리 데이터로 받음
                 });

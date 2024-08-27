@@ -2,10 +2,16 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import mobileReject from './MobileReject.module.css';
 import logo from '../assets/logo.png';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 // 반려상태인 데이터만 조회
 const MobileReject = () => {
     const branchName = localStorage.getItem('branchName'); // branchName 가져오기
+    const location = useLocation();
+    const navigate = useNavigate();
+    const searchParams = new URLSearchParams(location.search);
+    const branchId = searchParams.get('branchId');
+    const date = searchParams.get('date');
     const [rejectedItems, setRejectedItems] = useState([]); // 반려된 데이터 저장
 
     useEffect(() => {
@@ -13,7 +19,7 @@ const MobileReject = () => {
         const fetchRejectedItems = async () => {
             try {
                 const branchId = localStorage.getItem('branchId'); // branchId를 localStorage에서 가져오기
-                const response = await axios.get(`http://10.10.10.25:8090/traders/movement/rejected/${branchId}`);
+                const response = await axios.get(`http://10.10.10.109:8090/traders/movement/rejected/${branchId}`);
                 const data = response.data;
 
                 // 필요한 필드들만 추출하여 상태에 저장
@@ -38,7 +44,12 @@ const MobileReject = () => {
 
     return (
         <div className={mobileReject.mobileReject_page}>
-            <img src={logo} alt='로고' className={mobileReject.logo} />
+            <img
+                src={logo}
+                alt="로고"
+                className={mobileReject.logo}
+                onClick={() => navigate(`/mobile/main?branchId=${branchId}&date=${date}`)}
+            />
             <div className={mobileReject.mobileReject_content}>
                 <div className={mobileReject.title}>
                     <span>반려상품목록</span>

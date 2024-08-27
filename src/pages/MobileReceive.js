@@ -36,7 +36,7 @@ const MobileReceive = () => {
         const fetchData = async () => {
             try {
                 const response = await axios.get(
-                    `http://10.10.10.25:8090/traders/movement/${branchId}/${date}`,
+                    `http://10.10.10.109:8090/traders/movement/${branchId}/${date}`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`
@@ -109,7 +109,7 @@ const MobileReceive = () => {
             console.log("업데이트할 항목들:", itemsToUpdate);
 
             const response = await axios.post(
-                'http://10.10.10.25:8090/traders/movement/updateMovStatus',
+                'http://10.10.10.109:8090/traders/movement/updateMovStatus',
                 itemsToUpdate,
                 {
                     headers: {
@@ -164,7 +164,7 @@ const MobileReceive = () => {
             console.log("반려할 항목들:", itemsToReject);
 
             const response = await axios.post(
-                'http://10.10.10.25:8090/traders/movement/updateMovStatus',
+                'http://10.10.10.109:8090/traders/movement/updateMovStatus',
                 itemsToReject,
                 {
                     headers: {
@@ -205,7 +205,13 @@ const MobileReceive = () => {
     return (
         <div className={mobileReceive.mainMobile_page}>
             <div className={mobileReceive.mainMobile_box}>
-                <img src={logo} alt="로고" className={mobileReceive.logo} />
+                <img
+                    src={logo}
+                    alt="로고"
+                    className={mobileReceive.logo}
+                    onClick={() => navigate(`/mobile/main?branchId=${branchId}&date=${date}`)}
+                />
+
                 <div className={mobileReceive.card_box}>
                     <div className={mobileReceive.card_title}>
                         <div className={mobileReceive.flexContainer}>

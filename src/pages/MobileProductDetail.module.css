@@ -161,3 +161,9 @@
 .mobileProductDetail_hr {
     height: 1px;
 }
+
+.update_location .ok_btn {
+    margin-top: 10px;
+    background-color: #333333;
+    color: white;
+}
