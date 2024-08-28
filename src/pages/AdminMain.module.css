@@ -323,3 +323,23 @@
     line-height: 1.5;
     /* 버튼 내 텍스트의 줄 간격 */
 }
+
+.welcomeText {
+    font-size: 14px;
+    line-height: 1.0;
+    color: #333;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-left: 4px solid #36A287;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    /* margin-bottom: 0px; */
+    height: 130px;
+    box-sizing: border-box;
+    /* overflow: auto;
+}
+
+.welcomeText br {
+    line-height: 1.8;
+    /* br 태그 간 줄 간격 조정 */
+}

@@ -138,6 +138,7 @@ const OrderCartTable = ({ columns, orderCart, setOrderCart, handleGcount }) => {
       tossPayments.requestPayment('카드', {
         ...paymentData,
         successUrl: `http://traders5reactbucket.s3-website-ap-northeast-1.amazonaws.com/traders/payment/PaymentSuccess?${queryString}`,
+
         failUrl: 'http://traders5reactbucket.s3-website-ap-northeast-1.amazonaws.com/traders/payment/fail'
       });
 
