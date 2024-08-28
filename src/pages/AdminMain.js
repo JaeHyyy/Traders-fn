@@ -305,10 +305,15 @@ const AdminMain = () => {
                 <Card className={styles.card} title={typingText}>
 
                     <Divider />
-                    <p>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                        consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                    <p className={styles.welcomeText}>
+                        안녕하세요, 이마트트레이더스 본사 관리 시스템에 오신 것을 환영합니다.
+                        <br /><br />
+                        본 시스템은 지점 운영과 고객 만족도를 극대화하기 위한 핵심 도구입니다. 데이터를 정확히 관리하고 신속하게 의사결정하는 데 도움을 줍니다.
+                        <br /><br />
+                        문제가 발생하면 해당 부서에 문의해주시기 바랍니다. 여러분의 노고에 깊이 감사드립니다.
                     </p>
+
+
 
 
                     {/* <div className={styles.buttons}>

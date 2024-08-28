@@ -149,7 +149,7 @@ const AdminGoods = () => {
         }
 
         const token = getAuthToken();
-        axios.post('http://traders5bootapp.ap-northeast-1.elasticbeanstalk.com//traders/goodsadd', formData, {
+        axios.post('http://traders5bootapp.ap-northeast-1.elasticbeanstalk.com/traders/goodsadd', formData, {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'multipart/form-data',
