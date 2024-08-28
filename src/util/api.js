@@ -1,3 +1,6 @@
+//AXIOS로 백앤드에서 API와 연결에 사용됩니다.
+//토큰이 포함되어있고, 기본 헤더는 'Content-Type': 'application/json' 으로 설정되어있습니다.
+
 import axios from 'axios';
 import { getAuthToken } from './auth'; // 토큰을 가져오는 함수
 
