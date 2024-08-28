@@ -67,6 +67,7 @@ function Main() {
         })
           .sort((a, b) => a.stockquantity - b.stockquantity);
         setStockk(shortage);
+        console.log("이거", shortage);
       })
       .catch(error => {
         console.error('There was an error fetching the goods!', error);

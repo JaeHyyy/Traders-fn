@@ -93,10 +93,15 @@ const MobileReceive = () => {
             const itemsToUpdate = qrCodesData
                 .filter(item => selectedItems.includes(item.gcode))
                 .map(item => {
+                    //유통기한 +7일 시키기
+                    // 'yyyy-MM-dd' 형식의 날짜 문자열을 Date 객체로 변환
+                    const movDate = new Date(item.movdate);
+                    movDate.setDate(movDate.getDate() + 7);//유통기한 +7
+                    const updatedMovDate = movDate.toISOString().split('T')[0];// Date 객체를 다시 'yyyy-MM-dd' 형식의 문자열로 변환
                     return {
                         branchid: item.branchid,
                         gcode: item.gcode,  // 개별 항목의 gcode를 사용
-                        movdate: item.movdate,
+                        movdate: updatedMovDate,
                         newStatus: "입고 완료",
                         movquantity: item.movquantity,
                         loc1: loc1 || item.loc1,  // URL에서 가져온 loc1 또는 항목의 loc1 사용
