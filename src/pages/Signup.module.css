@@ -1,4 +1,4 @@
-/* General Reset */
+General Reset
 * {
     margin: 0;
     padding: 0;
@@ -41,7 +41,7 @@ hr {
 .signup_box {
     width: 90%;
     max-width: 500px;
-    border: 1px solid #ddd;
+    border: 1px solid #b5b5b5;
     border-radius: 8px;
     padding: 20px;
     background-color: #fff;
@@ -74,7 +74,7 @@ hr {
     margin: 4px 0;
     border-radius: 6px;
     background-color: #F8F8F8;
-    border: 1px solid #ddd;
+    border: 1px solid #b5b5b5;
 }
 
 .input.addressInput {
@@ -84,7 +84,7 @@ hr {
     margin: 4px 0;
     border-radius: 6px;
     background-color: #F8F8F8;
-    border: 1px solid #ddd;
+    border: 1px solid #b5b5b5;
 }
 
 .addressSection {
@@ -123,7 +123,7 @@ hr {
     padding: 0 10px;
     border-radius: 6px;
     background-color: #F8F8F8;
-    border: 1px solid #ddd;
+    border: 1px solid #b5b5b5;
     margin-right: 8px;
     color: #333;
     /* opacity: 0.5; */
@@ -169,4 +169,36 @@ hr {
 
 .btn_signup:hover {
     background-color: #133A00;
+}
+
+.errorMessage {
+    color: red;
+    font-size: 12px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    letter-spacing: -.4px;
+}
+
+.inputContainer .input.error {
+    border-color: red;
+}
+
+/* Placeholder 텍스트를 빨간색으로 설정 */
+.input.error::placeholder {
+    color: red;
+    text-decoration: underline;
+    text-decoration-color: red;
+}
+
+/* 아이콘에도 에러 스타일 적용 */
+.icon.error-icon {
+    filter: hue-rotate(0deg) brightness(0.7) sepia(1) saturate(5) hue-rotate(-50deg);
+}
+
+/* Error 상태에서 모든 div.inputContainer에 적용될 스타일 */
+.inputContainer.error {
+    border: 1px solid red;
+    border-radius: 6px;
+    padding: 8px;
+    /* div 안쪽 여백을 주어 내용이 테두리에 밀착되지 않도록 */
 }

@@ -9,7 +9,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-color: #AADA2A;
+    /* background-color: #AADA2A; */
     height: 100vh;
 }
 
@@ -17,6 +17,7 @@
     background-color: white;
     padding: 20px;
     border-radius: 20px;
+    border: 1px solid #b5b5b5
 }
 
 .logo {
@@ -38,10 +39,10 @@
     width: 100%;
     height: 48px;
     padding: 0 10px;
-    margin-bottom: 16px;
+    /* margin-bottom: 16px; */
     border-radius: 6px;
     background-color: #F8F8F8;
-    border: 1px solid #ddd;
+    border: 1px solid #b5b5b5;
 }
 
 .input::placeholder {
@@ -53,23 +54,35 @@
     font-size: 16px;
     text-align: center;
     background-color: #AADA2A;
-    margin-top: 20px;
+    /* margin-top: 20px; */
     width: 100%;
     height: 48px;
     border: none;
     cursor: pointer;
+    border-radius: 10px;
 }
 
 .btn_signup {
-    color: #000;
+    color: #808080;
     font-size: 16px;
     text-align: center;
-    background-color: #fff;
-    margin-top: 20px;
+    background-color: #F1F1F1;
+    /* margin-top: 20px; */
     width: 100%;
     height: 48px;
-    border: 1px solid black;
+    border: 1px solid #b5b5b5;
     cursor: pointer;
+    border-radius: 10px;
+}
+
+.btn_login:hover {
+    color: white;
+    background-color: #133A00;
+}
+
+.btn_signup:hover {
+    color: white;
+    background-color: #808080;
 }
 
 .form_options {
@@ -77,7 +90,8 @@
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    margin-top: 10px;
+    /* margin-top: 10px; */
+    color: rgba(0, 0, 0, 0.5);
 }
 
 .form_options label {
@@ -94,12 +108,10 @@
 #remember-check-id {
     opacity: 50%;
     text-decoration: none;
-    color: black;
 }
+
 
 .logo {
     margin: auto;
     display: block;
 }
-
-

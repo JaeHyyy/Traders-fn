@@ -1,0 +1,345 @@
+.container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: #EEEEEE;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    box-sizing: border-box;
+    align-items: center;
+}
+
+.chartContainer {
+    display: flex;
+    justify-content: space-between;
+    background-color: #EEEEEE;
+    width: 100%;
+}
+
+.bar,.doughnut {
+    background-color: #FFFFFF;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 49%;/* 두 그래프가 나란히 배치되도록 너비를 조정 */
+    height: 400px;
+    margin-bottom: 20px;/* 두 그래프 간 간격을 추가 */
+}
+
+.card,
+.floatLabelContainer {
+    background-color: #FFFFFF;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 49%;
+    height: 200px;
+    margin-bottom: 10px;
+}
+
+.floatLabelContainer{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.noticeInputContainer{
+    flex: 3;
+}
+
+
+.inputTextarea {
+    width: 100%;
+    height: 160px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #54A687;
+    border-radius: 5px;
+    box-sizing: border-box;
+    resize: none;
+}
+
+.actionContainer {
+    display: flex;
+    flex-direction: column;
+    justify-items: end;
+    gap: 10px;
+    flex: 1; 
+}
+
+.dropdown {
+    width: 100%;
+    height: 30px;
+}
+
+.listButton,.customButton {
+    background-color: #36A287 !important;
+    border-color: #36A287 !important;
+    color: #FFFFFF !important;
+    width: 100%;
+    padding: 10px 20px;
+    font-size: 14px;
+    border-radius: 5px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+    margin-left: auto;
+    cursor: pointer;
+}
+
+.listButton:hover, .customButton:hover {
+    background-color: #38433f !important;
+    border-color: #1E5A45 !important;
+}
+
+.confirmDialog{
+    font-size : 18px;
+    background: var(--surface-card);
+    width:450px;
+    height:200px;
+    padding: 1rem;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    
+}
+
+
+.buttons{
+    display:flex;
+    justify-content: center;
+}
+
+.linkbutton1{
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    margin-top: 10px;
+    margin-right:50px;
+    background: linear-gradient(135deg, rgba(170, 218, 42, 0.8), rgba(215, 245, 177, 0.8), rgba(144, 238, 144, 0.8));
+    color: #4C4C4C;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    font-size: 16px;
+    text-align: center;
+    line-height: 120px; /* 버튼 내부 텍스트를 가운데 정렬 */
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+    backdrop-filter: blur(10px); /* 유리 효과를 위한 블러 */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), /* 외부 그림자 */
+                inset 0 -2px 6px rgba(255, 255, 255, 0.2); /* 안쪽 그림자 */
+    transition: all 0.3s ease; /* 부드러운 전환 효과 */
+    position: relative;
+    overflow: hidden;
+}
+
+.linkbutton2 {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    margin-top: 10px;
+    margin-right: 50px;
+    background: linear-gradient(135deg, rgba(255, 138, 92, 0.4), rgba(245, 96, 64, 0.4), rgba(180, 70, 170, 0.4), rgba(140, 82, 255, 0.4));
+    border: 1px solid rgba(255, 255, 255, 0.3); /* 살짝 투명한 흰색 테두리 */
+    padding: 10px 20px;
+    font-size: 16px;
+    color: black; /* 글자 색 */
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+    backdrop-filter: blur(15px); /* 유리 효과를 위한 블러 */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), /* 그림자 */
+                inset 0 -2px 6px rgba(255, 255, 255, 0.3); /* 안쪽 그림자 */
+    transition: all 0.3s ease; 
+    position: relative;
+    overflow: hidden;
+}
+
+.linkbutton3 {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    margin-top: 10px;
+    background: linear-gradient(135deg, rgba(223, 38, 45, 0.8), rgba(235, 116, 121, 0.8), rgba(245, 165, 165, 0.8), rgba(255, 145, 145, 0.8)); /* 신세계 그룹 색상 조합 */
+    font-size: 16px;
+    color: white; /* 텍스트 색상 */
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    text-align: center;
+    line-height: 120px; /* 버튼 내부 텍스트를 가운데 정렬 */
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+    backdrop-filter: blur(10px); /* 유리 효과를 위한 블러 */
+    box-shadow: 0 4px 6px rgba(255, 115, 115, 0.3), /* 외부 그림자 */
+                inset 0 -2px 6px rgba(255, 255, 255, 0.3); /* 안쪽 그림자 */
+    transition: all 0.3s ease; /* 부드러운 전환 효과 */
+    position: relative;
+    overflow: hidden;
+}
+
+
+.linkbutton1::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, rgba(170, 218, 42, 0.4), rgba(215, 245, 177, 0.4), rgba(144, 238, 144, 0.4));
+    /* 부드러운 파스텔 그라데이션 */
+    z-index: 1;
+    transition: all 0.5s ease;
+}
+
+.linkbutton1:hover::before {
+    top: -25%;
+    left: -25%;
+    background: linear-gradient(45deg, rgba(170, 218, 42, 0.6), rgba(215, 245, 177, 0.6), rgba(144, 238, 144, 0.6));
+    /* 호버 시 색상 강화 */
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.6);
+    filter: blur(10px);
+}
+
+.linkbutton1:hover {
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 6px 8px rgba(0, 255, 170, 0.4),
+        inset 0 -2px 8px rgba(255, 255, 255, 0.4);
+    /* 호버 시 그림자 증가 */
+    color: white;
+}
+
+.linkbutton1:active {
+    background: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 6px rgba(0, 255, 170, 0.3),
+        inset 0 -1px 4px rgba(255, 255, 255, 0.3);
+    /* 클릭 시 눌리는 느낌 */
+}
+
+.linkbutton2:before{
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, rgba(255, 138, 92, 0.2), rgba(245, 96, 64, 0.2), rgba(180, 70, 170, 0.2), rgba(140, 82, 255, 0.2));
+    z-index: 1;
+    transition: all 0.5s ease;
+}
+.linkbutton2:hover:before{
+    top: -25%;
+    left: -25%;
+    background: linear-gradient(45deg, rgba(255, 138, 92, 0.4), rgba(245, 96, 64, 0.4), rgba(180, 70, 170, 0.4), rgba(140, 82, 255, 0.4));
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.6);
+    filter: blur(15px);
+}
+
+.linkbutton2:hover {
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2),
+        inset 0 -2px 8px rgba(255, 255, 255, 0.3);
+    /* 호버 시 그림자 증가 */
+    color: white;
+}
+
+.linkbutton2:active {
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1),
+        inset 0 -1px 4px rgba(255, 255, 255, 0.2);
+}
+
+.linkbutton3::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, rgba(223, 38, 45, 0.4), rgba(235, 116, 121, 0.4), rgba(245, 165, 165, 0.4), rgba(255, 145, 145, 0.4));
+    /* 부드러운 파스텔 그라데이션 */
+    z-index: 1;
+    transition: all 0.5s ease;
+}
+
+.linkbutton3:hover::before {
+    top: -25%;
+    left: -25%;
+    background: linear-gradient(45deg, rgba(223, 38, 45, 0.6), rgba(235, 116, 121, 0.6), rgba(245, 165, 165, 0.6), rgba(255, 145, 145, 0.6));
+    /* 호버 시 색상 강화 */
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.6);
+    filter: blur(10px);
+}
+
+.linkbutton3:hover {
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 6px 8px rgba(255, 115, 115, 0.4),
+        inset 0 -2px 8px rgba(255, 255, 255, 0.4);
+    /* 호버 시 그림자 증가 */
+    color: white;
+}
+
+.linkbutton3:active {
+    background: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 6px rgba(255, 115, 115, 0.3),
+        inset 0 -1px 4px rgba(255, 255, 255, 0.3);
+    /* 클릭 시 눌리는 느낌 */
+}
+
+.d {
+    width: 70vw !important; 
+    max-width: 1000px;     
+    background-color: #ffffff; 
+    border-radius: 8px;     
+    padding: 20px;  
+}
+
+.b{ 
+    background-color: transparent !important;
+    border: none;
+    color: #f44336 !important; 
+    box-shadow: none; 
+    padding: 0; 
+}
+
+.b:hover{
+    background-color: transparent !important; 
+    color: #d32f2f !important; 
+    box-shadow: none; 
+}
+
+.p-confirm-dialog .p-button {
+    padding: 10px 20px;
+    /* 버튼의 패딩을 조정하여 크기를 키움 */
+    font-size: 16px;
+    /* 버튼 텍스트 크기 */
+    min-width: 100px;
+    /* 버튼의 최소 너비 */
+}
+
+.p-confirm-dialog .p-button span {
+    line-height: 1.5;
+    /* 버튼 내 텍스트의 줄 간격 */
+}
+
+.welcomeText {
+    font-size: 14px;
+    line-height: 1.0;
+    color: #333;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-left: 4px solid #36A287;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    /* margin-bottom: 0px; */
+    height: 130px;
+    box-sizing: border-box;
+    /* overflow: auto;
+}
+
+.welcomeText br {
+    line-height: 1.8;
+    /* br 태그 간 줄 간격 조정 */
+}
